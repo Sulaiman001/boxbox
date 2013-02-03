@@ -5,6 +5,10 @@ Released under the MIT license:
 https://github.com/incompl/boxbox/blob/master/LICENSE
 
 Created at Bocoup http://bocoup.com
+
+This version is a fork of the original boxbox (created by Greg Smith) by topheman aka Christophe Rosset : https://github.com/topheman/boxbox
+Functions, methods, etc ... added by topheman are marked with a comment @added by topheman
+See more on the readme file
 */
 
 /**
@@ -150,6 +154,12 @@ Created at Bocoup http://bocoup.com
         _canvas: null,
         _keydownHandlers: {},
         _keyupHandlers: {},
+        _mousedownHandlers: {},//@added by topheman
+        _mouseupHandlers: {},//@added by topheman
+        _mousemoveHandlers: {},//@added by topheman
+        _touchstartHandlers: {},//@added by topheman
+        _touchdownHandlers: {},//@added by topheman
+        _touchmoveHandlers: {},//@added by topheman
         _startContactHandlers: {},
         _finishContactHandlers: {},
         _impactHandlers: {},
@@ -165,6 +175,7 @@ Created at Bocoup http://bocoup.com
         _onTick: [],
         _creationQueue: [],
         _positionQueue: [],
+        _pause: false,//@added by topheman
         
         _init: function(canvasElem, options) {
             var self = this;
@@ -302,8 +313,11 @@ Created at Bocoup http://bocoup.com
                     
                     world.ClearForces();
                     world.DrawDebugData();
-
-                    window.requestAnimationFrame(animationLoop);
+                    //@modified by topheman
+                    if(self._pause === false)
+                        window.requestAnimationFrame(animationLoop);
+                    else
+                        self._pause = animationLoop;
                 }());
                 
                 // keyboard events
@@ -321,6 +335,64 @@ Created at Bocoup http://bocoup.com
                         }
                     }
                 }, false);
+                
+                /**
+                 * Mouse events
+                 * @added by topheman
+                 */
+                
+                /**
+                 * @function mousedownHandler
+                 * @added by topheman
+                 */
+                function mousedownHandler(e) {
+                    var mousePos = self.calculateWorldPositionFromMouse(e);
+                    var entityX = mousePos.x,
+                    entityY = mousePos.y;
+                    for (var key in self._mousedownHandlers) {
+                        if (!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY)) {
+                            self._mousedownHandlers[key].call(self._entities[key], e, mousePos);
+                        }
+                    }
+                }
+                
+                /**
+                 * @function mouseupHandler
+                 * @added by topheman
+                 */
+                function mouseupHandler(e) {
+                    var mousePos = self.calculateWorldPositionFromMouse(e);
+                    var entityX = mousePos.x,
+                    entityY = mousePos.y;
+                    for (var key in self._mouseupHandlers) {
+                        if (!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY)) {
+                            self._mouseupHandlers[key].call(self._entities[key], e, mousePos);
+                        }
+                    }
+                }
+                
+                /**
+                 * @function mousemoveHandler
+                 * @added by topheman
+                 */
+                function mousemoveHandler(e) {
+                    var mousePos = self.calculateWorldPositionFromMouse(e);
+                    var entityX = mousePos.x,
+                    entityY = mousePos.y;
+                    for (var key in self._mousemoveHandlers) {
+                        if (!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY)) {
+                            self._mousemoveHandlers[key].call(self._entities[key], e, mousePos);
+                        }
+                    }
+                }
+                
+                /**
+                 * adding mouse/touch events to the canvas with the previous handlers
+                 * @added by topheman
+                 */
+                self._canvas.addEventListener('mousedown', mousedownHandler, false);
+                self._canvas.addEventListener('mouseup', mouseupHandler, false);
+                self._canvas.addEventListener('mousemove', mousemoveHandler, false);
 
                 // contact events
                 listener = new Box2D.Dynamics.b2ContactListener();
@@ -371,12 +443,84 @@ Created at Bocoup http://bocoup.com
             }
         },
         
+        /**
+         * Stops or resumes the animationLoop
+         * @added by topheman
+         */
+        pause : function(){
+            if(this._pause === false){
+                this._pause = true;
+            }
+            else
+            {
+                window.requestAnimationFrame(this._pause);
+                this._pause = false;
+            }
+        },
+        
         _addKeydownHandler: function(id, f) {
             this._keydownHandlers[id] = f;
         },
         
         _addKeyupHandler: function(id, f) {
             this._keyupHandlers[id] = f;
+        },
+        
+        /**
+         * @param {Int} id
+         * @param {Function} f callback
+         * @private
+         * @added by topheman
+         */
+        _addMousedownHandler: function(id, f) {
+            this._mousedownHandlers[id] = f;
+        },
+                
+        /**
+         * @param {Int} id
+         * @param {Function} f callback
+         * @private
+         * @added by topheman
+         */
+        _addMouseupHandler: function(id, f) {
+            this._mouseupHandlers[id] = f;
+        },
+                
+        /**
+         * @param {Int} id
+         * @param {Function} f callback
+         * @private
+         * @added by topheman
+         */
+        _addMousemoveHandler: function(id, f) {
+            this._mousemoveHandlers[id] = f;
+        },
+                
+        /**
+         * @param {Int} id
+         * @private
+         * @added by topheman
+         */
+        _removeMousedownHandler: function(id) {
+            delete this._mousedownHandlers[id];
+        },
+                
+        /**
+         * @param {Int} id
+         * @private
+         * @added by topheman
+         */
+        _removeMouseupHandler: function(id) {
+            delete this._mouseupHandlers[id];
+        },
+                
+        /**
+         * @param {Int} id
+         * @private
+         * @added by topheman
+         */
+        _removeMousemoveHandler: function(id) {
+            delete this._mousemoveHandlers[id];
         },
 
         _addStartContactHandler: function(id, f) {
@@ -428,6 +572,18 @@ Created at Bocoup http://bocoup.com
         
         _clearConstantForce: function(name, id) {
             delete this._constantForces[name + id];
+        },
+                
+        /**
+         * @param {Object} e event
+         * @returns {Object} position x,y
+         * @added by topheman
+         */
+        calculateWorldPositionFromMouse: function(e){
+            return {
+                x: (e.offsetX || e.layerX) / this.scale(),
+                y: (e.offsetY || e.layerY) / this.scale()
+            };
         },
 
         /**
@@ -1116,6 +1272,26 @@ Created at Bocoup http://bocoup.com
         },
         
         /**
+         * Checks if the entity is at x,y
+         * @param {Number} x
+         * @param {Number} y
+         * @returns {Boolean}
+         * @added by topheman
+         */
+        checkPosition: function(x,y){
+            var body;
+            this._world._world.QueryPoint(function (fixture) {
+                body = fixture.GetBody();
+            }, new b2Vec2(x, y));
+            if(body !== undefined && this._id === body._bbid){
+                return true;
+            }
+            else{
+                return false;
+            }
+        },
+        
+        /**
          * @_module entity
          * @_params
          * @return {x,y}
@@ -1453,6 +1629,72 @@ Created at Bocoup http://bocoup.com
          */
         onKeyup: function(callback) {
             this._world._addKeyupHandler(this._id, callback);
+        },
+        
+        /**
+         * @param {Function} callback
+         * @added by topheman
+         */
+        onMousedown : function(callback){
+            this._world._addMousedownHandler(this._id, callback);
+        },
+        
+        /**
+         * @param {Function} callback
+         * @added by topheman
+         */     
+        onMouseup : function(callback){
+            this._world._addMouseupHandler(this._id, callback);
+        },
+        
+        /**
+         * @param {Function} callback
+         * @added by topheman
+         */    
+        onMousemove : function(callback){
+            this._world._addMousemoveHandler(this._id, callback);
+        },
+        
+        /**
+         * @added by topheman
+         */    
+        unbindOnMousedown: function(){
+            this._world._removeMousedownHandler(this._id);
+        },
+        
+        /**
+         * @added by topheman
+         */   
+        unbindOnMouseup: function(){
+            this._world._removeMouseupHandler(this._id);
+        },
+        
+        /**
+         * @added by topheman
+         */    
+        unbindOnMousemove: function(){
+            this._world._removeMousemoveHandler(this._id);
+        },
+        
+        /**
+         * @added by topheman
+         */  
+        onTouchstart : function(callback){
+            
+        },
+        
+        /**
+         * @added by topheman
+         */  
+        onTouchend : function(callback){
+            
+        },
+        
+        /**
+         * @added by topheman
+         */  
+        onTouchmove : function(callback){
+            
         },
 
         /**

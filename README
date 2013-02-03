@@ -11,3 +11,13 @@ http://code.google.com/p/box2dweb/
 Created at Bocoup:
 
 http://bocoup.com
+
+Forked by topheman
+
+http://labs.topheman.com/
+
+I needed an abstract layer to box2dweb to simplify the creation of objects. I intend to add the mouse/touch event part which is missing in boxbox (for my needs - I need it to create an html5 game). We'll see where it will lead me - at least, I'm learning box2dweb.
+
+Demos/tests are in the demos/topheman folder
+
+Note : this is a work in progress ...
