@@ -1,0 +1,10 @@
+.main-canvas{
+    border: 1px solid black;
+    font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+}
+h3 {
+    font-family: Arial,Verdana,Geneva,Helvetica,sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    font-style: italic;
+}

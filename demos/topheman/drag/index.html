@@ -4,15 +4,40 @@ Test boxbox forked by topheman
 <!DOCTYPE html>
 <html>
     <head>
-        <title>boxbox forked by topheman test</title>
+        <title>Demos boxbox by topheman [drag events]</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link type="text/css" href="./style.css" rel="stylesheet">
+        <link type="text/css" href="../style.css" rel="stylesheet">
         <script type="text/javascript" src="../../../Box2dWeb-2.1.a.3.min.js"></script>
         <script type="text/javascript" src="../../../boxbox.js"></script>
         <script type="text/javascript" src="./index.js"></script>
+        <link type="text/css" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css" rel="stylesheet">
+        <script type="text/javascript" src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
     </head>
-    <body>
-        <h3>Test box2dweb</h3>
+    <body onload="prettyPrint();">
+        <h3>Demos boxbox by topheman [drag events]</h3>
         <canvas id="canvas" width="600" height="400" class="main-canvas"></canvas>
+        <pre class="prettyprint">
+//one simple line
+player.draggable();
+//with the callbacks
+enemy.draggable({
+    start: function(e,pos){
+        this.color('blue');
+        player.color('red');
+        console.info('startdrag callback','event',e,'world pos',pos);
+    },
+    drag: function(e,pos){
+        this.color('#'+Math.floor(Math.random()*16777215).toString(16));//wath your eyes 
+        console.info('drag callback','event',e,'world pos',pos);
+    },
+    stop: function(e,pos){
+        this.color('blue');
+        player.color('gray');
+        console.info('stopdrag callback','event',e,'world pos',pos);
+    }
+});
+    
+circle.draggable('disable');
+        </pre>
     </body>
 </html>

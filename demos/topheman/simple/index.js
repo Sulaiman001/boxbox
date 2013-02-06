@@ -1,9 +1,10 @@
 function init(){
-     
+    
+    //init canvas and world
     canvas = document.getElementById("canvas");
     myWorld = boxbox.createWorld(canvas,{scale:30});
-//    myWorld.pause();
     
+    //create entities
     decor1 = myWorld.createEntity({
       color: "orange",
       x: 6,
@@ -38,41 +39,25 @@ function init(){
     });
     ground.name('ground');
     
-    player.onMousedown(function(a,b){
+    //add events (simple on mouse down/up events)
+    player.onMousedown(function(e, pos){
         this.color('red');
-//       console.log('mousedown','a',a,'b',b); 
     });
     
-    player.onMouseup(function(a,b){
+    player.onMouseup(function(e, pos){
         this.color('blue');
-//       console.log('mouseup','a',a,'b',b); 
     });
     
-    ground.onMousemove(function(a,b){
-        this._hover = true;//add an inter hover or mousein mouseout method (used in rendering)
-//        this.color('yellow');
-//       console.log('mousemove','a',a,'b',b); 
-    });
-    
-    ground.onRender(function(ctx){
-        if(this._hover === true)
-            this.color('yellow');
-        else
-            this.color('green');
-//        this._hover = false;
-    });
-    
+    //add events to make the enemy entitie draggable (now, you don't have to do all that code, you can simply use the method .draggable() and you will have callbacks for start, drag and stop)
     function onMousedownHandler(e, pos){
-//        console.log('enemy mouse down');
         enemy.unbindOnMousedown();
         onMousemoveHandler.call(this,e,pos);
+        console.info(this,e,pos);
         enemy.onMousemove(onMousemoveHandler);
         enemy.onMouseup(onMouseupHandler);
     }
     
     function onMousemoveHandler(e, pos){
-//        console.log('enemy mouse move');
-//        this._body.SetFixedRotation(true);
         if(!this._moveJoint){
             var jointDefinition = new Box2D.Dynamics.Joints.b2MouseJointDef();
  
@@ -87,7 +72,6 @@ function init(){
     }
     
     function onMouseupHandler(e, pos){
-//        console.log('enemy mouse up');
         enemy.onMousedown(onMousedownHandler);
         enemy.unbindOnMousemove();
         enemy.unbindOnMouseup();
@@ -95,12 +79,9 @@ function init(){
             this._world._world.DestroyJoint(this._moveJoint);
             this._moveJoint = null;
         }
-//        this._body.SetType(Box2D.Dynamics.b2Body.b2_staticBody);
     }
     
     enemy.onMousedown(onMousedownHandler);
-    
-//    canvas.addEventListener('mousedown',function(){console.log('mousedown');});
 
 }   
 

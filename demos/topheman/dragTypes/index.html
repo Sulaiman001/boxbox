@@ -4,15 +4,55 @@ Test boxbox forked by topheman
 <!DOCTYPE html>
 <html>
     <head>
-        <title>boxbox forked by topheman test</title>
+        <title>Demos boxbox by topheman [drag type = "eventDrag"]</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link type="text/css" href="./style.css" rel="stylesheet">
+        <link type="text/css" href="../style.css" rel="stylesheet">
         <script type="text/javascript" src="../../../Box2dWeb-2.1.a.3.min.js"></script>
         <script type="text/javascript" src="../../../boxbox.js"></script>
         <script type="text/javascript" src="./index.js"></script>
+        <link type="text/css" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css" rel="stylesheet">
+        <script type="text/javascript" src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
     </head>
-    <body>
-        <h3>Test boxbox</h3>
+    <body onload="prettyPrint();">
+        <h3>Demos boxbox by topheman [drag type = "eventDrag"]</h3>
         <canvas id="canvas" width="600" height="400" class="main-canvas"></canvas>
+        <pre class="prettyprint">
+//draw callback binded onRender
+function drawTargetting(ctx){
+    console.info('onRender','this',this);
+    if(this._mouseInfos){
+        ctx.lineWidth = 3;
+        ctx.strokeStyle='#33a99a';
+        ctx.beginPath();
+        ctx.moveTo(this.position().x*this._world.scale(),this.position().y*this._world.scale());
+        ctx.lineTo(this._mouseInfos.position.x*this._world.scale(),this._mouseInfos.position.y*this._world.scale());
+        ctx.stroke();
+    }
+}
+
+//draggable (without moving) with callbacks
+circle2.draggable({
+    type : 'eventDrag',
+    start: function(e,mouseInfos){
+        this.color('blue');
+        console.info('startdrag callback','event',e.type,'world pos',mouseInfos);
+        //binding a render callback
+        this.onRender(drawTargetting);
+    },
+    drag: function(e,mouseInfos){
+        //adding infos for the render callback
+        this._mouseInfos = mouseInfos;
+        console.info('drag callback','event',e.type,'world pos',mouseInfos);
+    },
+    stop: function(e,mouseInfos){
+        //no more need for the render callback
+        this._world.unbindOnRender(drawTargetting);
+        this._mouseInfos = null;
+        this.color('darkred');
+        this.applyImpulse(30,-(this.position().x-mouseInfos.position.x),-(this.position().y-mouseInfos.position.y));
+        console.info('stopdrag callback','event',e.type,'world pos',mouseInfos);
+    }
+});
+        </pre>
     </body>
 </html>

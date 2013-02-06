@@ -1,8 +1,10 @@
 function init(){
      
+    //init canvas and world
     canvas = document.getElementById("canvas");
     myWorld = boxbox.createWorld(canvas,{scale:30});
 
+    //create entities
     player = myWorld.createEntity();
     player.name('player');
     
@@ -105,19 +107,40 @@ function init(){
         }
     });
     
+    //draw callback binded onRender
+    function drawTargetting(ctx){
+        console.info('onRender','this',this);
+        if(this._mouseInfos){
+            ctx.lineWidth = 3;
+            ctx.strokeStyle='#33a99a';
+            ctx.beginPath();
+            ctx.moveTo(this.position().x*this._world.scale(),this.position().y*this._world.scale());
+            ctx.lineTo(this._mouseInfos.position.x*this._world.scale(),this._mouseInfos.position.y*this._world.scale());
+            ctx.stroke();
+        }
+    }
+    
     //draggable (without moving) with callbacks
     circle2.draggable({
         type : 'eventDrag',
-        start: function(e,pos){
+        start: function(e,mouseInfos){
             this.color('blue');
-            console.info('startdrag callback','event',e.type,'world pos',pos);
+            console.info('startdrag callback','event',e.type,'world pos',mouseInfos);
+            //binding a render callback
+            this.onRender(drawTargetting);
         },
-        drag: function(e,pos){
-            console.info('drag callback','event',e.type,'world pos',pos);
+        drag: function(e,mouseInfos){
+            //adding infos for the render callback
+            this._mouseInfos = mouseInfos;
+            console.info('drag callback','event',e.type,'world pos',mouseInfos);
         },
-        stop: function(e,pos){
+        stop: function(e,mouseInfos){
+            //no more need for the render callback
+            this._world.unbindOnRender(drawTargetting);
+            this._mouseInfos = null;
             this.color('darkred');
-            console.info('stopdrag callback','event',e.type,'world pos',pos);
+            this.applyImpulse(30,-(this.position().x-mouseInfos.position.x),-(this.position().y-mouseInfos.position.y));
+            console.info('stopdrag callback','event',e.type,'world pos',mouseInfos);
         }
     });
     

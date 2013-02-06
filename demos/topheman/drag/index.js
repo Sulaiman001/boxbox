@@ -1,8 +1,10 @@
 function init(){
-     
+    
+    //init canvas and world
     canvas = document.getElementById("canvas");
     myWorld = boxbox.createWorld(canvas,{scale:30});
 
+    //create entities
     player = myWorld.createEntity();
     player.name('player');
     
