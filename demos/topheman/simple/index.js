@@ -1,23 +1,34 @@
 function init(){
      
     canvas = document.getElementById("canvas");
-    world = boxbox.createWorld(canvas,{scale:30});
-//    world.pause();
+    myWorld = boxbox.createWorld(canvas,{scale:30});
+//    myWorld.pause();
+    
+    decor1 = myWorld.createEntity({
+      color: "orange",
+      x: 6,
+      y: 4,
+      width: 6,
+      height: 4,
+      type: "static",
+      active: false
+    });
+    decor1.name('decor1');
 
-    player = world.createEntity();
+    player = myWorld.createEntity();
     player.name('player');
     
-    enemy = world.createEntity({
+    enemy = myWorld.createEntity({
         color : 'red',
         x: 16,
         y: 2,
         width: 3,
+        density: 10,
         height: 4
-//        type:"static"
     });
     enemy.name('enemy');
 
-    ground = world.createEntity({
+    ground = myWorld.createEntity({
       color: "green",
       x: 13,
       y: 10,
@@ -61,6 +72,7 @@ function init(){
     
     function onMousemoveHandler(e, pos){
 //        console.log('enemy mouse move');
+//        this._body.SetFixedRotation(true);
         if(!this._moveJoint){
             var jointDefinition = new Box2D.Dynamics.Joints.b2MouseJointDef();
  
@@ -83,6 +95,7 @@ function init(){
             this._world._world.DestroyJoint(this._moveJoint);
             this._moveJoint = null;
         }
+//        this._body.SetType(Box2D.Dynamics.b2Body.b2_staticBody);
     }
     
     enemy.onMousedown(onMousedownHandler);

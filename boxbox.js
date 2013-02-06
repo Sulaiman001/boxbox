@@ -72,6 +72,7 @@ See more on the readme file
     }
     
     // A minimal extend for simple objects inspired by jQuery
+    //@todo topheman : use the prototype (here and on the other parts of the code)
     function extend(target, o) {
         if (target === undefined) {
             target = {};
@@ -157,8 +158,13 @@ See more on the readme file
         _mousedownHandlers: {},//@added by topheman
         _mouseupHandlers: {},//@added by topheman
         _mousemoveHandlers: {},//@added by topheman
+        _mouseinHandlers: {},//@added by topheman
+        _mouseoutHandlers: {},//@added by topheman
+        _startdragHandlers: {},//@added by topheman
+        _dragHandlers: {},//@added by topheman
+        _stopdragHandlers: {},//@added by topheman
         _touchstartHandlers: {},//@added by topheman
-        _touchdownHandlers: {},//@added by topheman
+        _touchendHandlers: {},//@added by topheman
         _touchmoveHandlers: {},//@added by topheman
         _startContactHandlers: {},
         _finishContactHandlers: {},
@@ -176,6 +182,8 @@ See more on the readme file
         _creationQueue: [],
         _positionQueue: [],
         _pause: false,//@added by topheman
+        _hoverEntityId: null,//@added by topheman (track the entity which hovered)
+        _draggingEntityId: null,//@added by topheman (track the entity which is dragged)
         
         _init: function(canvasElem, options) {
             var self = this;
@@ -195,6 +203,7 @@ See more on the readme file
             // Set up rendering on the provided canvas
             if (this._canvas !== undefined) {
                 
+                debugWorld = self;//@added by topheman for debugging
                 // debug rendering
                 if (this._ops.debugDraw) {
                     var debugDraw = new b2DebugDraw();
@@ -349,6 +358,7 @@ See more on the readme file
                     var mousePos = self.calculateWorldPositionFromMouse(e);
                     var entityX = mousePos.x,
                     entityY = mousePos.y;
+                    _world_mousedownHandler(e, mousePos);
                     for (var key in self._mousedownHandlers) {
                         if (!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY)) {
                             self._mousedownHandlers[key].call(self._entities[key], e, mousePos);
@@ -364,6 +374,7 @@ See more on the readme file
                     var mousePos = self.calculateWorldPositionFromMouse(e);
                     var entityX = mousePos.x,
                     entityY = mousePos.y;
+                    _world_mouseupHandler(e, mousePos)
                     for (var key in self._mouseupHandlers) {
                         if (!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY)) {
                             self._mouseupHandlers[key].call(self._entities[key], e, mousePos);
@@ -379,10 +390,126 @@ See more on the readme file
                     var mousePos = self.calculateWorldPositionFromMouse(e);
                     var entityX = mousePos.x,
                     entityY = mousePos.y;
+                    _world_mousemoveHandler(e, mousePos);
                     for (var key in self._mousemoveHandlers) {
                         if (!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY)) {
                             self._mousemoveHandlers[key].call(self._entities[key], e, mousePos);
                         }
+                    }
+                }
+                
+                /**
+                 * Global world events handlers
+                 * Triggers specific handlers such as drag events, in/out events
+                 * Also triggers public handlers @todo
+                 * @added by topheman
+                 * @called by their respective public handlers (before the entities handlers) see mouse events section for example
+                 */
+                
+                /**
+                 * @function _world_mousedownHandler
+                 * @added by topheman
+                 */
+                function _world_mousedownHandler(e, mousePos){
+                    //if no dragging active and if a click on the world is on an entity, trigger the _world_mousemoveHandlerForDragEvent
+                    var entityX = mousePos.x,
+                    entityY = mousePos.y;
+                    if(self._draggingEntityId === null){
+                        for(var key in self._entities){
+                            if(!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY) && self._entities[key]._ops._draggable.disabled === false){
+                                _world_mousemoveHandlerForDragEvent.call(self._entities[key],e,mousePos);
+                            }
+                        }
+                    }
+                }
+                
+                /**
+                 * @function _world_mousemoveHandler
+                 * @added by topheman
+                 */
+                function _world_mousemoveHandler(e, mousePos){
+                    //if a dragging is active, trigger the _world_mousemoveHandlerForDragEvent (no matter if the mouse is on an entity)
+                    if(self._draggingEntityId !== null){
+                        _world_mousemoveHandlerForDragEvent.call(self._entities[self._draggingEntityId],e,mousePos);
+                    }
+                }
+                
+                /**
+                 * @function _world_mouseupHandler
+                 * @added by topheman
+                 */
+                function _world_mouseupHandler(e, mousePos){
+                    //if a dragging is active, trigger the _world_mouseupHandlerForDragEvent (to stop drag)
+                    if(self._draggingEntityId !== null){
+                        _world_mouseupHandlerForDragEvent.call(self._entities[self._draggingEntityId],e,mousePos);
+                    }
+                    
+                }
+                
+                /**
+                 * Special world events handlers, triggered by global world event handlers
+                 * The events are splitted to emulate a bind/event system
+                 * @added by topheman
+                 * @called by the global world event handlers
+                 */
+                
+                /**
+                 * @function _world_mouseupHandler
+                 * @context Entity
+                 * @added by topheman
+                 * @triggers the startdrag or the drag event specified in the .draggable() method
+                 */
+                function _world_mousemoveHandlerForDragEvent(e, mousePos) {
+                    if(!this._moveJoint){
+                        this._startDrag = true;//to know if startDrag has to be fired
+                        //tag the entity as dragged on the world
+                        this._world._draggingEntityId = this._id;
+                        //create the joint with the mouse on first call
+                        var jointDefinition = new Box2D.Dynamics.Joints.b2MouseJointDef();
+
+                        jointDefinition.bodyA = this._world._world.GetGroundBody();
+                        jointDefinition.bodyB = this._body;
+                        jointDefinition.target.Set(mousePos.x, mousePos.y);
+                        jointDefinition.maxForce = 10000000000000000000000000000;//100000
+                        jointDefinition.timeStep = 1/60;//hard coded ?!!
+                        this._moveJoint = this._world._world.CreateJoint(jointDefinition);
+                    }
+                    this._moveJoint.SetTarget(new Box2D.Common.Math.b2Vec2(mousePos.x, mousePos.y));
+
+                    if(e.type === 'mousemove'){
+                        //trigger startdrag event on the first move
+                        if(this._startDrag){
+                            if(this._world._startdragHandlers[this._id]){
+                                this._world._startdragHandlers[this._id].call(this,e, mousePos);
+                            }
+                            this._startDrag = false;//reset startDrag state
+                        }
+                        //trigger the drag event on the next moves
+                        else {
+                            if(this._world._dragHandlers[this._id]){
+                                this._world._dragHandlers[this._id].call(this,e, mousePos);
+                            }
+                            this._drag = true;//to know if drag has to be fired
+                        }
+                    }
+                }
+                
+                /**
+                 * @function _world_mouseupHandlerForDragEvent
+                 * @context Entity
+                 * @added by topheman
+                 * @triggers the stopdrag event specified in the .draggable() method
+                 */
+                function _world_mouseupHandlerForDragEvent(e, mousePos) {
+                    if (this._moveJoint) {
+                        this._world._world.DestroyJoint(this._moveJoint);
+                        this._moveJoint = null;
+                        this._world._draggingEntityId = null;//untag the dragging entity on world
+                        //trigger the stopdrag event
+                        if(this._drag && this._world._stopdragHandlers[this._id]){
+                            this._world._stopdragHandlers[this._id].call(this,e, mousePos);
+                        }
+                        this._drag = false;//reset drag state
                     }
                 }
                 
@@ -521,6 +648,73 @@ See more on the readme file
          */
         _removeMousemoveHandler: function(id) {
             delete this._mousemoveHandlers[id];
+        },
+                
+        /**
+         * @param {Int} id
+         * @param {Function} f callback
+         * @private
+         * @added by topheman
+         */
+        _addStartdragHandler: function(id, f) {
+            this._startdragHandlers[id] = f;
+        },
+                
+        /**
+         * @param {Int} id
+         * @param {Function} f callback
+         * @private
+         * @added by topheman
+         */
+        _addDragHandler: function(id, f) {
+            this._dragHandlers[id] = f;
+        },
+                
+        /**
+         * @param {Int} id
+         * @param {Function} f callback
+         * @private
+         * @added by topheman
+         */
+        _addStopdragHandler: function(id, f) {
+            this._stopdragHandlers[id] = f;
+        },
+                
+        /**
+         * @param {Int} id
+         * @private
+         * @added by topheman
+         */
+        _removeStartdragHandler: function(id) {
+            delete this._startdragHandlers[id];
+        },
+                
+        /**
+         * @param {Int} id
+         * @private
+         * @added by topheman
+         */
+        _removeDragHandler: function(id) {
+            delete this._dragHandlers[id];
+        },
+                
+        /**
+         * @param {Int} id
+         * @private
+         * @added by topheman
+         */
+        _removeStopdragHandler: function(id) {
+            delete this._stopdragHandlers[id];
+        },
+                
+        /**
+         * @param {Int} id
+         * @param {Function} f callback
+         * @private
+         * @added by topheman
+         */
+        _addMouseupHandler: function(id, f) {
+            this._mouseupHandlers[id] = f;
         },
 
         _addStartContactHandler: function(id, f) {
@@ -1179,6 +1373,11 @@ See more on the readme file
                 this._sprite.src = ops.image;
             }
             
+            //@added by topheman
+            ops._draggable = {
+                disabled: false
+            };
+            
             body.active = ops.active;
             body.fixedRotation = ops.fixedRotation;
             body.bullet = ops.bullet;
@@ -1788,6 +1987,58 @@ See more on the readme file
         sprite: function(x, y) {
             this._ops.spriteX = x;
             this._ops.spriteY = y;
+        },
+                
+        /**
+         * @param {String}|{Object} @optional name description
+         *      @disabled {Boolean}
+         *      @start {Function}
+         *      @drag {Function}
+         *      @stop {Function}
+         * @added by topheman
+         */
+        draggable: function(options){
+            //simple init without options
+            if(typeof options === 'undefined'){
+                this._ops._draggable.disabled = false;
+            }
+            //method call
+            else if(typeof options === 'string'){
+                switch(options){
+                    case 'disable':
+                        this._ops._draggable.disabled = true;
+                        break;
+                    case 'enable':
+                        this._ops._draggable.disabled = false;
+                        break;
+                }
+            }
+            else if(typeof options === 'object'){
+                if(options.disabled === false || options.disabled === true){
+                    this._ops._draggable.disabled = options.disabled;
+                }
+                else{
+                    this._ops._draggable.disabled = false;//active by default (if not specified)
+                }
+                if(typeof options.start === 'function'){
+                    this._world._addStartdragHandler(this._id,options.start);
+                }
+                else if(typeof options.start !== 'undefined'){
+                    this._world._removeStartdragHandler(this._id);
+                }
+                if(typeof options.drag === 'function'){
+                    this._world._addDragHandler(this._id,options.drag);
+                }
+                else if(typeof options.drag !== 'undefined'){
+                    this._world._removeDragHandler(this._id);
+                }
+                if(typeof options.stop === 'function'){
+                    this._world._addStopdragHandler(this._id,options.stop);
+                }
+                else if(typeof options.stop !== 'undefined'){
+                    this._world._removeStopdragHandler(this._id);
+                }
+            }
         }
         
     };
