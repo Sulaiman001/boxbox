@@ -429,7 +429,7 @@ See more on the readme file
                  */
                 function _world_mousemoveHandler(e, mousePos){
                     //if a dragging is active, trigger the _world_mousemoveHandlerForDragEvent (no matter if the mouse is on an entity)
-                    if(self._draggingEntityId !== null){
+                    if(self._draggingEntityId !== null && self._entities[self._draggingEntityId]._dragging){
                         _world_mousemoveHandlerForDragEvent.call(self._entities[self._draggingEntityId],e,mousePos);
                     }
                 }
@@ -440,7 +440,7 @@ See more on the readme file
                  */
                 function _world_mouseupHandler(e, mousePos){
                     //if a dragging is active, trigger the _world_mouseupHandlerForDragEvent (to stop drag)
-                    if(self._draggingEntityId !== null){
+                    if(self._draggingEntityId !== null && self._entities[self._draggingEntityId]._dragging){
                         _world_mouseupHandlerForDragEvent.call(self._entities[self._draggingEntityId],e,mousePos);
                     }
                     
@@ -460,37 +460,54 @@ See more on the readme file
                  * @triggers the startdrag or the drag event specified in the .draggable() method
                  */
                 function _world_mousemoveHandlerForDragEvent(e, mousePos) {
-                    if(!this._moveJoint){
-                        this._startDrag = true;//to know if startDrag has to be fired
+                    //tag as dragging when passing for the first time
+                    if(!this._dragging && !this._startDrag){
+                        //tag as dragging (all along the drag), with the original coordinates
+                        this._dragging = mousePos;
+                        //tag as startDrag to know that startDrag event will have to be triggered next time on mousemove event
+                        this._startDrag = true;
                         //tag the entity as dragged on the world
                         this._world._draggingEntityId = this._id;
-                        //create the joint with the mouse on first call
-                        var jointDefinition = new Box2D.Dynamics.Joints.b2MouseJointDef();
+                        
+                        //init regularDrag
+                        if(this._ops._draggable.type === 'regularDrag'){
+                            if(!this._moveJoint){
+                                //create the joint with the mouse on first call
+                                var jointDefinition = new Box2D.Dynamics.Joints.b2MouseJointDef();
 
-                        jointDefinition.bodyA = this._world._world.GetGroundBody();
-                        jointDefinition.bodyB = this._body;
-                        jointDefinition.target.Set(mousePos.x, mousePos.y);
-                        jointDefinition.maxForce = 10000000000000000000000000000;//100000
-                        jointDefinition.timeStep = 1/60;//hard coded ?!!
-                        this._moveJoint = this._world._world.CreateJoint(jointDefinition);
+                                jointDefinition.bodyA = this._world._world.GetGroundBody();
+                                jointDefinition.bodyB = this._body;
+                                jointDefinition.target.Set(mousePos.x, mousePos.y);
+                                jointDefinition.maxForce = 10000000000000000000000000000;//100000
+                                jointDefinition.timeStep = 1/60;//hard coded ?!!
+                                this._moveJoint = this._world._world.CreateJoint(jointDefinition);
+                            }
+                        }
+                        //init eventDrag
+                        else if(this._ops._draggable.type === 'eventDrag'){
+
+                        }
                     }
-                    this._moveJoint.SetTarget(new Box2D.Common.Math.b2Vec2(mousePos.x, mousePos.y));
-
-                    if(e.type === 'mousemove'){
+                    else {
                         //trigger startdrag event on the first move
                         if(this._startDrag){
                             if(this._world._startdragHandlers[this._id]){
-                                this._world._startdragHandlers[this._id].call(this,e, mousePos);
+                                this._world._startdragHandlers[this._id].call(this,e, mergeMouseInfos(mousePos,this._dragging));
                             }
                             this._startDrag = false;//reset startDrag state
                         }
                         //trigger the drag event on the next moves
                         else {
                             if(this._world._dragHandlers[this._id]){
-                                this._world._dragHandlers[this._id].call(this,e, mousePos);
+                                this._world._dragHandlers[this._id].call(this,e, mergeMouseInfos(mousePos,this._dragging));
                             }
                             this._drag = true;//to know if drag has to be fired
                         }
+                    }
+                    
+                    //update the move joint if regularDrag
+                    if(this._moveJoint){
+                        this._moveJoint.SetTarget(new Box2D.Common.Math.b2Vec2(mousePos.x, mousePos.y));
                     }
                 }
                 
@@ -501,16 +518,38 @@ See more on the readme file
                  * @triggers the stopdrag event specified in the .draggable() method
                  */
                 function _world_mouseupHandlerForDragEvent(e, mousePos) {
-                    if (this._moveJoint) {
-                        this._world._world.DestroyJoint(this._moveJoint);
-                        this._moveJoint = null;
-                        this._world._draggingEntityId = null;//untag the dragging entity on world
-                        //trigger the stopdrag event
-                        if(this._drag && this._world._stopdragHandlers[this._id]){
-                            this._world._stopdragHandlers[this._id].call(this,e, mousePos);
-                        }
+                    if(this._dragging && this._drag){
                         this._drag = false;//reset drag state
+                        //if there is a move joint, we are in regularDrag (no test, in case the type of drag is change in the middle of a drag)
+                        if (this._moveJoint) {
+                            this._world._world.DestroyJoint(this._moveJoint);
+                            this._moveJoint = null;
+                        }
+                        //trigger the stopdrag event
+                        if(this._world._stopdragHandlers[this._id]){
+                            this._world._stopdragHandlers[this._id].call(this,e, mergeMouseInfos(mousePos,this._dragging));
+                        }
+                        this._dragging = false;//all the dragging process is ended, reset this propertie
+                        this._world._draggingEntityId = null;//untag the dragging entity on world
                     }
+                }
+                
+                /**
+                 * Prepares the mouseInfos object passed in callback
+                 * @todo optimize
+                 * @added by topheman
+                 */
+                function mergeMouseInfos(mouseInfos,originalMouseInfos){
+                    var result = {};
+                    result.position = {};
+                    result.position.x = mouseInfos.x;
+                    result.position.y = mouseInfos.y;
+                    if(originalMouseInfos){
+                        result.originalPosition = {};
+                        result.originalPosition.x = originalMouseInfos.x;
+                        result.originalPosition.y = originalMouseInfos.y;
+                    }
+                    return result;
                 }
                 
                 /**
@@ -1375,7 +1414,8 @@ See more on the readme file
             
             //@added by topheman
             ops._draggable = {
-                disabled: false
+                disabled: false,
+                type: 'regularDrag'
             };
             
             body.active = ops.active;
@@ -1992,6 +2032,7 @@ See more on the readme file
         /**
          * @param {String}|{Object} @optional name description
          *      @disabled {Boolean}
+         *      @type {String} regularDrag or eventDrag
          *      @start {Function}
          *      @drag {Function}
          *      @stop {Function}
@@ -2001,6 +2042,7 @@ See more on the readme file
             //simple init without options
             if(typeof options === 'undefined'){
                 this._ops._draggable.disabled = false;
+                this._ops._draggable.type = 'regularDrag';
             }
             //method call
             else if(typeof options === 'string'){
@@ -2019,6 +2061,9 @@ See more on the readme file
                 }
                 else{
                     this._ops._draggable.disabled = false;//active by default (if not specified)
+                }
+                if(typeof options.type === 'string'){
+                    this._ops._draggable.type = options.type;
                 }
                 if(typeof options.start === 'function'){
                     this._world._addStartdragHandler(this._id,options.start);
