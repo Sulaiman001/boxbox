@@ -745,16 +745,6 @@ See more on the readme file
         _removeStopdragHandler: function(id) {
             delete this._stopdragHandlers[id];
         },
-                
-        /**
-         * @param {Int} id
-         * @param {Function} f callback
-         * @private
-         * @added by topheman
-         */
-        _addMouseupHandler: function(id, f) {
-            this._mouseupHandlers[id] = f;
-        },
 
         _addStartContactHandler: function(id, f) {
             this._startContactHandlers[id] = f;
