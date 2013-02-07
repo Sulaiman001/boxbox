@@ -76,7 +76,7 @@ function init(){
       shape:'circle'
     });
     circle.name('circle');
-    
+
     //one line , it's draggable !
     player.draggable();
     enemy.draggable({
@@ -95,8 +95,9 @@ function init(){
             console.info('stopdrag callback','event',e,'world pos',pos);
         }
     });
-    
-    circle.draggable('disable');
+
+        //if you wan't to disable or enable the drag :
+//    player.draggable('disable');
 
 }   
 

@@ -1414,7 +1414,7 @@ See more on the readme file
             
             //@added by topheman
             ops._draggable = {
-                disabled: false,
+                disabled: true,//drag disabled by default
                 type: 'regularDrag'
             };
             
