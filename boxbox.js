@@ -182,7 +182,7 @@ See more on the readme file
         _creationQueue: [],
         _positionQueue: [],
         _pause: false,//@added by topheman
-        _hoverEntityId: null,//@added by topheman (track the entity which hovered)
+        _hoverEntityId: null,//@added by topheman (track the entity which hovered) - used to track entities for mousein/mouseout events
         _draggingEntityId: null,//@added by topheman (track the entity which is dragged)
         
         _init: function(canvasElem, options) {
@@ -428,9 +428,30 @@ See more on the readme file
                  * @added by topheman
                  */
                 function _world_mousemoveHandler(e, mousePos){
+                    // --- dragging part ---
                     //if a dragging is active, trigger the _world_mousemoveHandlerForDragEvent (no matter if the mouse is on an entity)
                     if(self._draggingEntityId !== null && self._entities[self._draggingEntityId]._dragging){
                         _world_mousemoveHandlerForDragEvent.call(self._entities[self._draggingEntityId],e,mousePos);
+                    }
+                    
+                    // --- mouse in/out part ---
+                    var previousHoveredEntityId = self._hoverEntityId,
+                    currentHoveredEntityId = null;
+                    //track the hovered entity
+                    for(var key in self._entities){
+                        if(!self._entities[key]._destroyed && self._entities[key].checkPosition(mousePos.x,mousePos.y)){
+                            currentHoveredEntityId = key;//we don't break the loop, to catch the last entity (the one on top of the canvas)
+                        }
+                    }
+                    //update the hoverEntityId flag in the world
+                    self._hoverEntityId = currentHoveredEntityId;
+                    //mouse in
+                    if(previousHoveredEntityId === null && currentHoveredEntityId !== null && self._mouseinHandlers[currentHoveredEntityId]){
+                        self._mouseinHandlers[currentHoveredEntityId].call(self._entities[currentHoveredEntityId],e, mousePos);
+                    }
+                    //mouse out
+                    if(previousHoveredEntityId !== null && currentHoveredEntityId === null && self._mouseoutHandlers[previousHoveredEntityId]){
+                        self._mouseoutHandlers[previousHoveredEntityId].call(self._entities[previousHoveredEntityId],e, mousePos);
                     }
                 }
                 
@@ -717,6 +738,44 @@ See more on the readme file
          */
         _addStopdragHandler: function(id, f) {
             this._stopdragHandlers[id] = f;
+        },
+                
+        /**
+         * @param {Int} id
+         * @param {Function} f callback
+         * @private
+         * @added by topheman
+         */
+        _addMouseinHandler: function(id, f) {
+            this._mouseinHandlers[id] = f;
+        },
+                
+        /**
+         * @param {Int} id
+         * @param {Function} f callback
+         * @private
+         * @added by topheman
+         */
+        _addMouseoutHandler: function(id, f) {
+            this._mouseoutHandlers[id] = f;
+        },
+                
+        /**
+         * @param {Int} id
+         * @private
+         * @added by topheman
+         */
+        _removeMouseinHandler: function(id) {
+            delete this._mouseinHandlers[id];
+        },
+                
+        /**
+         * @param {Int} id
+         * @private
+         * @added by topheman
+         */
+        _removeMouseoutHandler: function(id) {
+            delete this._mouseoutHandlers[id];
         },
                 
         /**
@@ -1509,9 +1568,21 @@ See more on the readme file
          */
         checkPosition: function(x,y){
             var body;
-            this._world._world.QueryPoint(function (fixture) {
-                body = fixture.GetBody();
-            }, new b2Vec2(x, y));
+            
+            if(this._body.GetType() !== b2Body.b2_staticBody){
+                this._world._world.QueryPoint(function (fixture) {
+                    body = fixture.GetBody();
+                }, new b2Vec2(x, y));
+            }
+            else{
+                var aabb = new b2AABB();
+                aabb.lowerBound.Set(x - 0.001, y - 0.001);
+                aabb.upperBound.Set(x - 0.001, y - 0.001);
+                this._world._world.QueryAABB(function(fixture){
+                    body = fixture.GetBody();
+                }, aabb);
+            }
+            
             if(body !== undefined && this._id === body._bbid){
                 return true;
             }
@@ -1903,6 +1974,40 @@ See more on the readme file
          */    
         unbindOnMousemove: function(){
             this._world._removeMousemoveHandler(this._id);
+        },
+        
+        /**
+         * @param {Function} callback
+         * @added by topheman
+         */    
+        onMousein : function(callback){
+            if(this._ops.active === false)
+                console.warn('onMousein only on active objects');
+            this._world._addMouseinHandler(this._id, callback);
+        },
+        
+        /**
+         * @param {Function} callback
+         * @added by topheman
+         */    
+        onMouseout : function(callback){
+            if(this._ops.active === false)
+                console.warn('onMousein only on active objects');
+            this._world._addMouseoutHandler(this._id, callback);
+        },
+        
+        /**
+         * @added by topheman
+         */    
+        unbindOnMousein: function(){
+            this._world._removeMouseinHandler(this._id);
+        },
+        
+        /**
+         * @added by topheman
+         */    
+        unbindOnMouseout: function(){
+            this._world._removeMouseoutHandler(this._id);
         },
         
         /**
