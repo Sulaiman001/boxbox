@@ -143,6 +143,14 @@ See more on the readme file
         type: "distance",
         allowCollisions: false
     };
+    
+    /**
+     * Id used to identify the world in the list of callbacks
+     * could be changed to switch if you wan't to be triggered before or after the entities events
+     * @added by topheman
+     * @type String
+     */
+    var worldCallbackEventId = 'world';
 
     /**
      * @header
@@ -357,11 +365,17 @@ See more on the readme file
                 function mousedownHandler(e) {
                     var mousePos = self.calculateWorldPositionFromMouse(e);
                     var entityX = mousePos.x,
-                    entityY = mousePos.y;
+                    entityY = mousePos.y,
+                    entities;
                     _world_mousedownHandler(e, mousePos);
                     for (var key in self._mousedownHandlers) {
-                        if (!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY)) {
-                            self._mousedownHandlers[key].call(self._entities[key], e, mousePos);
+                        if(key === worldCallbackEventId){
+                            entities = self.find(entityX,entityY);
+                            mousePos.entity = entities.length > 0 ? entities[0] : null;
+                            self._mousedownHandlers[key].call(self, e, mousePos);
+                        }
+                        else if (!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY)) {
+                            self._mousedownHandlers[key].carll(self._entities[key], e, mousePos);
                         }
                     }
                 }
@@ -373,10 +387,16 @@ See more on the readme file
                 function mouseupHandler(e) {
                     var mousePos = self.calculateWorldPositionFromMouse(e);
                     var entityX = mousePos.x,
-                    entityY = mousePos.y;
+                    entityY = mousePos.y,
+                    entities;
                     _world_mouseupHandler(e, mousePos)
                     for (var key in self._mouseupHandlers) {
-                        if (!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY)) {
+                        if(key === worldCallbackEventId){
+                            entities = self.find(entityX,entityY);
+                            mousePos.entity = entities.length > 0 ? entities[0] : null;
+                            self._mouseupHandlers[key].call(self, e, mousePos);
+                        }
+                        else if (!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY)) {
                             self._mouseupHandlers[key].call(self._entities[key], e, mousePos);
                         }
                     }
@@ -389,10 +409,16 @@ See more on the readme file
                 function mousemoveHandler(e) {
                     var mousePos = self.calculateWorldPositionFromMouse(e);
                     var entityX = mousePos.x,
-                    entityY = mousePos.y;
+                    entityY = mousePos.y,
+                    entities;
                     _world_mousemoveHandler(e, mousePos);
                     for (var key in self._mousemoveHandlers) {
-                        if (!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY)) {
+                        if(key === worldCallbackEventId){
+                            entities = self.find(entityX,entityY);
+                            mousePos.entity = entities.length > 0 ? entities[0] : null;
+                            self._mousemoveHandlers[key].call(self, e, mousePos);
+                        }
+                        else if (!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY)) {
                             self._mousemoveHandlers[key].call(self._entities[key], e, mousePos);
                         }
                     }
@@ -1224,6 +1250,60 @@ See more on the readme file
                 x: Math.round((x + -c.x) * s),
                 y: Math.round((y + -c.y) * s)
             };
+        },
+        
+        /**
+         * @param {Function} callback
+         * @context World
+         * @added by topheman
+         */
+        onMousedown : function(callback){
+            this._addMousedownHandler(worldCallbackEventId, callback);
+        },
+        
+        /**
+         * @param {Function} callback
+         * @context World
+         * @added by topheman
+         */
+        onMouseup : function(callback){
+            this._addMouseupHandler(worldCallbackEventId, callback);
+        },
+        
+        /**
+         * @param {Function} callback
+         * @context World
+         * @added by topheman
+         */
+        onMousemove : function(callback){
+            this._addMousemoveHandler(worldCallbackEventId, callback);
+        },
+        
+        /**
+         * @param {Function} callback
+         * @context World
+         * @added by topheman
+         */    
+        unbindOnMousedown: function(){
+            this._removeMousedownHandler(worldCallbackEventId);
+        },
+        
+        /**
+         * @param {Function} callback
+         * @context World
+         * @added by topheman
+         */   
+        unbindOnMouseup: function(){
+            this._removeMouseupHandler(worldCallbackEventId);
+        },
+        
+        /**
+         * @param {Function} callback
+         * @context World
+         * @added by topheman
+         */    
+        unbindOnMousemove: function(){
+            this._removeMousemoveHandler(worldCallbackEventId);
         }
         
     };
