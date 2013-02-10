@@ -375,7 +375,7 @@ See more on the readme file
                             self._mousedownHandlers[key].call(self, e, mousePos);
                         }
                         else if (!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY)) {
-                            self._mousedownHandlers[key].carll(self._entities[key], e, mousePos);
+                            self._mousedownHandlers[key].call(self._entities[key], e, mousePos);
                         }
                     }
                 }
