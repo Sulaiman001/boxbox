@@ -1,3 +1,5 @@
+(function(){
+
 function init(){
     
     //init canvas and world
@@ -100,6 +102,8 @@ function init(){
         console.info('world - out',e,pos);
     });
 
-}   
+}
 
-window.addEventListener('load',init);
+init();
+
+})();

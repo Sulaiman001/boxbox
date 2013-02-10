@@ -1,3 +1,5 @@
+(function(){
+
 function init(){
      
     //init canvas and world
@@ -131,6 +133,8 @@ function init(){
             walls[i].color(color);
         }
     }
-}   
+}
 
-window.addEventListener('load',init);
+init();
+
+})();

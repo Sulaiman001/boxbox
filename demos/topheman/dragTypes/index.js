@@ -1,3 +1,5 @@
+(function(){
+ 
 function init(){
      
     //init canvas and world
@@ -136,6 +138,8 @@ function init(){
     
     circle.draggable('disable');
 
-}   
+}
 
-window.addEventListener('load',init);
+init();
+
+})();

@@ -1,3 +1,5 @@
+(function(){
+
 function init(){
     
     //init canvas and world
@@ -84,4 +86,6 @@ function init(){
 
 }   
 
-window.addEventListener('load',init);
+init();
+
+})();
