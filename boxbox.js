@@ -425,6 +425,42 @@ See more on the readme file
                 }
                 
                 /**
+                 * Callback binded on the mouseover eventListener of the canvas (so only for the world, not the entities)
+                 * @function mouseinHandler
+                 * @added by topheman
+                 */
+                function mouseinHandler(e) {
+                    var mousePos = self.calculateWorldPositionFromMouse(e);
+                    var entityX = mousePos.x,
+                    entityY = mousePos.y,
+                    entities;
+                    entities = self.find(entityX,entityY);
+                    mousePos.entity = entities.length > 0 ? entities[0] : null;
+                    _world_mouseinHandler(e, mousePos);
+                    if(self._mouseinHandlers[worldCallbackEventId]){
+                        self._mouseinHandlers[worldCallbackEventId].call(self, e, mousePos);
+                    }
+                }
+                
+                /**
+                 * Callback binded on the mouseout eventListener of the canvas (so only for the world, not the entities)
+                 * @function mouseinHandler
+                 * @added by topheman
+                 */
+                function mouseoutHandler(e) {
+                    var mousePos = self.calculateWorldPositionFromMouse(e);
+                    var entityX = mousePos.x,
+                    entityY = mousePos.y,
+                    entities;
+                    entities = self.find(entityX,entityY);
+                    mousePos.entity = entities.length > 0 ? entities[0] : null;
+                    _world_mouseoutHandler(e, mousePos);
+                    if(self._mouseoutHandlers[worldCallbackEventId]){
+                        self._mouseoutHandlers[worldCallbackEventId].call(self, e, mousePos);
+                    }
+                }
+                
+                /**
                  * Global world events handlers
                  * Triggers specific handlers such as drag events, in/out events
                  * Also triggers public handlers @todo
@@ -491,6 +527,32 @@ See more on the readme file
                         _world_mouseupHandlerForDragEvent.call(self._entities[self._draggingEntityId],e,mousePos);
                     }
                     
+                }
+                
+                /**
+                 * @function _world_mouseinHandler
+                 * @added by topheman
+                 */
+                function _world_mouseinHandler(e, mousePos){
+                    //trigger the mousein of the entity if it hasn't been trigger when the mouse entered the world (like when there was no pixels between the entity and the border of the world)
+                    if(mousePos.entity && self._mouseinHandlers[mousePos.entity._id]){
+                        self._mouseinHandlers[mousePos.entity._id].call(self._entities[mousePos.entity._id],e, mousePos);
+                    }
+                }
+                
+                /**
+                 * @function _world_mouseinHandler
+                 * @added by topheman
+                 */
+                function _world_mouseoutHandler(e, mousePos){
+                    //trigger the mouseup of the dragging - to prevent the entity to be stuck dragging if the mouse goes out of the canvas
+                    if(self._draggingEntityId !== null && self._entities[self._draggingEntityId]._dragging){
+                        _world_mouseupHandlerForDragEvent.call(self._entities[self._draggingEntityId],e,mousePos);
+                    }
+                    //trigger the mouseout
+                    if(self._hoverEntityId !== null && self._mouseoutHandlers[self._hoverEntityId]){
+                        self._mouseoutHandlers[self._hoverEntityId].call(self._entities[self._hoverEntityId],e, mousePos);
+                    }
                 }
                 
                 /**
@@ -606,6 +668,8 @@ See more on the readme file
                 self._canvas.addEventListener('mousedown', mousedownHandler, false);
                 self._canvas.addEventListener('mouseup', mouseupHandler, false);
                 self._canvas.addEventListener('mousemove', mousemoveHandler, false);
+                self._canvas.addEventListener('mouseover', mouseinHandler, false);
+                self._canvas.addEventListener('mouseout', mouseoutHandler, false);
 
                 // contact events
                 listener = new Box2D.Dynamics.b2ContactListener();
@@ -1304,6 +1368,42 @@ See more on the readme file
          */    
         unbindOnMousemove: function(){
             this._removeMousemoveHandler(worldCallbackEventId);
+        },
+        
+        /**
+         * @param {Function} callback
+         * @context World
+         * @added by topheman
+         */
+        onMousein : function(callback){
+            this._addMouseinHandler(worldCallbackEventId, callback);
+        },
+        
+        /**
+         * @param {Function} callback
+         * @context World
+         * @added by topheman
+         */
+        onMouseout : function(callback){
+            this._addMouseoutHandler(worldCallbackEventId, callback);
+        },
+        
+        /**
+         * @param {Function} callback
+         * @context World
+         * @added by topheman
+         */    
+        unbindOnMousein: function(){
+            this._removeMouseinHandler(worldCallbackEventId);
+        },
+        
+        /**
+         * @param {Function} callback
+         * @context World
+         * @added by topheman
+         */    
+        unbindOnMouseout: function(){
+            this._removeMouseoutHandler(worldCallbackEventId);
         }
         
     };

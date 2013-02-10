@@ -30,13 +30,53 @@ function init(){
 
     ground = myWorld.createEntity({
       color: "green",
-      x: 13,
-      y: 10,
-      width: 12,
+      x: 10,
+      y: 13,
+      width: 20,
       height: 0.5,
       type: "static"
     });
     ground.name('ground');
+
+    sky = myWorld.createEntity({
+      color: "green",
+      x: 10,
+      y: 0,
+      width: 20,
+      height: 0.5,
+      type: "static"
+    });
+    sky.name('sky');
+
+    wallLeft = myWorld.createEntity({
+      color: "green",
+      x: 0,
+      y: 6,
+      width: 0.5,
+      height: 15,
+      type: "static"
+    });
+    wallLeft.name('wallLeft');
+
+    wallRight = myWorld.createEntity({
+      color: "green",
+      x: 20,
+      y: 6,
+      width: 0.5,
+      height: 15,
+      type: "static"
+    });
+    wallRight.name('wallRight');
+
+    sky = myWorld.createEntity({
+      color: "green",
+      x: 10,
+      y: 0,
+      width: 20,
+      height: 0.5,
+      type: "static"
+    });
+    sky.name('sky');
     
     enemy.draggable();
     
@@ -52,8 +92,12 @@ function init(){
         console.info('world - up',e,pos);
     });
     
-    myWorld.onMousemove(function(e,pos){
-        console.info('world - move',e,pos);
+    myWorld.onMousein(function(e,pos){
+        console.info('world - in',e,pos);
+    });
+    
+    myWorld.onMouseout(function(e,pos){
+        console.info('world - out',e,pos);
     });
 
 }   

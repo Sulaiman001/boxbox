@@ -16,5 +16,27 @@ Test boxbox forked by topheman
     <body onload="prettyPrint();">
         <h3>Demos boxbox by topheman [world events]</h3>
         <canvas id="canvas" width="600" height="400" class="main-canvas"></canvas>
+        <pre class="prettyprint">
+    enemy.onMousemove(function(){
+       console.info('enemy mousemove'); 
+    });
+    
+    myWorld.onMousedown(function(e,pos){
+        console.info('world - mousedown',e,pos);
+    });
+    
+    myWorld.onMouseup(function(e,pos){
+        console.info('world - up',e,pos);
+    });
+    
+    myWorld.onMousein(function(e,pos){
+        console.info('world - in',e,pos);
+    });
+    
+    myWorld.onMouseout(function(e,pos){
+        console.info('world - out',e,pos);
+    });
+        </pre>
+
     </body>
 </html>
