@@ -136,7 +136,8 @@ See more on the readme file
         allowSleep: true,
         scale: 30,
         tickFrequency: 50,
-        collisionOutlines: false
+        collisionOutlines: false,
+        touchEvents : false
     };
     
     var JOINT_DEFAULT_OPTIONS = {
@@ -460,6 +461,21 @@ See more on the readme file
                     }
                 }
                 
+                function touchstartHandler(e) {
+                    console.info(e);
+                    e.preventDefault();
+                }
+                
+                function touchmoveHandler(e) {
+                    console.info(e);
+                    e.preventDefault();
+                }
+                
+                function touchendHandler(e) {
+                    console.info(e);
+                    e.preventDefault();
+                }
+                
                 /**
                  * Global world events handlers
                  * Triggers specific handlers such as drag events, in/out events
@@ -669,6 +685,12 @@ See more on the readme file
                 self._canvas.addEventListener('mousemove', mousemoveHandler, false);
                 self._canvas.addEventListener('mouseover', mouseinHandler, false);
                 self._canvas.addEventListener('mouseout', mouseoutHandler, false);
+                
+                if(self._ops.touchEvents){
+                    self._canvas.addEventListener('touchstart', touchstartHandler, false);
+                    self._canvas.addEventListener('touchmove', touchmoveHandler, false);
+                    self._canvas.addEventListener('touchend', touchendHandler, false);
+                }
 
                 // contact events
                 listener = new Box2D.Dynamics.b2ContactListener();
