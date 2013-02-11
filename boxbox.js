@@ -570,7 +570,7 @@ See more on the readme file
                  */
                 function _world_mousemoveHandlerForDragEvent(e, mousePos) {
                     //tag as dragging when passing for the first time
-                    if(!this._dragging && !this._startDrag){
+                    if(this._world._draggingEntityId === null && !this._dragging && !this._startDrag){
                         //tag as dragging (all along the drag), with the original coordinates
                         this._dragging = mousePos;
                         //tag as startDrag to know that startDrag event will have to be triggered next time on mousemove event
@@ -597,20 +597,19 @@ See more on the readme file
 
                         }
                     }
-                    else {
+                    else if(this._dragging) {
                         //trigger startdrag event on the first move
-                        if(this._startDrag){
+                        if(this._startDrag && e.type == 'mousemove'){
                             if(this._world._startdragHandlers[this._id]){
                                 this._world._startdragHandlers[this._id].call(this,e, mergeMouseInfos(mousePos,this._dragging));
                             }
-                            this._startDrag = false;//reset startDrag state
+                            this._startDrag = false;//reset startDrag state after the first drag
                         }
                         //trigger the drag event on the next moves
                         else {
                             if(this._world._dragHandlers[this._id]){
                                 this._world._dragHandlers[this._id].call(this,e, mergeMouseInfos(mousePos,this._dragging));
                             }
-                            this._drag = true;//to know if drag has to be fired
                         }
                     }
                     
@@ -627,20 +626,20 @@ See more on the readme file
                  * @triggers the stopdrag event specified in the .draggable() method
                  */
                 function _world_mouseupHandlerForDragEvent(e, mousePos) {
-                    if(this._dragging && this._drag){
-                        this._drag = false;//reset drag state
+                    if(this._dragging){
                         //if there is a move joint, we are in regularDrag (no test, in case the type of drag is change in the middle of a drag)
                         if (this._moveJoint) {
                             this._world._world.DestroyJoint(this._moveJoint);
                             this._moveJoint = null;
                         }
-                        //trigger the stopdrag event
-                        if(this._world._stopdragHandlers[this._id]){
+                        //trigger the stopdrag event (don't trigger it if the first drag hasn't happened)
+                        if(this._startDrag === false && this._world._stopdragHandlers[this._id]){
                             this._world._stopdragHandlers[this._id].call(this,e, mergeMouseInfos(mousePos,this._dragging));
                         }
-                        this._dragging = false;//all the dragging process is ended, reset this propertie
-                        this._world._draggingEntityId = null;//untag the dragging entity on world
                     }
+                    this._startDrag = false;//reset startDrag state if there was no drag at all
+                    this._dragging = false;//all the dragging process is ended, reset this propertie
+                    this._world._draggingEntityId = null;//untag the dragging entity on world
                 }
                 
                 /**
