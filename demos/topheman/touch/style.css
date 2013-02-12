@@ -17,8 +17,10 @@ h3{
     position:absolute;
     top:310px;
     left:5px;
-    border:1px solid black;
     right:5px;
     bottom:5px;
-    overflow: scroll;
+    border:1px solid black;
+    overflow-y: auto;
+    height: auto;
+    min-height: 80px;
 }

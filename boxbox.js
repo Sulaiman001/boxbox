@@ -462,17 +462,17 @@ See more on the readme file
                 }
                 
                 function touchstartHandler(e) {
-                    console.info(e);
+                    console.info(logTouchInfos(e));
                     e.preventDefault();
                 }
                 
                 function touchmoveHandler(e) {
-                    console.info(e);
+                    console.info(logTouchInfos(e));
                     e.preventDefault();
                 }
                 
                 function touchendHandler(e) {
-                    console.info(e);
+                    console.info(logTouchInfos(e));
                     e.preventDefault();
                 }
                 

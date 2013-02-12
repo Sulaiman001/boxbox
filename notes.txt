@@ -1,0 +1,8 @@
+world
+- onTouchstart(e)
+- onTouchmove(e)
+- onTouchend(e)
+- onTouchcancel(e)
+- _touchInfos
+	- activeTouches
+	- activeEntityIds
