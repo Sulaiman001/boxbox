@@ -4,7 +4,7 @@ function initViewport(){
     var width = window.innerWidth;
     var height = window.innerHeight;
     canvas.width = width;
-    canvas.height = height;
+    canvas.height = 200 || height;
 }
 
 if(!!('ontouchstart' in window) && !(/Chrome\/24/.test(navigator.appVersion))){
@@ -17,9 +17,11 @@ if(!!('ontouchstart' in window) && !(/Chrome\/24/.test(navigator.appVersion))){
         document.getElementById('log').innerHTML += args.join(',')+"\n__________________________\n";
     }
     console.log = log;
-    console.info = log;        
+    console.info = log;
+    console.warn = log;
 
     logTouchInfos = function (e){
+        var tab = false;
         function parseTouchList(touchList){
             var i,key,infos = {};
             for(i in  touchList){
@@ -41,7 +43,7 @@ if(!!('ontouchstart' in window) && !(/Chrome\/24/.test(navigator.appVersion))){
             touches : parseTouchList(e.touches)
         };
         
-        return JSON.stringify(result, null, 4);
+        return tab ? JSON.stringify(result, null, 4): JSON.stringify(result);
     };
     
 }

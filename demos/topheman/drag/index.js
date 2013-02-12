@@ -1,5 +1,5 @@
 (function(){
-    
+
 function init(){
     
     //init canvas and world

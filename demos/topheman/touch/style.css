@@ -15,12 +15,14 @@ h3{
 }
 #log{
     position:absolute;
-    top:310px;
+    top:200px;
     left:5px;
     right:5px;
     bottom:5px;
     border:1px solid black;
-    overflow-y: auto;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
     height: auto;
     min-height: 80px;
+    display: block;
 }

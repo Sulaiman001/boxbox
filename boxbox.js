@@ -137,7 +137,8 @@ See more on the readme file
         scale: 30,
         tickFrequency: 50,
         collisionOutlines: false,
-        touchEvents : false
+        touchEvents : false,
+        preventScroll : false
     };
     
     var JOINT_DEFAULT_OPTIONS = {
@@ -175,6 +176,7 @@ See more on the readme file
         _touchstartHandlers: {},//@added by topheman
         _touchendHandlers: {},//@added by topheman
         _touchmoveHandlers: {},//@added by topheman
+        _touchcancelHandlers: {},//@added by topheman
         _startContactHandlers: {},
         _finishContactHandlers: {},
         _impactHandlers: {},
@@ -461,18 +463,79 @@ See more on the readme file
                     }
                 }
                 
+                /**
+                 * Returns an object with the entity and the identifier corresponding to the touch
+                 * @param {Touch} touch
+                 * @returns {Object}
+                 * @added by topheman
+                 */
+                function getEntityFromTouch(touch){
+                    var touchPos = self.calculateWorldPositionFromMouse(touch);
+                    var entityX = touchPos.x,
+                    entityY = touchPos.y,
+                    entities;
+                    entities = self.find(entityX,entityY);
+                    touchPos.entity = entities.length > 0 ? entities[0] : null;
+                    touchPos.touchIdentifier = touch.identifier;
+                    return touchPos;
+                }
+                
+                /**
+                 * Returns an array of infos about the changed touches
+                 * @param {TouchEvent} e
+                 * @returns {Array}
+                 */
+                function getTouchInfos(e){
+                    var infos = [],i;
+                    for(var i=0; i < e.changedTouches.length; i++){
+                        if(e.changedTouches[i]){
+                            infos.push(getEntityFromTouch(e.changedTouches[i]));
+                        }
+                    }
+                    return infos;
+                }
+                
+                /**
+                 * @function touchstartHandler
+                 * @added by topheman
+                 */
                 function touchstartHandler(e) {
-                    console.info(logTouchInfos(e));
+                    var touchInfos = getTouchInfos(e);
+                    _world_touchstartHandler(e, touchInfos);
                     e.preventDefault();
                 }
                 
+                
+                /**
+                 * @function touchmoveHandler
+                 * @added by topheman
+                 */
                 function touchmoveHandler(e) {
-                    console.info(logTouchInfos(e));
+                    var touchInfos = getTouchInfos(e);
+                    _world_touchmoveHandler(e, touchInfos);
                     e.preventDefault();
                 }
                 
+                
+                /**
+                 * @function touchendHandler
+                 * @added by topheman
+                 */
                 function touchendHandler(e) {
-                    console.info(logTouchInfos(e));
+                    var touchInfos = getTouchInfos(e);
+                   _world_touchendHandler(e, touchInfos);
+                    e.preventDefault();
+                }
+                
+                
+                /**
+                 * @function touchcancelHandler
+                 * @added by topheman
+                 */
+                function touchcancelHandler(e) {
+                    console.warn('touchcancel',logTouchInfos(e));
+                    if(self._touchcancelHandlers[worldCallbackEventId])
+                        self._touchcancelHandlers[worldCallbackEventId].call(self, e);
                     e.preventDefault();
                 }
                 
@@ -543,6 +606,33 @@ See more on the readme file
                         _world_mouseupHandlerForDragEvent.call(self._entities[self._draggingEntityId],e,mousePos);
                     }
                     
+                }
+                
+                /**
+                 * @function _world_touchstartHandler
+                 * @added by topheman
+                 */
+                function _world_touchstartHandler(e, touchInfos){
+                    if(self._touchstartHandlers[worldCallbackEventId])
+                        self._touchstartHandlers[worldCallbackEventId].call(self, e, touchInfos);
+                }
+                
+                /**
+                 * @function _world_touchmoveHandler
+                 * @added by topheman
+                 */
+                function _world_touchmoveHandler(e, touchInfos){
+                    if(self._touchmoveHandlers[worldCallbackEventId])
+                        self._touchmoveHandlers[worldCallbackEventId].call(self, e, touchInfos);
+                }
+                
+                /**
+                 * @function _world_touchmoveHandler
+                 * @added by topheman
+                 */
+                function _world_touchendHandler(e, touchInfos){
+                    if(self._touchendHandlers[worldCallbackEventId])
+                        self._touchendHandlers[worldCallbackEventId].call(self, e, touchInfos);
                 }
                 
                 /**
@@ -680,16 +770,25 @@ See more on the readme file
                  * adding mouse/touch events to the canvas with the previous handlers
                  * @added by topheman
                  */
-                self._canvas.addEventListener('mousedown', mousedownHandler, false);
-                self._canvas.addEventListener('mouseup', mouseupHandler, false);
-                self._canvas.addEventListener('mousemove', mousemoveHandler, false);
-                self._canvas.addEventListener('mouseover', mouseinHandler, false);
-                self._canvas.addEventListener('mouseout', mouseoutHandler, false);
                 
                 if(self._ops.touchEvents){
                     self._canvas.addEventListener('touchstart', touchstartHandler, false);
                     self._canvas.addEventListener('touchmove', touchmoveHandler, false);
                     self._canvas.addEventListener('touchend', touchendHandler, false);
+                    self._canvas.addEventListener('touchcancel', touchcancelHandler, false);
+                }
+                else{
+                    self._canvas.addEventListener('mousedown', mousedownHandler, false);
+                    self._canvas.addEventListener('mouseup', mouseupHandler, false);
+                    self._canvas.addEventListener('mousemove', mousemoveHandler, false);
+                    self._canvas.addEventListener('mouseover', mouseinHandler, false);
+                    self._canvas.addEventListener('mouseout', mouseoutHandler, false);
+                }
+                
+                if(self._ops.preventScroll){
+                    document.body.addEventListener('touchmove', function(e) {
+                        e.preventDefault();
+                    }, false);
                 }
 
                 // contact events
@@ -819,6 +918,82 @@ See more on the readme file
          */
         _removeMousemoveHandler: function(id) {
             delete this._mousemoveHandlers[id];
+        },
+        
+        /**
+         * @param {Int} id
+         * @param {Function} f callback
+         * @private
+         * @added by topheman
+         */
+        _addTouchstartHandler: function(id, f) {
+            this._touchstartHandlers[id] = f;
+        },
+        
+        /**
+         * @param {Int} id
+         * @param {Function} f callback
+         * @private
+         * @added by topheman
+         */
+        _addTouchendHandler: function(id, f) {
+            this._touchendHandlers[id] = f;
+        },
+        
+        /**
+         * @param {Int} id
+         * @param {Function} f callback
+         * @private
+         * @added by topheman
+         */
+        _addTouchmoveHandler: function(id, f) {
+            this._touchmoveHandlers[id] = f;
+        },
+        
+        /**
+         * @param {Int} id
+         * @param {Function} f callback
+         * @private
+         * @added by topheman
+         */
+        _addTouchcancelHandler: function(id, f) {
+            this._touchcancelHandlers[id] = f;
+        },
+                
+        /**
+         * @param {Int} id
+         * @private
+         * @added by topheman
+         */
+        _removeTouchstartHandler: function(id) {
+            delete this._touchstartHandlers[id];
+        },
+                
+        /**
+         * @param {Int} id
+         * @private
+         * @added by topheman
+         */
+        _removeTouchendHandler: function(id) {
+            delete this._touchendHandlers[id];
+        },
+                
+        /**
+         * @param {Int} id
+         * @private
+         * @added by topheman
+         */
+        _removeTouchmoveHandler: function(id) {
+            delete this._touchmoveHandlers[id];
+        },
+                
+        /**
+         * @param {Int} id
+         * @private
+         * @added by topheman
+         */
+        _removeTouchcancelHandler: function(id) {
+            delete this._touchHandlers[id];
         },
                 
         /**
@@ -974,8 +1149,8 @@ See more on the readme file
          */
         calculateWorldPositionFromMouse: function(e){
             return {
-                x: (e.offsetX || e.layerX) / this.scale(),
-                y: (e.offsetY || e.layerY) / this.scale()
+                x: (e.offsetX || e.layerX || e.pageX) / this.scale(),
+                y: (e.offsetY || e.layerY || e.pageY) / this.scale()
             };
         },
 
@@ -1425,7 +1600,75 @@ See more on the readme file
          */    
         unbindOnMouseout: function(){
             this._removeMouseoutHandler(worldCallbackEventId);
-        }
+        },
+        
+        /**
+         * @param {Function} callback
+         * @context World
+         * @added by topheman
+         */
+        onTouchstart : function(callback){
+            this._addTouchstartHandler(worldCallbackEventId, callback);
+        },
+        
+        /**
+         * @param {Function} callback
+         * @context World
+         * @added by topheman
+         */
+        onTouchmove : function(callback){
+            this._addTouchmoveHandler(worldCallbackEventId, callback);
+        },
+        
+        /**
+         * @param {Function} callback
+         * @context World
+         * @added by topheman
+         */
+        onTouchend : function(callback){
+            this._addTouchendHandler(worldCallbackEventId, callback);
+        },
+        
+        /**
+         * @param {Function} callback
+         * @context World
+         * @added by topheman
+         */
+        onTouchcancel : function(callback){
+            this._addTouchcancelHandler(worldCallbackEventId, callback);
+        },
+        
+        /**
+         * @context World
+         * @added by topheman
+         */
+        unbindOnTouchstart : function(){
+            this._removeTouchstartHandler(worldCallbackEventId);
+        },
+        
+        /**
+         * @context World
+         * @added by topheman
+         */
+        unbindOnTouchmove : function(callback){
+            this._removeTouchmoveHandler(worldCallbackEventId);
+        },
+        
+        /**
+         * @context World
+         * @added by topheman
+         */
+        unbindOnTouchend : function(callback){
+            this._removeTouchendHandler(worldCallbackEventId);
+        },
+        
+        /**
+         * @context World
+         * @added by topheman
+         */
+        unbindOnTouchcancel : function(callback){
+            this._removeTouchcancelHandler(worldCallbackEventId);
+        },
         
     };
     
@@ -2215,21 +2458,21 @@ See more on the readme file
          * @added by topheman
          */  
         onTouchstart : function(callback){
-            
+            console.warn('Not implemented yet');
         },
         
         /**
          * @added by topheman
          */  
         onTouchend : function(callback){
-            
+            console.warn('Not implemented yet');
         },
         
         /**
          * @added by topheman
          */  
         onTouchmove : function(callback){
-            
+            console.warn('Not implemented yet');
         },
 
         /**
