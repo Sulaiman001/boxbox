@@ -1,3 +1,8 @@
+/**
+ * 
+ * The code of this file is dirty, it's only some quick made log / screen adjust function I needed for dev
+ */
+
 function initViewport(){
     
     var canvas = document.getElementById('canvas');
@@ -12,7 +17,7 @@ if(!!('ontouchstart' in window) && !(/Chrome\/24/.test(navigator.appVersion))){
     function log(){
         var args = [];
         for (var i in arguments){
-            args.push(arguments[i].toString());
+            args.push(arguments[i] !== undefined ? arguments[i].toString() : 'undefined');
         }
         document.getElementById('log').innerHTML += args.join(',')+"\n__________________________\n";
     }
@@ -21,7 +26,8 @@ if(!!('ontouchstart' in window) && !(/Chrome\/24/.test(navigator.appVersion))){
     console.warn = log;
 
     logTouchInfos = function (e){
-        var tab = false;
+        var tab = false,result;
+        
         function parseTouchList(touchList){
             var i,key,infos = {};
             for(i in  touchList){
@@ -36,12 +42,28 @@ if(!!('ontouchstart' in window) && !(/Chrome\/24/.test(navigator.appVersion))){
             return infos;
         }
         
-        var result = {
-            type : e.type,
-            changedTouches : parseTouchList(e.changedTouches),
-            targetTouches : parseTouchList(e.targetTouches),
-            touches : parseTouchList(e.touches)
-        };
+        if(e.touches){
+        
+            result = {
+                type : e.type,
+                changedTouches : parseTouchList(e.changedTouches),
+                targetTouches : parseTouchList(e.targetTouches),
+                touches : parseTouchList(e.touches)
+            };
+        
+        }
+        
+        else if(e[0]){
+            result = [];
+            for (i=0; i < e.length; i++){
+                result.push({
+                    entity : e[i].entity !== null ? e[i].entity._id : null,
+                    identifier : e[i].identifier,
+                    x : e[i].x,
+                    y : e[i].y
+                });
+            }
+        }
         
         return tab ? JSON.stringify(result, null, 4): JSON.stringify(result);
     };

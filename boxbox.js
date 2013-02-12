@@ -174,9 +174,9 @@ See more on the readme file
         _dragHandlers: {},//@added by topheman
         _stopdragHandlers: {},//@added by topheman
         _touchstartHandlers: {},//@added by topheman
-        _touchendHandlers: {},//@added by topheman
-        _touchmoveHandlers: {},//@added by topheman
-        _touchcancelHandlers: {},//@added by topheman
+        _touchendHandlers: {},//@added by topheman      (only for world) @todo change array to simple var or keep the same structure ?
+        _touchmoveHandlers: {},//@added by topheman     (only for world) @todo change array to simple var or keep the same structure ?
+        _touchcancelHandlers: {},//@added by topheman   (only for world) @todo change array to simple var or keep the same structure ?
         _startContactHandlers: {},
         _finishContactHandlers: {},
         _impactHandlers: {},
