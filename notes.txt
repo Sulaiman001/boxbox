@@ -6,3 +6,8 @@ world
 - _touchInfos
 	- activeTouches
 	- activeEntityIds
+
+touchOnly
+mouseOnly
+
+pointerSpecialHandlers

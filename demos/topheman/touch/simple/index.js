@@ -6,7 +6,7 @@ function init(){
     
     //init canvas and world
     canvas = document.getElementById("canvas");
-    myWorld = boxbox.createWorld(canvas,{scale:30,touchEvents:true, preventScroll:false});
+    myWorld = boxbox.createWorld(canvas,{scale:30, preventScroll:false, disableTouchEvents : false, disableKeyEvents : true, disableMouseEvents : true});
     
     //create entities
     decor1 = myWorld.createEntity({
