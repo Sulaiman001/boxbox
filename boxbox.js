@@ -217,7 +217,6 @@ See more on the readme file
             // Set up rendering on the provided canvas
             if (this._canvas !== undefined) {
                 
-                debugWorld = self;//@added by topheman for debugging
                 // debug rendering
                 if (this._ops.debugDraw) {
                     var debugDraw = new b2DebugDraw();
@@ -337,10 +336,12 @@ See more on the readme file
                     world.ClearForces();
                     world.DrawDebugData();
                     //@modified by topheman
-                    if(self._pause === false)
+                    if(self._pause === false){
                         window.requestAnimationFrame(animationLoop);
-                    else
+                    }
+                    else{
                         self._pause = animationLoop;
+                    }
                 }());
                 
                 /**
@@ -373,7 +374,7 @@ See more on the readme file
                  * @function mousedownHandler
                  * @added by topheman
                  */
-                function mousedownHandler(e) {
+                var mousedownHandler = function(e) {
                     var mousePos = self.calculateWorldPositionFromMouse(e);
                     var entityX = mousePos.x,
                     entityY = mousePos.y,
@@ -389,18 +390,18 @@ See more on the readme file
                             self._mousedownHandlers[key].call(self._entities[key], e, mousePos);
                         }
                     }
-                }
+                };
                 
                 /**
                  * @function mouseupHandler
                  * @added by topheman
                  */
-                function mouseupHandler(e) {
+                var mouseupHandler = function(e) {
                     var mousePos = self.calculateWorldPositionFromMouse(e);
                     var entityX = mousePos.x,
                     entityY = mousePos.y,
                     entities;
-                    _world_mouseupHandler(e, mousePos)
+                    _world_mouseupHandler(e, mousePos);
                     for (var key in self._mouseupHandlers) {
                         if(key === worldCallbackEventId){
                             entities = self.find(entityX,entityY);
@@ -411,13 +412,13 @@ See more on the readme file
                             self._mouseupHandlers[key].call(self._entities[key], e, mousePos);
                         }
                     }
-                }
+                };
                 
                 /**
                  * @function mousemoveHandler
                  * @added by topheman
                  */
-                function mousemoveHandler(e) {
+                var mousemoveHandler = function(e) {
                     var mousePos = self.calculateWorldPositionFromMouse(e);
                     var entityX = mousePos.x,
                     entityY = mousePos.y,
@@ -433,14 +434,14 @@ See more on the readme file
                             self._mousemoveHandlers[key].call(self._entities[key], e, mousePos);
                         }
                     }
-                }
+                };
                 
                 /**
                  * Callback binded on the mouseover eventListener of the canvas (so only for the world, not the entities)
                  * @function mouseinHandler
                  * @added by topheman
                  */
-                function mouseinHandler(e) {
+                var mouseinHandler = function (e) {
                     var mousePos = self.calculateWorldPositionFromMouse(e);
                     var entityX = mousePos.x,
                     entityY = mousePos.y,
@@ -451,14 +452,14 @@ See more on the readme file
                     if(self._mouseinHandlers[worldCallbackEventId]){
                         self._mouseinHandlers[worldCallbackEventId].call(self, e, mousePos);
                     }
-                }
+                };
                 
                 /**
                  * Callback binded on the mouseout eventListener of the canvas (so only for the world, not the entities)
                  * @function mouseinHandler
                  * @added by topheman
                  */
-                function mouseoutHandler(e) {
+                var mouseoutHandler = function (e) {
                     var mousePos = self.calculateWorldPositionFromMouse(e);
                     var entityX = mousePos.x,
                     entityY = mousePos.y,
@@ -469,7 +470,7 @@ See more on the readme file
                     if(self._mouseoutHandlers[worldCallbackEventId]){
                         self._mouseoutHandlers[worldCallbackEventId].call(self, e, mousePos);
                     }
-                }
+                };
                 
                 /**
                  * Returns an object with the entity and the identifier corresponding to the touch
@@ -477,7 +478,7 @@ See more on the readme file
                  * @returns {Object}
                  * @added by topheman
                  */
-                function getEntityFromTouch(touch){
+                var getEntityFromTouch = function (touch){
                     var touchPos = self.calculateWorldPositionFromMouse(touch);
                     var entityX = touchPos.x,
                     entityY = touchPos.y,
@@ -486,66 +487,67 @@ See more on the readme file
                     touchPos.entity = entities.length > 0 ? entities[0] : null;
                     touchPos.touchIdentifier = touch.identifier;
                     return touchPos;
-                }
+                };
                 
                 /**
                  * Returns an array of infos about the changed touches
                  * @param {TouchEvent} e
                  * @returns {Array}
                  */
-                function getTouchInfos(e){
+                var getTouchInfos = function(e){
                     var infos = [],i;
-                    for(var i=0; i < e.changedTouches.length; i++){
+                    for(i=0; i < e.changedTouches.length; i++){
                         if(e.changedTouches[i]){
                             infos.push(getEntityFromTouch(e.changedTouches[i]));
                         }
                     }
                     return infos;
-                }
+                };
                 
                 /**
                  * @function touchstartHandler
                  * @added by topheman
                  */
-                function touchstartHandler(e) {
+                var touchstartHandler = function (e) {
                     var touchInfos = getTouchInfos(e);
                     _world_touchstartHandler(e, touchInfos);
                     e.preventDefault();
-                }
+                };
                 
                 
                 /**
                  * @function touchmoveHandler
                  * @added by topheman
                  */
-                function touchmoveHandler(e) {
+                var touchmoveHandler = function(e) {
                     var touchInfos = getTouchInfos(e);
                     _world_touchmoveHandler(e, touchInfos);
                     e.preventDefault();
-                }
+                };
                 
                 
                 /**
                  * @function touchendHandler
                  * @added by topheman
                  */
-                function touchendHandler(e) {
+                var touchendHandler = function(e) {
                     var touchInfos = getTouchInfos(e);
                    _world_touchendHandler(e, touchInfos);
                     e.preventDefault();
-                }
+                };
                 
                 
                 /**
                  * @function touchcancelHandler
                  * @added by topheman
                  */
-                function touchcancelHandler(e) {
-                    console.warn('touchcancel',logTouchInfos(e));
-                    if(self._touchcancelHandlers[worldCallbackEventId])
+                var touchcancelHandler = function (e) {
+//                    console.warn('touchcancel',logTouchInfos(e));
+                    if(self._touchcancelHandlers[worldCallbackEventId]){
                         self._touchcancelHandlers[worldCallbackEventId].call(self, e);
+                    }
                     e.preventDefault();
-                }
+                };
                 
                 /**
                  * Global world events handlers
@@ -559,7 +561,7 @@ See more on the readme file
                  * @function _world_mousedownHandler
                  * @added by topheman
                  */
-                function _world_mousedownHandler(e, mousePos){
+                var _world_mousedownHandler = function(e, mousePos){
                     //if no dragging active and if a click on the world is on an entity, trigger the _world_mousemoveHandlerForDragEvent
                     var entityX = mousePos.x,
                     entityY = mousePos.y;
@@ -570,13 +572,13 @@ See more on the readme file
                             }
                         }
                     }
-                }
+                };
                 
                 /**
                  * @function _world_mousemoveHandler
                  * @added by topheman
                  */
-                function _world_mousemoveHandler(e, mousePos){
+                var _world_mousemoveHandler = function(e, mousePos){
                     // --- dragging part ---
                     //if a dragging is active, trigger the _world_mousemoveHandlerForDragEvent (no matter if the mouse is on an entity)
                     if(self._draggingEntityId !== null && self._entities[self._draggingEntityId]._dragging){
@@ -602,63 +604,66 @@ See more on the readme file
                     if(previousHoveredEntityId !== null && currentHoveredEntityId === null && self._mouseoutHandlers[previousHoveredEntityId]){
                         self._mouseoutHandlers[previousHoveredEntityId].call(self._entities[previousHoveredEntityId],e, mousePos);
                     }
-                }
+                };
                 
                 /**
                  * @function _world_mouseupHandler
                  * @added by topheman
                  */
-                function _world_mouseupHandler(e, mousePos){
+                var _world_mouseupHandler = function(e, mousePos){
                     //if a dragging is active, trigger the _world_mouseupHandlerForDragEvent (to stop drag)
                     if(self._draggingEntityId !== null && self._entities[self._draggingEntityId]._dragging){
                         _world_mouseupHandlerForDragEvent.call(self._entities[self._draggingEntityId],e,mousePos);
                     }
                     
-                }
+                };
                 
                 /**
                  * @function _world_touchstartHandler
                  * @added by topheman
                  */
-                function _world_touchstartHandler(e, touchInfos){
-                    if(self._touchstartHandlers[worldCallbackEventId])
+                var _world_touchstartHandler = function(e, touchInfos){
+                    if(self._touchstartHandlers[worldCallbackEventId]){
                         self._touchstartHandlers[worldCallbackEventId].call(self, e, touchInfos);
-                }
+                    }
+                };
                 
                 /**
                  * @function _world_touchmoveHandler
                  * @added by topheman
                  */
-                function _world_touchmoveHandler(e, touchInfos){
-                    if(self._touchmoveHandlers[worldCallbackEventId])
+                var _world_touchmoveHandler = function(e, touchInfos){
+                    if(self._touchmoveHandlers[worldCallbackEventId]){
                         self._touchmoveHandlers[worldCallbackEventId].call(self, e, touchInfos);
-                }
+                    }
+                };
                 
                 /**
                  * @function _world_touchmoveHandler
                  * @added by topheman
                  */
-                function _world_touchendHandler(e, touchInfos){
-                    if(self._touchendHandlers[worldCallbackEventId])
+                var _world_touchendHandler = function(e, touchInfos){
+                    if(self._touchendHandlers[worldCallbackEventId]){
                         self._touchendHandlers[worldCallbackEventId].call(self, e, touchInfos);
-                }
+                    }
+                };
                 
                 /**
                  * @function _world_mouseinHandler
                  * @added by topheman
                  */
-                function _world_mouseinHandler(e, mousePos){
+                var _world_mouseinHandler = function(e, mousePos){
                     //trigger the mousein of the entity if it hasn't been trigger when the mouse entered the world (like when there was no pixels between the entity and the border of the world)
                     if(mousePos.entity && self._mouseinHandlers[mousePos.entity._id]){
                         self._mouseinHandlers[mousePos.entity._id].call(self._entities[mousePos.entity._id],e, mousePos);
                     }
-                }
+                };
                 
                 /**
                  * @function _world_mouseinHandler
                  * @added by topheman
                  */
-                function _world_mouseoutHandler(e, mousePos){
+                var _world_mouseoutHandler = function(e, mousePos){
                     //trigger the mouseup of the dragging - to prevent the entity to be stuck dragging if the mouse goes out of the canvas
                     if(self._draggingEntityId !== null && self._entities[self._draggingEntityId]._dragging){
                         _world_mouseupHandlerForDragEvent.call(self._entities[self._draggingEntityId],e,mousePos);
@@ -667,7 +672,7 @@ See more on the readme file
                     if(self._hoverEntityId !== null && self._mouseoutHandlers[self._hoverEntityId]){
                         self._mouseoutHandlers[self._hoverEntityId].call(self._entities[self._hoverEntityId],e, mousePos);
                     }
-                }
+                };
                 
                 /**
                  * Special world events handlers, triggered by global world event handlers
@@ -682,7 +687,7 @@ See more on the readme file
                  * @added by topheman
                  * @triggers the startdrag or the drag event specified in the .draggable() method
                  */
-                function _world_mousemoveHandlerForDragEvent(e, mousePos) {
+                var _world_mousemoveHandlerForDragEvent = function(e, mousePos) {
                     //tag as dragging when passing for the first time
                     if(this._world._draggingEntityId === null && !this._dragging && !this._startDrag){
                         //tag as dragging (all along the drag), with the original coordinates
@@ -713,7 +718,7 @@ See more on the readme file
                     }
                     else if(this._dragging) {
                         //trigger startdrag event on the first move
-                        if(this._startDrag && e.type == 'mousemove'){
+                        if(this._startDrag && e.type === 'mousemove'){
                             if(this._world._startdragHandlers[this._id]){
                                 this._world._startdragHandlers[this._id].call(this,e, mergeMouseInfos(mousePos,this._dragging));
                             }
@@ -731,7 +736,7 @@ See more on the readme file
                     if(this._moveJoint){
                         this._moveJoint.SetTarget(new Box2D.Common.Math.b2Vec2(mousePos.x, mousePos.y));
                     }
-                }
+                };
                 
                 /**
                  * @function _world_mouseupHandlerForDragEvent
@@ -739,7 +744,7 @@ See more on the readme file
                  * @added by topheman
                  * @triggers the stopdrag event specified in the .draggable() method
                  */
-                function _world_mouseupHandlerForDragEvent(e, mousePos) {
+                var _world_mouseupHandlerForDragEvent = function(e, mousePos) {
                     if(this._dragging){
                         //if there is a move joint, we are in regularDrag (no test, in case the type of drag is change in the middle of a drag)
                         if (this._moveJoint) {
@@ -754,14 +759,14 @@ See more on the readme file
                     this._startDrag = false;//reset startDrag state if there was no drag at all
                     this._dragging = false;//all the dragging process is ended, reset this propertie
                     this._world._draggingEntityId = null;//untag the dragging entity on world
-                }
+                };
                 
                 /**
                  * Prepares the mouseInfos object passed in callback
                  * @todo optimize
                  * @added by topheman
                  */
-                function mergeMouseInfos(mouseInfos,originalMouseInfos){
+                var mergeMouseInfos = function(mouseInfos,originalMouseInfos){
                     var result = {};
                     result.position = {};
                     result.position.x = mouseInfos.x;
@@ -772,7 +777,7 @@ See more on the readme file
                         result.originalPosition.y = originalMouseInfos.y;
                     }
                     return result;
-                }
+                };
                 
                 /**
                  * adding mouse/touch events to the canvas with the previous handlers
@@ -1768,7 +1773,7 @@ See more on the readme file
                 return false;
             }
             this._removeTouchcancelHandler(worldCallbackEventId);
-        },
+        }
         
     };
     
@@ -2561,8 +2566,9 @@ See more on the readme file
                 console.warn('Mouse events are disabled, you tried to call onMousein');
                 return false;
             }
-            if(this._ops.active === false)
+            if(this._ops.active === false){
                 console.warn('onMousein only on active objects');
+            }
             this._world._addMouseinHandler(this._id, callback);
         },
         
@@ -2575,8 +2581,9 @@ See more on the readme file
                 console.warn('Mouse events are disabled, you tried to call onMouseout');
                 return false;
             }
-            if(this._ops.active === false)
+            if(this._ops.active === false){
                 console.warn('onMousein only on active objects');
+            }
             this._world._addMouseoutHandler(this._id, callback);
         },
         
