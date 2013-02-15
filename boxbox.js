@@ -2771,6 +2771,10 @@ See more on the readme file
             }
         },
                 
+        isPined : function(){
+            return this._pinJoint ? true : false;
+        },
+                
         /**
          * @param {String}|{Object} options @optional
          *      @disabled {Boolean}

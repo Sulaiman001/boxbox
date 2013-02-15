@@ -140,9 +140,16 @@ function init(){
     
     circle.mouseDraggable('disable');
     
-    setTimeout(function(){
-        enemy.pin('revolute');
-    },700)
+    enemy.onKeydown(function(e){
+        if(e.ctrlKey === true){
+            if(this.isPined()){
+                this.unPin();
+            }
+            else{
+                this.pin();
+            }                
+        }
+    });
 
 }
 

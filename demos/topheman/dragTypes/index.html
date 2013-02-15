@@ -15,6 +15,8 @@ Test boxbox forked by topheman
     <body onload="prettyPrint();">
         <h3>Demos boxbox by topheman [drag type = "eventDrag"]</h3>
         <canvas id="canvas" width="600" height="400" class="main-canvas"></canvas>
+        <ul>Drag on the red circle to throw it</ul>
+        <ul>Hold ctrl key to pin/unpin the rectangle as you drag it</ul>
         <pre class="prettyprint">
 //draw callback binded onRender
 function drawTargetting(ctx){
@@ -50,6 +52,19 @@ circle2.mouseDraggable({
         this.color('darkred');
         this.applyImpulse(30,-(this.position().x-mouseInfos.position.x),-(this.position().y-mouseInfos.position.y));
         console.info('stopdrag callback','event',e.type,'world pos',mouseInfos);
+    }
+});
+    
+circle.mouseDraggable('disable');
+
+enemy.onKeydown(function(e){
+    if(e.ctrlKey === true){
+        if(this.isPined()){
+            this.unPin();
+        }
+        else{
+            this.pin();
+        }                
     }
 });
         </pre>
