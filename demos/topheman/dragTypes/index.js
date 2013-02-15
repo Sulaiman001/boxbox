@@ -4,7 +4,7 @@ function init(){
      
     //init canvas and world
     canvas = document.getElementById("canvas");
-    myWorld = boxbox.createWorld(canvas,{scale:30, debugDraw : true});
+    myWorld = boxbox.createWorld(canvas,{scale:30, debugDraw : false});
 
     //create entities
     player = myWorld.createEntity();
@@ -151,7 +151,7 @@ function init(){
             }
             else{
                 if(this._mouseInfos){
-                    this.pin('revolute',this._mouseInfos.position.x,this._mouseInfos.position.y);
+                    this.pin(this._mouseInfos.position.x,this._mouseInfos.position.y);
                 }
                 else{
                     this.pin();

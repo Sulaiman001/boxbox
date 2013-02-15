@@ -2737,30 +2737,21 @@ See more on the readme file
           
         /**
          * Pins an entity to the world
-         * @param type of joint
          * @param {type} x @optional
          * @param {type} y @optional
          */
-        pin: function(type,x,y) {
+        pin: function(x,y) {
+            if(this.isPined()){
+                this.unPin();
+            }
             var position = this.position(), jointDefinition, localX, localY, localCoords;
-            type = type || "revolute";
             x = x || position.x;
             y = y || position.y;
-            localCoords = this._body.GetLocalVector(new b2Vec2(x,y));
-            var worldCoords = this._body.GetWorldCenter();
-            localX = localCoords.x -worldCoords.x;
-            localY = localCoords.y - worldCoords.y;
+            localCoords = this._body.GetLocalPoint(new b2Vec2(x,y));
+            localX = localCoords.x;
+            localY = localCoords.y;
             
-            if (type === "distance") {
-                jointDefinition = new Box2D.Dynamics.Joints.b2DistanceJointDef();
-            }
-            else if (type === "revolute") {
-                jointDefinition = new Box2D.Dynamics.Joints.b2RevoluteJointDef();
-            }
-            else if (type === "mouse") {
-                jointDefinition = new Box2D.Dynamics.Joints.b2MouseJointDef();
-            }
-            
+            jointDefinition = new Box2D.Dynamics.Joints.b2RevoluteJointDef();
             jointDefinition.bodyA = this._world._world.GetGroundBody();
             jointDefinition.bodyB = this._body;
             if(jointDefinition.target && jointDefinition.target.Set){
@@ -2770,7 +2761,6 @@ See more on the readme file
                 jointDefinition.localAnchorA.Set(x,y);
             }
             jointDefinition.localAnchorB.Set(localX,localY);
-            console.info(localX,localY,jointDefinition,localCoords,worldCoords);
             jointDefinition.maxForce = 10000000000000000000000000000;//100000
             jointDefinition.timeStep = 1/60;//hard coded ?!!
             this._pinJoint = this._world._world.CreateJoint(jointDefinition);
