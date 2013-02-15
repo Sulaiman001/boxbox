@@ -11,3 +11,9 @@ touchOnly
 mouseOnly
 
 pointerSpecialHandlers
+
+delete destroyed entity handlers
+mouseDraggable : special joints (not only mouseJoint)
+
+touchDraggable
+special css styles (prevent text select, drag ...)
