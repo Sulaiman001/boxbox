@@ -4,7 +4,7 @@ function init(){
      
     //init canvas and world
     canvas = document.getElementById("canvas");
-    myWorld = boxbox.createWorld(canvas,{scale:30});
+    myWorld = boxbox.createWorld(canvas,{scale:30, debugDraw : true});
 
     //create entities
     player = myWorld.createEntity();
@@ -84,15 +84,18 @@ function init(){
     //mouseDraggable with callbacks
     enemy.mouseDraggable({
         start: function(e,pos){
+            this._mouseInfos = pos;
             this.color('blue');
             player.color('red');
             console.info('startdrag callback','event',e.type,'world pos',pos);
         },
         drag: function(e,pos){
+            this._mouseInfos = pos;
             this.color('#'+Math.floor(Math.random()*16777215).toString(16));//wath your eyes 
             console.info('drag callback','event',e.type,'world pos',pos);
         },
         stop: function(e,pos){
+            this._mouseInfos = null;
             this.color('blue');
             player.color('gray');
             console.info('stopdrag callback','event',e.type,'world pos',pos);
@@ -141,12 +144,18 @@ function init(){
     circle.mouseDraggable('disable');
     
     enemy.onKeydown(function(e){
+        console.info(e);
         if(e.ctrlKey === true){
             if(this.isPined()){
                 this.unPin();
             }
             else{
-                this.pin();
+                if(this._mouseInfos){
+                    this.pin('revolute',this._mouseInfos.position.x,this._mouseInfos.position.y);
+                }
+                else{
+                    this.pin();
+                }
             }                
         }
     });
