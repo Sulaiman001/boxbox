@@ -29,8 +29,8 @@ function drawTargetting(ctx){
     }
 }
 
-//draggable (without moving) with callbacks
-circle2.draggable({
+//mouseDraggable (without moving) with callbacks
+circle2.mouseDraggable({
     type : 'eventDrag',
     start: function(e,mouseInfos){
         this.color('blue');

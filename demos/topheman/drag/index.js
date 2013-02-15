@@ -80,8 +80,8 @@ function init(){
     circle.name('circle');
 
     //one line , it's draggable !
-    player.draggable();
-    enemy.draggable({
+    player.mouseDraggable();
+    enemy.mouseDraggable({
         start: function(e,pos){
             this.color('blue');
             player.color('red');
@@ -99,7 +99,7 @@ function init(){
     });
 
         //if you wan't to disable or enable the drag :
-//    player.draggable('disable');
+//    player.mouseDraggable('disable');
 
 }   
 

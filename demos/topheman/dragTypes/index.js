@@ -79,10 +79,10 @@ function init(){
     circle2.name('circle2');
     
     //one line , it's draggable !
-    player.draggable();
+    player.mouseDraggable();
     
-    //draggable with callbacks
-    enemy.draggable({
+    //mouseDraggable with callbacks
+    enemy.mouseDraggable({
         start: function(e,pos){
             this.color('blue');
             player.color('red');
@@ -99,6 +99,8 @@ function init(){
         }
     });
     
+//    enemy.pin(15,8);
+    
     //draw callback binded onRender
     function drawTargetting(ctx){
         console.info('onRender','this',this);
@@ -112,8 +114,8 @@ function init(){
         }
     }
     
-    //draggable (without moving) with callbacks
-    circle2.draggable({
+    //mouseDraggable (without moving) with callbacks
+    circle2.mouseDraggable({
         type : 'eventDrag',
         start: function(e,mouseInfos){
             this.color('blue');
@@ -136,7 +138,11 @@ function init(){
         }
     });
     
-    circle.draggable('disable');
+    circle.mouseDraggable('disable');
+    
+    setTimeout(function(){
+        enemy.pin('revolute');
+    },700)
 
 }
 

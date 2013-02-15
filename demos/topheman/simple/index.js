@@ -49,7 +49,7 @@ function init(){
         this.color('blue');
     });
     
-    //add events to make the enemy entitie draggable (now, you don't have to do all that code, you can simply use the method .draggable() and you will have callbacks for start, drag and stop)
+    //add events to make the enemy entitie draggable (now, you don't have to do all that code, you can simply use the method .mouseDraggable() and you will have callbacks for start, drag and stop)
     function onMousedownHandler(e, pos){
         enemy.unbindOnMousedown();
         onMousemoveHandler.call(this,e,pos);

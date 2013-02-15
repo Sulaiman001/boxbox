@@ -80,7 +80,7 @@ function init(){
     });
     sky.name('sky');
     
-    enemy.draggable();
+    enemy.mouseDraggable();
     
     enemy.onMousemove(function(){
        console.info('enemy mousemove'); 

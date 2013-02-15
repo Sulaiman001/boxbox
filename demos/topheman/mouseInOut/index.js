@@ -106,7 +106,7 @@ function init(){
         this.color('orange');
     });
     
-    enemy.draggable();
+    enemy.mouseDraggable();
     
     circle2.onMousein(function(e, pos){
         this.color('yellow');

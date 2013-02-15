@@ -2727,9 +2727,52 @@ See more on the readme file
             this._ops.spriteX = x;
             this._ops.spriteY = y;
         },
+          
+        /**
+         * Pins an entity to the world
+         * @param type of joint
+         * @param {type} x @optional
+         * @param {type} y @optional
+         */
+        pin: function(type,x,y) {
+            var position = this.position(), jointDefinition;
+            type = type || "revolute";
+            x = x || position.x;
+            y = y || position.y;
+            
+            if (type === "distance") {
+                jointDefinition = new Box2D.Dynamics.Joints.b2DistanceJointDef();
+            }
+            else if (type === "revolute") {
+                jointDefinition = new Box2D.Dynamics.Joints.b2RevoluteJointDef();
+            }
+            else if (type === "mouse") {
+                jointDefinition = new Box2D.Dynamics.Joints.b2MouseJointDef();
+            }
+            
+            jointDefinition.bodyA = this._world._world.GetGroundBody();
+            jointDefinition.bodyB = this._body;
+            console.info(jointDefinition,jointDefinition.bodyA);
+            if(jointDefinition.target && jointDefinition.target.Set){
+                jointDefinition.target.Set(x, y);
+            }
+            else{
+                jointDefinition.localAnchorA = position;
+            }
+            jointDefinition.maxForce = 10000000000000000000000000000;//100000
+            jointDefinition.timeStep = 1/60;//hard coded ?!!
+            this._pinJoint = this._world._world.CreateJoint(jointDefinition);
+        },
+        
+        unPin: function(){
+            if(this._pinJoint){
+                this._world._world.DestroyJoint(this._pinJoint);
+                this._pinJoint = null;
+            }
+        },
                 
         /**
-         * @param {String}|{Object} @optional name description
+         * @param {String}|{Object} options @optional
          *      @disabled {Boolean}
          *      @type {String} regularDrag or eventDrag
          *      @start {Function}
@@ -2737,7 +2780,11 @@ See more on the readme file
          *      @stop {Function}
          * @added by topheman
          */
-        draggable: function(options){
+        mouseDraggable: function(options){
+            if(this._world._ops.disableMouseEvents){
+                console.warn('Mouse events are disabled, you tried to call mouseDraggable');
+                return false;
+            }
             //simple init without options
             if(typeof options === 'undefined'){
                 this._ops._draggable.disabled = false;
