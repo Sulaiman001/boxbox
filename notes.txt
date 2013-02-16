@@ -22,4 +22,4 @@ license
 readme
 
 gh-page
-logo
+logo - done
