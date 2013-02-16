@@ -33,6 +33,9 @@ header h1 {
   text-align:center;
   margin: 1em 0;
 }
+header img{
+    border : 0px;
+}
 
 section {
   padding: .5em 1em;
@@ -40,6 +43,7 @@ section {
   border-width: 3px;
   border-style: solid;
   border-color: #900000;
+  display : block;
 }
 
 h1, h2, h3 {
@@ -84,6 +88,7 @@ nav {
 nav.compact {
   line-height: 2em;
   background-color: #e2e3ec;
+  display : block;
 }
 
 nav ul {
