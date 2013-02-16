@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title><%= title %></title>
+    <title>boxbox events - API documentation</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link type="text/css" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css" rel="stylesheet">
     <script type="text/javascript" src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
@@ -14,16 +14,10 @@ body {
   line-height: 1.4em;
 }
 
-a:link {
-  color: #000498;
-}
-a:visited {
-  color: black;
+a {
+  color: #900000;
 }
 a:hover {
-  color: #4549ff;
-}
-a:active {
   color: black;
 }
 
@@ -36,6 +30,7 @@ header a {
 }
 
 header h1 {
+  text-align:center;
   margin: 1em 0;
 }
 
@@ -44,7 +39,7 @@ section {
   margin: 1em;
   border-width: 3px;
   border-style: solid;
-  border-color: #e2e3ec;
+  border-color: #900000;
 }
 
 h1, h2, h3 {
@@ -104,6 +99,15 @@ nav.compact ul li {
   font-weight: bold;
 }
 
+nav.compact a{
+    text-decoration: none;
+}
+
+nav.compact a:hover{
+    background-color : #900000;
+    color : white;
+}
+
 .inlineIndexItem {
   padding: .3em .2em;
   background-color: white;
@@ -146,13 +150,11 @@ ul.properties li {
 
 .depth0 {
   margin: 1em 0em;
-  border-color: #B2B3BB;
   border-width: 4px;
 }
 
 .depth1 {
   margin: 1em 0 1em 1em;
-  border-color: #CECFD7;
 }
 
 .depth2 {
@@ -175,8 +177,8 @@ ul.properties li {
     <div id="content">
       <header>
         <h1>
-          <a href="/">
-            <%= title %>
+          <a href="http://topheman.github.com/boxbox/" title="boxbox events - API documentation">
+            <img src="http://topheman.github.com/boxbox/boxbox-events.png" alt="boxbox events">
           </a>
         </h2>
         <%= description %>
