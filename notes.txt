@@ -17,3 +17,9 @@ mouseDraggable : special joints (not only mouseJoint)
 
 touchDraggable
 special css styles (prevent text select, drag ...)
+
+license
+readme
+
+gh-page
+logo

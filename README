@@ -1,14 +1,15 @@
 A framework that makes it easier to use the Box2d / Box2dweb physics engine in JavaScript.
+And now that makes it easier to use the mouse / touch events with.
 
-Learn about boxbox here:
+Learn about boxbox by topheman here:
 
-http://incompl.github.com/boxbox
+http://topheman.github.com/boxbox
 
 box2dweb files are from:
 
 http://code.google.com/p/box2dweb/
 
-Created at Bocoup:
+Originally created at Bocoup by Greg Smith :
 
 http://bocoup.com
 
@@ -16,7 +17,7 @@ Forked by topheman
 
 http://labs.topheman.com/
 
-I needed an abstract layer to box2dweb to simplify the creation of objects. I intend to add the mouse/touch event part which is missing in boxbox (for my needs - I need it to create an html5 game). We'll see where it will lead me - at least, I'm learning box2dweb.
+I needed an abstract layer to box2dweb to simplify the creation of objects. I intend to add the mouse/touch events part which is missing in boxbox (for my needs - I need it to create an html5 game). We'll see where it will lead me - at least, I'm learning box2dweb.
 
 Demos/tests are in the demos/topheman folder
 

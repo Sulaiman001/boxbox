@@ -2,7 +2,7 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     meta: {
-      banner: '/* Copyright 2012 Greg Smith. Licensed under the MIT License. http://incompl.github.com/boxbox/ */'
+      banner: '/* Copyright 2013 Christophe Rosset. Licensed under the MIT License. http://topheman.github.com/boxbox/ */\n/* Copyright 2012 Greg Smith. Licensed under the MIT License. http://incompl.github.com/boxbox/ */'
     },
     min: {
       'boxbox.min.js': ['<banner>', 'boxbox.js']

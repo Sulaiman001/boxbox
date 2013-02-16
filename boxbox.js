@@ -1,13 +1,13 @@
 /*
+Copyright (C) 2013 Christophe Rosset <tophe@topheman.com>
 Copyright (C) 2012 Greg Smith <gsmith@incompl.com>
 
 Released under the MIT license:
-https://github.com/incompl/boxbox/blob/master/LICENSE
+https://github.com/topheman/boxbox/blob/master/LICENSE
 
-Created at Bocoup http://bocoup.com
-
-This version is a fork of the original boxbox (created by Greg Smith) by topheman aka Christophe Rosset : https://github.com/topheman/boxbox
-Functions, methods, etc ... added by topheman are marked with a comment @added by topheman
+This version of boxbox is a fork of the original version created by Greg Smith. ( http://incompl.github.com/boxbox/ )
+The whole mouse/touch events management layer and some other methods are from Christophe Rosset aka topheman. ( http://topheman.github.com/boxbox/ )
+Changes from the original are tagged @added by topheman for a future merge.
 See more on the readme file
 */
 
@@ -53,7 +53,9 @@ See more on the readme file
     var DEGREES_PER_RADIAN = 57.2957795; // 180 / pi
 
     /**
-     * @description global boxbox object
+     * @_name boxbox
+     * @header
+     * @description contains a single self-contained physics simulation
      */
     window.boxbox = {};
     
@@ -99,6 +101,7 @@ See more on the readme file
     var b2AABB = Box2D.Collision.b2AABB;
     
     /**
+     * @_name createWorld
      * @_module boxbox
      * @_params canvas, [options]
      * @canvas element to render on
@@ -156,6 +159,7 @@ See more on the readme file
     var worldCallbackEventId = 'world';
 
     /**
+     * @_name World
      * @header
      * @description contains a single self-contained physics simulation
      */
@@ -908,6 +912,7 @@ See more on the readme file
         },
         
         /**
+         * @_name pause
          * @_module world
          * @description Stops or resumes the animationLoop
          * @added by topheman
@@ -1211,6 +1216,7 @@ See more on the readme file
         },
                 
         /**
+         * @_name calculateWorldPositionFromPointer
          * @_module world
          * @_params [value]
          * @value: {MouseEvent}|{Touch}
@@ -1226,6 +1232,7 @@ See more on the readme file
         },
 
         /**
+         * @_name gravity
          * @_module world
          * @_params [value]
          * @value: {x,y}
@@ -1241,6 +1248,7 @@ See more on the readme file
         },
         
         /**
+         * @_name createEntity
          * @_module world
          * @_params options
          * @options
@@ -1328,6 +1336,7 @@ See more on the readme file
         },
         
         /**
+         * @_name createJoint
          * @_module world
          * @_params entity1, entity2, [options]
          * @entity1 Entity on one side of the joint
@@ -1420,7 +1429,9 @@ See more on the readme file
         },
 
         /**
+         * @_name find
          * @_module world
+         * @_params x1, y1, x2, y2
          * @x1 upper left of query box
          * @y1 upper left of query box
          * @x2 lower right of query box
@@ -1448,6 +1459,7 @@ See more on the readme file
         },
         
         /**
+         * @_name camera
          * @_module world
          * @_params [value]
          * @value {x,y}
@@ -1468,7 +1480,9 @@ See more on the readme file
         },
         
         /**
+         * @_name onRender
          * @_module world
+         * @_params callback
          * @callback function( context )
          * <ul>
          * @context canvas context for rendering
@@ -1494,6 +1508,7 @@ See more on the readme file
         },
         
         /**
+         * @_name unbindOnRender
          * @_module world
          * @callback callback
          * @description
@@ -1512,7 +1527,9 @@ See more on the readme file
         },
 
         /**
+         * @_name onTick
          * @_module world
+         * @_params callback
          * @callback function()
          * <ul>
          * @this World
@@ -1535,6 +1552,7 @@ See more on the readme file
         },
 
         /**
+         * @_name unbindOnTick
          * @_module world
          * @callback callback
          * @description
@@ -1553,6 +1571,7 @@ See more on the readme file
         },
         
         /**
+         * @_name scale
          * @_module world
          * @_params [value]
          * @value number
@@ -1568,6 +1587,7 @@ See more on the readme file
         },
 
         /**
+         * @_name canvasPositionAt
          * @_module world
          * @return {x,y}
          * @description Get a canvas position for a corresponding world position. Useful
@@ -1584,9 +1604,13 @@ See more on the readme file
         },
         
         /**
+         * @_name onMousedown
          * @_module world
+         * @_params callback
          * @callback function(e,mouseInfos)
          * <ul>
+         * @e MouseEvent
+         * @mouseInfos {x,y}
          * @this World
          * </ul>
          * @description Add an onMousedown callback to the World
@@ -1601,9 +1625,13 @@ See more on the readme file
         },
         
         /**
+         * @_name onMouseup
          * @_module world
+         * @_params callback
          * @callback function(e,mouseInfos)
          * <ul>
+         * @e MouseEvent
+         * @mouseInfos {x,y}
          * @this World
          * </ul>
          * @description Add an onMouseup callback to the World
@@ -1618,9 +1646,13 @@ See more on the readme file
         },
         
         /**
+         * @_name onMousemove
          * @_module world
+         * @_params callback
          * @callback function(e,mouseInfos)
          * <ul>
+         * @e MouseEvent
+         * @mouseInfos {x,y}
          * @this World
          * </ul>
          * @description Add an onMousemove callback to the World
@@ -1635,6 +1667,7 @@ See more on the readme file
         },
         
         /**
+         * @_name unbindOnMousedown
          * @_module world
          * @description Removes the onMousedown callback from this World
          * @added by topheman
@@ -1648,6 +1681,7 @@ See more on the readme file
         },
         
         /**
+         * @_name unbindOnMouseup
          * @_module world
          * @description Removes the onMouseup callback from this World
          * @added by topheman
@@ -1661,6 +1695,7 @@ See more on the readme file
         },
         
         /**
+         * @_name unbindOnMousemove
          * @_module world
          * @description Removes the onMousemove callback from this World
          * @added by topheman
@@ -1674,9 +1709,13 @@ See more on the readme file
         },
         
         /**
+         * @_name onMousein
          * @_module world
+         * @_params callback
          * @callback function(e,mouseInfos)
          * <ul>
+         * @e MouseEvent
+         * @mouseInfos {x,y}
          * @this World
          * </ul>
          * @description Add an onMousein callback to the World
@@ -1691,9 +1730,13 @@ See more on the readme file
         },
         
         /**
+         * @_name onMouseout
          * @_module world
+         * @_params callback
          * @callback function(e,mouseInfos)
          * <ul>
+         * @e MouseEvent
+         * @mouseInfos {x,y}
          * @this World
          * </ul>
          * @description Add an onMouseout callback to the World
@@ -1708,6 +1751,7 @@ See more on the readme file
         },
         
         /**
+         * @_name unbindOnMousein
          * @_module world
          * @description Removes the onMousein callback from this World
          * @added by topheman
@@ -1721,6 +1765,7 @@ See more on the readme file
         },
         
         /**
+         * @_name unbindOnMouseout
          * @_module world
          * @description Removes the onMouseout callback from this World
          * @added by topheman
@@ -1734,9 +1779,13 @@ See more on the readme file
         },
         
         /**
+         * @_name onTouchstart
          * @_module world
+         * @_params callback
          * @callback function(e,touchInfos)
          * <ul>
+         * @e TouchEvent
+         * @touchInfos [{Entity,touchIdentifier,x,y}]
          * @this World
          * </ul>
          * @description Add an onTouchstart callback to the World
@@ -1751,9 +1800,13 @@ See more on the readme file
         },
         
         /**
+         * @_name onTouchmove
          * @_module world
+         * @_params callback
          * @callback function(e,touchInfos)
          * <ul>
+         * @e TouchEvent
+         * @touchInfos [{Entity,touchIdentifier,x,y}]
          * @this World
          * </ul>
          * @description Add an onTouchmove callback to the World
@@ -1768,9 +1821,13 @@ See more on the readme file
         },
         
         /**
+         * @_name onTouchend
          * @_module world
+         * @_params callback
          * @callback function(e,touchInfos)
          * <ul>
+         * @e TouchEvent
+         * @touchInfos [{Entity,touchIdentifier,x,y}]
          * @this World
          * </ul>
          * @description Add an onTouchend callback to the World
@@ -1785,9 +1842,13 @@ See more on the readme file
         },
         
         /**
+         * @_name onTouchcancel
          * @_module world
+         * @_params callback
          * @callback function(e,touchInfos)
          * <ul>
+         * @e TouchEvent
+         * @touchInfos [{Entity,touchIdentifier,x,y}]
          * @this World
          * </ul>
          * @description Add an onTouchcancel callback to the World
@@ -1802,6 +1863,7 @@ See more on the readme file
         },
         
         /**
+         * @_name unbindOnTouchstart
          * @_module world
          * @description Removes the onTouchstart callback from this World
          * @added by topheman
@@ -1815,6 +1877,7 @@ See more on the readme file
         },
         
         /**
+         * @_name unbindOnTouchmove
          * @_module world
          * @description Removes the onTouchmove callback from this World
          * @added by topheman
@@ -1828,6 +1891,7 @@ See more on the readme file
         },
         
         /**
+         * @_name unbindOnTouchend
          * @_module world
          * @description Removes the onTouchend callback from this World
          * @added by topheman
@@ -1841,6 +1905,7 @@ See more on the readme file
         },
         
         /**
+         * @_name unbindOnTouchcancel
          * @_module world
          * @description Removes the onTouchcancel callback from this World
          * @added by topheman
@@ -2005,6 +2070,7 @@ See more on the readme file
     };
     
     /**
+     * @_name Entity
      * @header
      * @description a single physical object in the physics simulation
      */
@@ -2151,6 +2217,7 @@ See more on the readme file
         },
         
         /**
+         * @_name name
          * @_module entity
          * @_params [value]
          * @return entity name
@@ -2164,6 +2231,7 @@ See more on the readme file
         },
         
         /**
+         * @_name position
          * @_module entity
          * @_params [value]
          * @value {x,y}
@@ -2187,9 +2255,10 @@ See more on the readme file
         },
         
         /**
-         * Checks if the entity is at x,y
-         * @param {Number} x
-         * @param {Number} y
+         * @_name checkPosition
+         * @_module entity
+         * @_params x,y
+         * @description Checks if the entity is at x,y
          * @returns {Boolean}
          * @added by topheman
          */
@@ -2219,6 +2288,7 @@ See more on the readme file
         },
         
         /**
+         * @_name canvasPosition
          * @_module entity
          * @_params
          * @return {x,y}
@@ -2237,6 +2307,7 @@ See more on the readme file
         },
         
         /**
+         * @_name rotation
          * @_module entity
          * @_params [value]
          * @value degrees
@@ -2251,6 +2322,7 @@ See more on the readme file
         },
         
         /**
+         * @_name friction
          * @_module entity
          * @_params [value]
          * @value number
@@ -2265,6 +2337,7 @@ See more on the readme file
         },
 
         /**
+         * @_name restitution
          * @_module entity
          * @_params [value]
          * @value number
@@ -2279,6 +2352,7 @@ See more on the readme file
         },
 
         /**
+         * @_name maxVelocityX
          * @_module entity
          * @_params [value]
          * @value number
@@ -2293,6 +2367,7 @@ See more on the readme file
         },
 
         /**
+         * @_name maxVelocityY
          * @_module entity
          * @_params [value]
          * @value number
@@ -2307,6 +2382,7 @@ See more on the readme file
         },
 
         /**
+         * @_name image
          * @_module entity
          * @_params [value]
          * @value string
@@ -2322,6 +2398,7 @@ See more on the readme file
         },
 
         /**
+         * @_name imageOffsetX
          * @_module entity
          * @_params [value]
          * @value number
@@ -2336,6 +2413,7 @@ See more on the readme file
         },
 
         /**
+         * @_name imageOffsetY
          * @_module entity
          * @_params [value]
          * @value number
@@ -2350,6 +2428,7 @@ See more on the readme file
         },
 
         /**
+         * @_name imageStretchToFit
          * @_module entity
          * @_params [value]
          * @value boolean
@@ -2364,6 +2443,7 @@ See more on the readme file
         },
 
         /**
+         * @_name color
          * @_module entity
          * @_params [value]
          * @value css color string
@@ -2378,6 +2458,7 @@ See more on the readme file
         },
 
         /**
+         * @_name borderColor
          * @_module entity
          * @_params [value]
          * @value css color string
@@ -2392,6 +2473,7 @@ See more on the readme file
         },
 
         /**
+         * @_name borderWidth
          * @_module entity
          * @_params [value]
          * @value number
@@ -2407,6 +2489,7 @@ See more on the readme file
         },
 
         /**
+         * @_name spriteSheet
          * @_module entity
          * @_params [value]
          * @value boolean
@@ -2421,6 +2504,7 @@ See more on the readme file
         },
 
         /**
+         * @_name spriteWidth
          * @_module entity
          * @_params [value]
          * @value number
@@ -2435,6 +2519,7 @@ See more on the readme file
         },
 
         /**
+         * @_name spriteHeight
          * @_module entity
          * @_params [value]
          * @value number
@@ -2449,6 +2534,7 @@ See more on the readme file
         },
 
         /**
+         * @_name draw
          * @_module entity
          * @_params [value]
          * @value function
@@ -2463,6 +2549,7 @@ See more on the readme file
         },
         
         /**
+         * @_name destroy
          * @_module entity
          * @description destroy this entity and remove it from the world
          */
@@ -2472,6 +2559,7 @@ See more on the readme file
         },
 
         /**
+         * @_name applyImpulse
          * @_module entity
          * @power of impulse
          * @degrees direction of force. 0 is up, 90 is right, etc.
@@ -2489,6 +2577,7 @@ See more on the readme file
         },
         
         /**
+         * @_name setForce
          * @_module entity
          * @name of force
          * @power of force
@@ -2503,6 +2592,7 @@ See more on the readme file
         },
         
         /**
+         * @_name setVelocity
          * @_module entity
          * @name of velocity
          * @power of velocity
@@ -2517,6 +2607,7 @@ See more on the readme file
         },
 
         /**
+         * @_name clearForce
          * @_module entity
          * @description Stop the force with the given name.
          */
@@ -2525,6 +2616,7 @@ See more on the readme file
         },
 
         /**
+         * @_name clearVelocity
          * @_module entity
          * @description Stop the constant velocity with the given name.
          */
@@ -2533,7 +2625,9 @@ See more on the readme file
         },
         
         /**
+         * @_name onKeydown
          * @_module entity
+         * @_params callback
          * @callback function( e )
          * <ul>
          * @e keydown event
@@ -2550,7 +2644,9 @@ See more on the readme file
         },
         
         /**
+         * @_name onKeyup
          * @_module entity
+         * @_params callback
          * @callback function( e )
          * <ul>
          * @e keyup event
@@ -2567,9 +2663,13 @@ See more on the readme file
         },
         
         /**
+         * @_name onMousedown
          * @_module entity
+         * @_params callback
          * @callback function(e,mouseInfos)
          * <ul>
+         * @e MouseEvent
+         * @mouseInfos {x,y}
          * @this Entity
          * </ul>
          * @description Add an onMousedown callback to this entity
@@ -2584,9 +2684,13 @@ See more on the readme file
         },
         
         /**
+         * @_name onMouseup
          * @_module entity
+         * @_params callback
          * @callback function(e,mouseInfos)
          * <ul>
+         * @e MouseEvent
+         * @mouseInfos {x,y}
          * @this Entity
          * </ul>
          * @description Add an onMouseup callback to this entity
@@ -2601,9 +2705,13 @@ See more on the readme file
         },
         
         /**
+         * @_name onMousemove
          * @_module entity
+         * @_params callback
          * @callback function(e,mouseInfos)
          * <ul>
+         * @e MouseEvent
+         * @mouseInfos {x,y}
          * @this Entity
          * </ul>
          * @description Add an onMousemove callback to this entity
@@ -2618,6 +2726,7 @@ See more on the readme file
         },
         
         /**
+         * @_name unbindOnMousedown
          * @_module entity
          * @description Removes the onMousedown callback from this entity
          * @added by topheman
@@ -2631,6 +2740,7 @@ See more on the readme file
         },
         
         /**
+         * @_name unbindOnMouseup
          * @_module entity
          * @description Removes the onMouseup callback from this entity
          * @added by topheman
@@ -2644,6 +2754,7 @@ See more on the readme file
         },
         
         /**
+         * @_name unbindOnMousemove
          * @_module entity
          * @description Removes the onMousemove callback from this entity
          * @added by topheman
@@ -2657,9 +2768,13 @@ See more on the readme file
         },
         
         /**
+         * @_name onMousein
          * @_module entity
+         * @_params callback
          * @callback function(e,mouseInfos)
          * <ul>
+         * @e MouseEvent
+         * @mouseInfos {x,y}
          * @this Entity
          * </ul>
          * @description Add an onMousein callback to this entity
@@ -2677,9 +2792,13 @@ See more on the readme file
         },
         
         /**
+         * @_name onMouseout
          * @_module entity
+         * @_params callback
          * @callback function(e,mouseInfos)
          * <ul>
+         * @e MouseEvent
+         * @mouseInfos {x,y}
          * @this Entity
          * </ul>
          * @description Add an onMouseout callback to this entity
@@ -2697,6 +2816,7 @@ See more on the readme file
         },
         
         /**
+         * @_name unbindOnMousein
          * @_module entity
          * @description Removes the onMousein callback from this entity
          * @added by topheman
@@ -2710,6 +2830,7 @@ See more on the readme file
         },
         
         /**
+         * @_name unbindOnMouseout
          * @_module entity
          * @description Removes the onMouseout callback from this entity
          * @added by topheman
@@ -2723,9 +2844,13 @@ See more on the readme file
         },
         
         /**
+         * @_name onTouchstart
          * @_module entity
+         * @_params callback
          * @callback function(e,touchInfos)
          * <ul>
+         * @e TouchEvent
+         * @touchInfos [{Entity,touchIdentifier,x,y}]
          * @this Entity
          * </ul>
          * @description Add an onTouchstart callback to this entity
@@ -2740,9 +2865,13 @@ See more on the readme file
         },
         
         /**
+         * @_name onTouchend
          * @_module entity
+         * @_params callback
          * @callback function(e,touchInfos)
          * <ul>
+         * @e TouchEvent
+         * @touchInfos [{Entity,touchIdentifier,x,y}]
          * @this Entity
          * </ul>
          * @description Add an onTouchend callback to this entity
@@ -2757,9 +2886,13 @@ See more on the readme file
         },
         
         /**
+         * @_name onTouchmove
          * @_module entity
+         * @_params callback
          * @callback function(e,touchInfos)
          * <ul>
+         * @e TouchEvent
+         * @touchInfos [{Entity,touchIdentifier,x,y}]
          * @this Entity
          * </ul>
          * @description Add an onTouchmove callback to this entity
@@ -2774,7 +2907,9 @@ See more on the readme file
         },
 
         /**
+         * @_name onStartContact
          * @_module entity
+         * @_params callback
          * @callback function( entity )
          * <ul>
          * @entity that contact started with
@@ -2787,7 +2922,9 @@ See more on the readme file
         },
 
         /**
+         * @_name onFinishContact
          * @_module entity
+         * @_params callback
          * @callback function( entity )
          * <ul>
          * @entity that contact ended with
@@ -2800,7 +2937,9 @@ See more on the readme file
         },
 
         /**
+         * @_name onImpact
          * @_module entity
+         * @_params callback
          * @callback function( entity, normalForce, tangentialForce )
          * <ul>
          * @entity collided with
@@ -2815,7 +2954,9 @@ See more on the readme file
         },
 
         /**
+         * @_name onRender
          * @_module entity
+         * @_params callback
          * @callback function( context )
          * <ul>
          * @context canvas context for rendering
@@ -2834,7 +2975,9 @@ See more on the readme file
         },
 
         /**
+         * @_name onTick
          * @_module entity
+         * @_params callback
          * @callback function()
          * <ul>
          * @this Entity
@@ -2857,7 +3000,9 @@ See more on the readme file
         },
 
         /**
+         * @_name sprite
          * @_module entity
+         * @_params x,y
          * @description Set the entity's image to the sprite at x, y on the sprite sheet.
          * Used only on entities with spriteSheet:true
          */
@@ -2867,11 +3012,12 @@ See more on the readme file
         },
           
         /**
+         * @_name pin
          * @_module entity
          * @_params x,y
-         * @param {type} x @optional
-         * @param {type} y @optional
+         * @optional x,y
          * @description Pins an entity to the world
+         * @added by topheman
          */
         pin: function(x,y) {
             if(this.isPined()){
@@ -2900,8 +3046,10 @@ See more on the readme file
         },
           
         /**
+         * @_name unPin
          * @_module entity
          * @description Unpins an entity from the world
+         * @added by topheman
          */
         unPin: function(){
             if(this._pinJoint){
@@ -2911,15 +3059,18 @@ See more on the readme file
         },
           
         /**
+         * @_name isPined
          * @_module entity
          * @return {Boolean}
          * @description Returns true if the entity is pined to the world
+         * @added by topheman
          */   
         isPined : function(){
             return this._pinJoint ? true : false;
         },
                 
         /**
+         * @_name mouseDraggable
          * @_module entity
          * @_params [options]
          * @description Turns an entity to draggable by the mouse, with multiple callbacks. 
