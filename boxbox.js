@@ -72,7 +72,6 @@ See more on the readme file
     }
     
     // A minimal extend for simple objects inspired by jQuery
-    //@todo topheman : use the prototype (here and on the other parts of the code)
     function extend(target, o) {
         if (target === undefined) {
             target = {};
@@ -148,7 +147,7 @@ See more on the readme file
         allowCollisions: false
     };
     
-    /**
+    /*
      * Id used to identify the world in the list of callbacks
      * could be changed to switch if you wan't to be triggered before or after the entities events
      * @added by topheman
@@ -365,17 +364,18 @@ See more on the readme file
                     }, false);
                 }
                 
-                /**
+                /*
                  * Mouse events
                  * @added by topheman
                  */
                 
-                /**
+                /*
                  * @function mousedownHandler
+                 * @param {MouseEvent} e
                  * @added by topheman
                  */
                 var mousedownHandler = function(e) {
-                    var mousePos = self.calculateWorldPositionFromMouse(e);
+                    var mousePos = self.calculateWorldPositionFromPointer(e);
                     var entityX = mousePos.x,
                     entityY = mousePos.y,
                     entities;
@@ -392,12 +392,13 @@ See more on the readme file
                     }
                 };
                 
-                /**
+                /*
                  * @function mouseupHandler
+                 * @param {MouseEvent} e
                  * @added by topheman
                  */
                 var mouseupHandler = function(e) {
-                    var mousePos = self.calculateWorldPositionFromMouse(e);
+                    var mousePos = self.calculateWorldPositionFromPointer(e);
                     var entityX = mousePos.x,
                     entityY = mousePos.y,
                     entities;
@@ -414,12 +415,13 @@ See more on the readme file
                     }
                 };
                 
-                /**
+                /*
                  * @function mousemoveHandler
+                 * @param {MouseEvent} e
                  * @added by topheman
                  */
                 var mousemoveHandler = function(e) {
-                    var mousePos = self.calculateWorldPositionFromMouse(e);
+                    var mousePos = self.calculateWorldPositionFromPointer(e);
                     var entityX = mousePos.x,
                     entityY = mousePos.y,
                     entities;
@@ -436,13 +438,14 @@ See more on the readme file
                     }
                 };
                 
-                /**
+                /*
                  * Callback binded on the mouseover eventListener of the canvas (so only for the world, not the entities)
                  * @function mouseinHandler
+                 * @param {MouseEvent} e
                  * @added by topheman
                  */
                 var mouseinHandler = function (e) {
-                    var mousePos = self.calculateWorldPositionFromMouse(e);
+                    var mousePos = self.calculateWorldPositionFromPointer(e);
                     var entityX = mousePos.x,
                     entityY = mousePos.y,
                     entities;
@@ -454,13 +457,14 @@ See more on the readme file
                     }
                 };
                 
-                /**
+                /*
                  * Callback binded on the mouseout eventListener of the canvas (so only for the world, not the entities)
                  * @function mouseinHandler
+                 * @param {MouseEvent} e
                  * @added by topheman
                  */
                 var mouseoutHandler = function (e) {
-                    var mousePos = self.calculateWorldPositionFromMouse(e);
+                    var mousePos = self.calculateWorldPositionFromPointer(e);
                     var entityX = mousePos.x,
                     entityY = mousePos.y,
                     entities;
@@ -472,14 +476,14 @@ See more on the readme file
                     }
                 };
                 
-                /**
+                /*
                  * Returns an object with the entity and the identifier corresponding to the touch
                  * @param {Touch} touch
                  * @returns {Object}
                  * @added by topheman
                  */
                 var getEntityFromTouch = function (touch){
-                    var touchPos = self.calculateWorldPositionFromMouse(touch);
+                    var touchPos = self.calculateWorldPositionFromPointer(touch);
                     var entityX = touchPos.x,
                     entityY = touchPos.y,
                     entities;
@@ -489,7 +493,7 @@ See more on the readme file
                     return touchPos;
                 };
                 
-                /**
+                /*
                  * Returns an array of infos about the changed touches
                  * @param {TouchEvent} e
                  * @returns {Array}
@@ -504,8 +508,9 @@ See more on the readme file
                     return infos;
                 };
                 
-                /**
+                /*
                  * @function touchstartHandler
+                 * @param {TouchEvent} e
                  * @added by topheman
                  */
                 var touchstartHandler = function (e) {
@@ -515,8 +520,9 @@ See more on the readme file
                 };
                 
                 
-                /**
+                /*
                  * @function touchmoveHandler
+                 * @param {TouchEvent} e
                  * @added by topheman
                  */
                 var touchmoveHandler = function(e) {
@@ -526,8 +532,9 @@ See more on the readme file
                 };
                 
                 
-                /**
+                /*
                  * @function touchendHandler
+                 * @param {TouchEvent} e
                  * @added by topheman
                  */
                 var touchendHandler = function(e) {
@@ -537,8 +544,9 @@ See more on the readme file
                 };
                 
                 
-                /**
+                /*
                  * @function touchcancelHandler
+                 * @param {TouchEvent} e
                  * @added by topheman
                  */
                 var touchcancelHandler = function (e) {
@@ -549,7 +557,7 @@ See more on the readme file
                     e.preventDefault();
                 };
                 
-                /**
+                /*
                  * Global world events handlers
                  * Triggers specific handlers such as drag events, in/out events
                  * Also triggers public handlers @todo
@@ -557,8 +565,10 @@ See more on the readme file
                  * @called by their respective public handlers (before the entities handlers) see mouse events section for example
                  */
                 
-                /**
+                /*
                  * @function _world_mousedownHandler
+                 * @param {MouseEvent} e
+                 * @param {Object} mousePos
                  * @added by topheman
                  */
                 var _world_mousedownHandler = function(e, mousePos){
@@ -574,8 +584,10 @@ See more on the readme file
                     }
                 };
                 
-                /**
+                /*
                  * @function _world_mousemoveHandler
+                 * @param {MouseEvent} e
+                 * @param {Object} mousePos
                  * @added by topheman
                  */
                 var _world_mousemoveHandler = function(e, mousePos){
@@ -606,8 +618,10 @@ See more on the readme file
                     }
                 };
                 
-                /**
+                /*
                  * @function _world_mouseupHandler
+                 * @param {MouseEvent} e
+                 * @param {Object} mousePos
                  * @added by topheman
                  */
                 var _world_mouseupHandler = function(e, mousePos){
@@ -618,8 +632,10 @@ See more on the readme file
                     
                 };
                 
-                /**
+                /*
                  * @function _world_touchstartHandler
+                 * @param {TouchEvent} e
+                 * @param {Object} touchInfos
                  * @added by topheman
                  */
                 var _world_touchstartHandler = function(e, touchInfos){
@@ -628,8 +644,10 @@ See more on the readme file
                     }
                 };
                 
-                /**
+                /*
                  * @function _world_touchmoveHandler
+                 * @param {TouchEvent} e
+                 * @param {Object} touchInfos
                  * @added by topheman
                  */
                 var _world_touchmoveHandler = function(e, touchInfos){
@@ -638,8 +656,10 @@ See more on the readme file
                     }
                 };
                 
-                /**
+                /*
                  * @function _world_touchmoveHandler
+                 * @param {TouchEvent} e
+                 * @param {Object} touchInfos
                  * @added by topheman
                  */
                 var _world_touchendHandler = function(e, touchInfos){
@@ -648,8 +668,10 @@ See more on the readme file
                     }
                 };
                 
-                /**
+                /*
                  * @function _world_mouseinHandler
+                 * @param {TouchEvent} e
+                 * @param {Object} touchInfos
                  * @added by topheman
                  */
                 var _world_mouseinHandler = function(e, mousePos){
@@ -659,8 +681,10 @@ See more on the readme file
                     }
                 };
                 
-                /**
+                /*
                  * @function _world_mouseinHandler
+                 * @param {TouchEvent} e
+                 * @param {Object} touchInfos
                  * @added by topheman
                  */
                 var _world_mouseoutHandler = function(e, mousePos){
@@ -674,15 +698,17 @@ See more on the readme file
                     }
                 };
                 
-                /**
+                /*
                  * Special world events handlers, triggered by global world event handlers
                  * The events are splitted to emulate a bind/event system
                  * @added by topheman
                  * @called by the global world event handlers
                  */
                 
-                /**
+                /*
                  * @function _world_mouseupHandler
+                 * @param {MouseEvent} e
+                 * @param {Object} mousePos
                  * @context Entity
                  * @added by topheman
                  * @triggers the startdrag or the drag event specified in the .draggable() method
@@ -738,8 +764,10 @@ See more on the readme file
                     }
                 };
                 
-                /**
+                /*
                  * @function _world_mouseupHandlerForDragEvent
+                 * @param {MouseEvent} e
+                 * @param {Object} mousePos
                  * @context Entity
                  * @added by topheman
                  * @triggers the stopdrag event specified in the .draggable() method
@@ -761,8 +789,10 @@ See more on the readme file
                     this._world._draggingEntityId = null;//untag the dragging entity on world
                 };
                 
-                /**
+                /*
                  * Prepares the mouseInfos object passed in callback
+                 * @param {Object} mouseInfos
+                 * @param {Object} originalMouseInfos
                  * @todo optimize
                  * @added by topheman
                  */
@@ -779,7 +809,7 @@ See more on the readme file
                     return result;
                 };
                 
-                /**
+                /*
                  * adding mouse/touch events to the canvas with the previous handlers
                  * @added by topheman
                  */
@@ -852,7 +882,11 @@ See more on the readme file
                 world.SetContactListener(listener);
             }
         },
-                
+        
+        /*
+         * Checks if at least one type of listeners has been left enabled
+         * @added by topheman
+         */
         checkListenersOptions : function(){
             var eventsEnabled = [];
             //if both touch and mouse events are disabled, enable the event listener available
@@ -874,7 +908,8 @@ See more on the readme file
         },
         
         /**
-         * Stops or resumes the animationLoop
+         * @_module world
+         * @description Stops or resumes the animationLoop
          * @added by topheman
          */
         pause : function(){
@@ -896,7 +931,7 @@ See more on the readme file
             this._keyupHandlers[id] = f;
         },
         
-        /**
+        /*
          * @param {Int} id
          * @param {Function} f callback
          * @private
@@ -906,7 +941,7 @@ See more on the readme file
             this._mousedownHandlers[id] = f;
         },
                 
-        /**
+        /*
          * @param {Int} id
          * @param {Function} f callback
          * @private
@@ -916,7 +951,7 @@ See more on the readme file
             this._mouseupHandlers[id] = f;
         },
                 
-        /**
+        /*
          * @param {Int} id
          * @param {Function} f callback
          * @private
@@ -926,7 +961,7 @@ See more on the readme file
             this._mousemoveHandlers[id] = f;
         },
                 
-        /**
+        /*
          * @param {Int} id
          * @private
          * @added by topheman
@@ -935,7 +970,7 @@ See more on the readme file
             delete this._mousedownHandlers[id];
         },
                 
-        /**
+        /*
          * @param {Int} id
          * @private
          * @added by topheman
@@ -944,7 +979,7 @@ See more on the readme file
             delete this._mouseupHandlers[id];
         },
                 
-        /**
+        /*
          * @param {Int} id
          * @private
          * @added by topheman
@@ -953,7 +988,7 @@ See more on the readme file
             delete this._mousemoveHandlers[id];
         },
         
-        /**
+        /*
          * @param {Int} id
          * @param {Function} f callback
          * @private
@@ -963,7 +998,7 @@ See more on the readme file
             this._touchstartHandlers[id] = f;
         },
         
-        /**
+        /*
          * @param {Int} id
          * @param {Function} f callback
          * @private
@@ -973,7 +1008,7 @@ See more on the readme file
             this._touchendHandlers[id] = f;
         },
         
-        /**
+        /*
          * @param {Int} id
          * @param {Function} f callback
          * @private
@@ -983,7 +1018,7 @@ See more on the readme file
             this._touchmoveHandlers[id] = f;
         },
         
-        /**
+        /*
          * @param {Int} id
          * @param {Function} f callback
          * @private
@@ -993,7 +1028,7 @@ See more on the readme file
             this._touchcancelHandlers[id] = f;
         },
                 
-        /**
+        /*
          * @param {Int} id
          * @private
          * @added by topheman
@@ -1002,7 +1037,7 @@ See more on the readme file
             delete this._touchstartHandlers[id];
         },
                 
-        /**
+        /*
          * @param {Int} id
          * @private
          * @added by topheman
@@ -1011,7 +1046,7 @@ See more on the readme file
             delete this._touchendHandlers[id];
         },
                 
-        /**
+        /*
          * @param {Int} id
          * @private
          * @added by topheman
@@ -1020,7 +1055,7 @@ See more on the readme file
             delete this._touchmoveHandlers[id];
         },
                 
-        /**
+        /*
          * @param {Int} id
          * @private
          * @added by topheman
@@ -1029,7 +1064,7 @@ See more on the readme file
             delete this._touchHandlers[id];
         },
                 
-        /**
+        /*
          * @param {Int} id
          * @param {Function} f callback
          * @private
@@ -1039,7 +1074,7 @@ See more on the readme file
             this._startdragHandlers[id] = f;
         },
                 
-        /**
+        /*
          * @param {Int} id
          * @param {Function} f callback
          * @private
@@ -1049,7 +1084,7 @@ See more on the readme file
             this._dragHandlers[id] = f;
         },
                 
-        /**
+        /*
          * @param {Int} id
          * @param {Function} f callback
          * @private
@@ -1059,7 +1094,7 @@ See more on the readme file
             this._stopdragHandlers[id] = f;
         },
                 
-        /**
+        /*
          * @param {Int} id
          * @param {Function} f callback
          * @private
@@ -1069,7 +1104,7 @@ See more on the readme file
             this._mouseinHandlers[id] = f;
         },
                 
-        /**
+        /*
          * @param {Int} id
          * @param {Function} f callback
          * @private
@@ -1079,7 +1114,7 @@ See more on the readme file
             this._mouseoutHandlers[id] = f;
         },
                 
-        /**
+        /*
          * @param {Int} id
          * @private
          * @added by topheman
@@ -1088,7 +1123,7 @@ See more on the readme file
             delete this._mouseinHandlers[id];
         },
                 
-        /**
+        /*
          * @param {Int} id
          * @private
          * @added by topheman
@@ -1097,7 +1132,7 @@ See more on the readme file
             delete this._mouseoutHandlers[id];
         },
                 
-        /**
+        /*
          * @param {Int} id
          * @private
          * @added by topheman
@@ -1106,7 +1141,7 @@ See more on the readme file
             delete this._startdragHandlers[id];
         },
                 
-        /**
+        /*
          * @param {Int} id
          * @private
          * @added by topheman
@@ -1115,7 +1150,7 @@ See more on the readme file
             delete this._dragHandlers[id];
         },
                 
-        /**
+        /*
          * @param {Int} id
          * @private
          * @added by topheman
@@ -1176,11 +1211,14 @@ See more on the readme file
         },
                 
         /**
-         * @param {Object} e event
-         * @returns {Object} position x,y
+         * @_module world
+         * @_params [value]
+         * @value: {MouseEvent}|{Touch}
+         * @return: {x,y}
+         * @description Returns the position in the world from the position of the mouse or a touch
          * @added by topheman
          */
-        calculateWorldPositionFromMouse: function(e){
+        calculateWorldPositionFromPointer: function(e){
             return {
                 x: (e.offsetX || e.layerX || e.pageX) / this.scale(),
                 y: (e.offsetY || e.layerY || e.pageY) / this.scale()
@@ -1546,8 +1584,12 @@ See more on the readme file
         },
         
         /**
-         * @param {Function} callback
-         * @context World
+         * @_module world
+         * @callback function(e,mouseInfos)
+         * <ul>
+         * @this World
+         * </ul>
+         * @description Add an onMousedown callback to the World
          * @added by topheman
          */
         onMousedown : function(callback){
@@ -1559,8 +1601,12 @@ See more on the readme file
         },
         
         /**
-         * @param {Function} callback
-         * @context World
+         * @_module world
+         * @callback function(e,mouseInfos)
+         * <ul>
+         * @this World
+         * </ul>
+         * @description Add an onMouseup callback to the World
          * @added by topheman
          */
         onMouseup : function(callback){
@@ -1572,8 +1618,12 @@ See more on the readme file
         },
         
         /**
-         * @param {Function} callback
-         * @context World
+         * @_module world
+         * @callback function(e,mouseInfos)
+         * <ul>
+         * @this World
+         * </ul>
+         * @description Add an onMousemove callback to the World
          * @added by topheman
          */
         onMousemove : function(callback){
@@ -1585,8 +1635,8 @@ See more on the readme file
         },
         
         /**
-         * @param {Function} callback
-         * @context World
+         * @_module world
+         * @description Removes the onMousedown callback from this World
          * @added by topheman
          */    
         unbindOnMousedown: function(){
@@ -1598,8 +1648,8 @@ See more on the readme file
         },
         
         /**
-         * @param {Function} callback
-         * @context World
+         * @_module world
+         * @description Removes the onMouseup callback from this World
          * @added by topheman
          */   
         unbindOnMouseup: function(){
@@ -1611,8 +1661,8 @@ See more on the readme file
         },
         
         /**
-         * @param {Function} callback
-         * @context World
+         * @_module world
+         * @description Removes the onMousemove callback from this World
          * @added by topheman
          */    
         unbindOnMousemove: function(){
@@ -1624,8 +1674,12 @@ See more on the readme file
         },
         
         /**
-         * @param {Function} callback
-         * @context World
+         * @_module world
+         * @callback function(e,mouseInfos)
+         * <ul>
+         * @this World
+         * </ul>
+         * @description Add an onMousein callback to the World
          * @added by topheman
          */
         onMousein : function(callback){
@@ -1637,8 +1691,12 @@ See more on the readme file
         },
         
         /**
-         * @param {Function} callback
-         * @context World
+         * @_module world
+         * @callback function(e,mouseInfos)
+         * <ul>
+         * @this World
+         * </ul>
+         * @description Add an onMouseout callback to the World
          * @added by topheman
          */
         onMouseout : function(callback){
@@ -1650,8 +1708,8 @@ See more on the readme file
         },
         
         /**
-         * @param {Function} callback
-         * @context World
+         * @_module world
+         * @description Removes the onMousein callback from this World
          * @added by topheman
          */    
         unbindOnMousein: function(){
@@ -1663,8 +1721,8 @@ See more on the readme file
         },
         
         /**
-         * @param {Function} callback
-         * @context World
+         * @_module world
+         * @description Removes the onMouseout callback from this World
          * @added by topheman
          */    
         unbindOnMouseout: function(){
@@ -1676,8 +1734,12 @@ See more on the readme file
         },
         
         /**
-         * @param {Function} callback
-         * @context World
+         * @_module world
+         * @callback function(e,touchInfos)
+         * <ul>
+         * @this World
+         * </ul>
+         * @description Add an onTouchstart callback to the World
          * @added by topheman
          */
         onTouchstart : function(callback){
@@ -1689,8 +1751,12 @@ See more on the readme file
         },
         
         /**
-         * @param {Function} callback
-         * @context World
+         * @_module world
+         * @callback function(e,touchInfos)
+         * <ul>
+         * @this World
+         * </ul>
+         * @description Add an onTouchmove callback to the World
          * @added by topheman
          */
         onTouchmove : function(callback){
@@ -1702,8 +1768,12 @@ See more on the readme file
         },
         
         /**
-         * @param {Function} callback
-         * @context World
+         * @_module world
+         * @callback function(e,touchInfos)
+         * <ul>
+         * @this World
+         * </ul>
+         * @description Add an onTouchend callback to the World
          * @added by topheman
          */
         onTouchend : function(callback){
@@ -1715,8 +1785,12 @@ See more on the readme file
         },
         
         /**
-         * @param {Function} callback
-         * @context World
+         * @_module world
+         * @callback function(e,touchInfos)
+         * <ul>
+         * @this World
+         * </ul>
+         * @description Add an onTouchcancel callback to the World
          * @added by topheman
          */
         onTouchcancel : function(callback){
@@ -1728,7 +1802,8 @@ See more on the readme file
         },
         
         /**
-         * @context World
+         * @_module world
+         * @description Removes the onTouchstart callback from this World
          * @added by topheman
          */
         unbindOnTouchstart : function(){
@@ -1740,7 +1815,8 @@ See more on the readme file
         },
         
         /**
-         * @context World
+         * @_module world
+         * @description Removes the onTouchmove callback from this World
          * @added by topheman
          */
         unbindOnTouchmove : function(callback){
@@ -1752,7 +1828,8 @@ See more on the readme file
         },
         
         /**
-         * @context World
+         * @_module world
+         * @description Removes the onTouchend callback from this World
          * @added by topheman
          */
         unbindOnTouchend : function(callback){
@@ -1764,7 +1841,8 @@ See more on the readme file
         },
         
         /**
-         * @context World
+         * @_module world
+         * @description Removes the onTouchcancel callback from this World
          * @added by topheman
          */
         unbindOnTouchcancel : function(callback){
@@ -2489,7 +2567,12 @@ See more on the readme file
         },
         
         /**
-         * @param {Function} callback
+         * @_module entity
+         * @callback function(e,mouseInfos)
+         * <ul>
+         * @this Entity
+         * </ul>
+         * @description Add an onMousedown callback to this entity
          * @added by topheman
          */
         onMousedown : function(callback){
@@ -2501,7 +2584,12 @@ See more on the readme file
         },
         
         /**
-         * @param {Function} callback
+         * @_module entity
+         * @callback function(e,mouseInfos)
+         * <ul>
+         * @this Entity
+         * </ul>
+         * @description Add an onMouseup callback to this entity
          * @added by topheman
          */     
         onMouseup : function(callback){
@@ -2513,7 +2601,12 @@ See more on the readme file
         },
         
         /**
-         * @param {Function} callback
+         * @_module entity
+         * @callback function(e,mouseInfos)
+         * <ul>
+         * @this Entity
+         * </ul>
+         * @description Add an onMousemove callback to this entity
          * @added by topheman
          */    
         onMousemove : function(callback){
@@ -2525,6 +2618,8 @@ See more on the readme file
         },
         
         /**
+         * @_module entity
+         * @description Removes the onMousedown callback from this entity
          * @added by topheman
          */    
         unbindOnMousedown: function(){
@@ -2536,6 +2631,8 @@ See more on the readme file
         },
         
         /**
+         * @_module entity
+         * @description Removes the onMouseup callback from this entity
          * @added by topheman
          */   
         unbindOnMouseup: function(){
@@ -2547,6 +2644,8 @@ See more on the readme file
         },
         
         /**
+         * @_module entity
+         * @description Removes the onMousemove callback from this entity
          * @added by topheman
          */    
         unbindOnMousemove: function(){
@@ -2558,7 +2657,12 @@ See more on the readme file
         },
         
         /**
-         * @param {Function} callback
+         * @_module entity
+         * @callback function(e,mouseInfos)
+         * <ul>
+         * @this Entity
+         * </ul>
+         * @description Add an onMousein callback to this entity
          * @added by topheman
          */    
         onMousein : function(callback){
@@ -2573,7 +2677,12 @@ See more on the readme file
         },
         
         /**
-         * @param {Function} callback
+         * @_module entity
+         * @callback function(e,mouseInfos)
+         * <ul>
+         * @this Entity
+         * </ul>
+         * @description Add an onMouseout callback to this entity
          * @added by topheman
          */    
         onMouseout : function(callback){
@@ -2588,6 +2697,8 @@ See more on the readme file
         },
         
         /**
+         * @_module entity
+         * @description Removes the onMousein callback from this entity
          * @added by topheman
          */    
         unbindOnMousein: function(){
@@ -2599,6 +2710,8 @@ See more on the readme file
         },
         
         /**
+         * @_module entity
+         * @description Removes the onMouseout callback from this entity
          * @added by topheman
          */    
         unbindOnMouseout: function(){
@@ -2610,6 +2723,12 @@ See more on the readme file
         },
         
         /**
+         * @_module entity
+         * @callback function(e,touchInfos)
+         * <ul>
+         * @this Entity
+         * </ul>
+         * @description Add an onTouchstart callback to this entity
          * @added by topheman
          */  
         onTouchstart : function(callback){
@@ -2621,6 +2740,12 @@ See more on the readme file
         },
         
         /**
+         * @_module entity
+         * @callback function(e,touchInfos)
+         * <ul>
+         * @this Entity
+         * </ul>
+         * @description Add an onTouchend callback to this entity
          * @added by topheman
          */  
         onTouchend : function(callback){
@@ -2632,6 +2757,12 @@ See more on the readme file
         },
         
         /**
+         * @_module entity
+         * @callback function(e,touchInfos)
+         * <ul>
+         * @this Entity
+         * </ul>
+         * @description Add an onTouchmove callback to this entity
          * @added by topheman
          */  
         onTouchmove : function(callback){
@@ -2736,9 +2867,11 @@ See more on the readme file
         },
           
         /**
-         * Pins an entity to the world
+         * @_module entity
+         * @_params x,y
          * @param {type} x @optional
          * @param {type} y @optional
+         * @description Pins an entity to the world
          */
         pin: function(x,y) {
             if(this.isPined()){
@@ -2765,25 +2898,37 @@ See more on the readme file
             jointDefinition.timeStep = 1/60;//hard coded ?!!
             this._pinJoint = this._world._world.CreateJoint(jointDefinition);
         },
-        
+          
+        /**
+         * @_module entity
+         * @description Unpins an entity from the world
+         */
         unPin: function(){
             if(this._pinJoint){
                 this._world._world.DestroyJoint(this._pinJoint);
                 this._pinJoint = null;
             }
         },
-                
+          
+        /**
+         * @_module entity
+         * @return {Boolean}
+         * @description Returns true if the entity is pined to the world
+         */   
         isPined : function(){
             return this._pinJoint ? true : false;
         },
                 
         /**
-         * @param {String}|{Object} options @optional
-         *      @disabled {Boolean}
-         *      @type {String} regularDrag or eventDrag
-         *      @start {Function}
-         *      @drag {Function}
-         *      @stop {Function}
+         * @_module entity
+         * @_params [options]
+         * @description Turns an entity to draggable by the mouse, with multiple callbacks. 
+         * @disabled {Boolean} true/false to disable/enable the draggable state
+         * @type {String} regularDrag/eventDrag - regularDrag : Moves the entity with the mouse / eventDrag : doesn't move the entity, only sends you the data and callbacks
+         * @start function(e,mouseInfos)
+         * @drag function(e,mouseInfos)
+         * @stop function(e,mouseInfos)
+         * The mouseInfos variable passed within the callback function contains the original position of the mouse when the drag started and its current position
          * @added by topheman
          */
         mouseDraggable: function(options){
