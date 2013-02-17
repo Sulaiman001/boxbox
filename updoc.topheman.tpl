@@ -10,7 +10,7 @@
 body {
   padding: 0;
   margin: 1em 1em 0;
-  font-family: sans-serif;
+  font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
   line-height: 1.4em;
 }
 
@@ -48,20 +48,19 @@ section {
 
 h1, h2, h3 {
   margin: 6px 0 .6em;
-  font-family: serif;
 }
 
 h1 {
-  font-size: 1.6em;
+  font-size: 1.2em;
 }
 
 h2 {
-  font-size: 1.4em;
+  font-size: 1em;
   margin: .4em 0 .8em;
 }
 
 h3 {
-  font-size: 1.2em;
+  font-size: 0.8em;
 }
 
 p {
@@ -149,8 +148,6 @@ ul.properties li {
 
 .property {
   font-weight: bold;
-  font-family: serif;
-  font-size: 1.2em;
 }
 
 .depth0 {

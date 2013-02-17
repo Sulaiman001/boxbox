@@ -3073,13 +3073,32 @@ See more on the readme file
          * @_name mouseDraggable
          * @_module entity
          * @_params [options]
-         * @description Turns an entity to draggable by the mouse, with multiple callbacks. 
+         * @description Turns an entity to draggable by the mouse, with multiple callbacks.
+         *      <br>The mouseInfos variable passed within the callback function contains the original position of the mouse when the drag started and its current position.
+         *      <br><br>without options
+         * <code>entity.mouseDraggable();</code>
+         * With options
+         * <code>entity.mouseDraggable({
+         *      start : function(e, mouseInfos){
+         *          console.info('StartDrag', e, mouseInfos);
+         *      },
+         *      drag : function(e, mouseInfos){
+         *          console.info('Drag', e, mouseInfos);
+         *      },
+         *      stop : function(e, mouseInfos){
+         *          console.info('StopDrag', e, mouseInfos);
+         *      }
+         * });</code>
+         * Enable / disable
+         * <code>entity.mouseDraggable('disable');</code>
+         * @options
+         * <ul>
          * @disabled {Boolean} true/false to disable/enable the draggable state
          * @type {String} regularDrag/eventDrag - regularDrag : Moves the entity with the mouse / eventDrag : doesn't move the entity, only sends you the data and callbacks
          * @start function(e,mouseInfos)
          * @drag function(e,mouseInfos)
          * @stop function(e,mouseInfos)
-         * The mouseInfos variable passed within the callback function contains the original position of the mouse when the drag started and its current position
+         * </ul>
          * @added by topheman
          */
         mouseDraggable: function(options){
