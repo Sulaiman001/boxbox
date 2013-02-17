@@ -9,9 +9,9 @@ function initViewport(){
     var width = window.innerWidth;
     var height = window.innerHeight;
     canvas.width = width;
-    canvas.height = 200 || height;
+    canvas.height = 400 || height;
 }
-
+//if(true){
 if(!!('ontouchstart' in window) && !(/Chrome\/24/.test(navigator.appVersion))){
        
     function log(){
@@ -63,6 +63,18 @@ if(!!('ontouchstart' in window) && !(/Chrome\/24/.test(navigator.appVersion))){
                     y : e[i].y
                 });
             }
+        }
+        
+        else {
+            
+            result = {};
+            for (var i in e){
+                if(i !== 'entity')
+                    result[i] = e[i];
+                else
+                    result[i] = e[i]._id;
+            }
+            
         }
         
         return tab ? JSON.stringify(result, null, 4): JSON.stringify(result);

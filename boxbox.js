@@ -73,7 +73,7 @@ See more on the readme file
         return new F();
     }
     
-    // A minimal extend for simple objects inspired by jQuery
+    // A minimal extend for simple objects inspired by jQuery @modifier by topheman : deep copy added because of reference problems @todo verify on the prototype
     function extend(target, o) {
         if (target === undefined) {
             target = {};
@@ -81,7 +81,12 @@ See more on the readme file
         if (o !== undefined) {
             for (var key in o) {
                 if (o.hasOwnProperty(key) && target[key] === undefined) {
-                    target[key] = o[key];
+                    if (typeof o[key] === 'object'){
+                        target[key] = extend(o[key], o[key]);
+                    }
+                    else{
+                        target[key] = o[key];
+                    }
                 }
             }
         }
@@ -139,10 +144,10 @@ See more on the readme file
         scale: 30,
         tickFrequency: 50,
         collisionOutlines: false,
-        disableTouchEvents : false, //@add by topheman
-        disableMouseEvents : false, //@add by topheman
-        disableKeyEvents : false, //@add by topheman
-        preventScroll : false
+        disableTouchEvents : false, //@added by topheman
+        disableMouseEvents : false, //@added by topheman
+        disableKeyEvents : false, //@added by topheman
+        preventScroll : false //@added by topheman
     };
     
     var JOINT_DEFAULT_OPTIONS = {
@@ -179,9 +184,9 @@ See more on the readme file
         _dragHandlers: {},//@added by topheman
         _stopdragHandlers: {},//@added by topheman
         _touchstartHandlers: {},//@added by topheman
-        _touchendHandlers: {},//@added by topheman      (only for world) @todo change array to simple var or keep the same structure ?
-        _touchmoveHandlers: {},//@added by topheman     (only for world) @todo change array to simple var or keep the same structure ?
-        _touchcancelHandlers: {},//@added by topheman   (only for world) @todo change array to simple var or keep the same structure ?
+        _touchendHandlers: {},//@added by topheman
+        _touchmoveHandlers: {},//@added by topheman
+        _touchcancelHandlers: {},//@added by topheman
         _startContactHandlers: {},
         _finishContactHandlers: {},
         _impactHandlers: {},
@@ -518,8 +523,15 @@ See more on the readme file
                  * @added by topheman
                  */
                 var touchstartHandler = function (e) {
-                    var touchInfos = getTouchInfos(e);
+                    var touchInfos = getTouchInfos(e),i,key;
                     _world_touchstartHandler(e, touchInfos);
+                    for(key in self._touchstartHandlers) {
+                        for (i in touchInfos){
+                            if(touchInfos[i].entity && touchInfos[i].entity._id == key && !touchInfos[i].entity._destroyed){
+                                self._touchstartHandlers[key].call(touchInfos[i].entity,e,touchInfos[i]);
+                            }
+                        }
+                    }
                     e.preventDefault();
                 };
                 
@@ -530,8 +542,15 @@ See more on the readme file
                  * @added by topheman
                  */
                 var touchmoveHandler = function(e) {
-                    var touchInfos = getTouchInfos(e);
+                    var touchInfos = getTouchInfos(e),i,key;
                     _world_touchmoveHandler(e, touchInfos);
+                    for(key in self._touchmoveHandlers) {
+                        for (i in touchInfos){
+                            if(touchInfos[i].entity && touchInfos[i].entity._id == key && !touchInfos[i].entity._destroyed){
+                                self._touchmoveHandlers[key].call(touchInfos[i].entity,e,touchInfos[i]);
+                            }
+                        }
+                    }
                     e.preventDefault();
                 };
                 
@@ -542,9 +561,15 @@ See more on the readme file
                  * @added by topheman
                  */
                 var touchendHandler = function(e) {
-                    var touchInfos = getTouchInfos(e);
-                   _world_touchendHandler(e, touchInfos);
-                    e.preventDefault();
+                    var touchInfos = getTouchInfos(e),i,key;
+                    _world_touchendHandler(e, touchInfos);
+                    for(key in self._touchendHandlers) {
+                        for (i in touchInfos){
+                            if(touchInfos[i].entity && touchInfos[i].entity._id == key && !touchInfos[i].entity._destroyed){
+                                self._touchendHandlers[key].call(touchInfos[i].entity,e,touchInfos[i]);
+                            }
+                        }
+                    }
                 };
                 
                 
@@ -2850,7 +2875,7 @@ See more on the readme file
          * @callback function(e,touchInfos)
          * <ul>
          * @e TouchEvent
-         * @touchInfos [{Entity,touchIdentifier,x,y}]
+         * @touchInfos {touchIdentifier,x,y}
          * @this Entity
          * </ul>
          * @description Add an onTouchstart callback to this entity
@@ -2861,7 +2886,7 @@ See more on the readme file
                 console.warn('Touch events are disabled, you tried to call onTouchstart');
                 return false;
             }
-            console.warn('Not implemented yet');
+            this._world._addTouchstartHandler(this._id, callback);
         },
         
         /**
@@ -2871,7 +2896,7 @@ See more on the readme file
          * @callback function(e,touchInfos)
          * <ul>
          * @e TouchEvent
-         * @touchInfos [{Entity,touchIdentifier,x,y}]
+         * @touchInfos {touchIdentifier,x,y}
          * @this Entity
          * </ul>
          * @description Add an onTouchend callback to this entity
@@ -2882,7 +2907,7 @@ See more on the readme file
                 console.warn('Touch events are disabled, you tried to call onTouchend');
                 return false;
             }
-            console.warn('Not implemented yet');
+            this._world._addTouchendHandler(this._id, callback);
         },
         
         /**
@@ -2892,7 +2917,7 @@ See more on the readme file
          * @callback function(e,touchInfos)
          * <ul>
          * @e TouchEvent
-         * @touchInfos [{Entity,touchIdentifier,x,y}]
+         * @touchInfos {touchIdentifier,x,y}
          * @this Entity
          * </ul>
          * @description Add an onTouchmove callback to this entity
@@ -2903,7 +2928,49 @@ See more on the readme file
                 console.warn('Touch events are disabled, you tried to call onTouchmove');
                 return false;
             }
-            console.warn('Not implemented yet');
+            this._world._addTouchmoveHandler(this._id, callback);
+        },
+        
+        /**
+         * @_name unbindOnTouchstart
+         * @_module entity
+         * @description Removes the onTouchstart callback from this entity
+         * @added by topheman
+         */    
+        unbindOnTouchstart: function(){
+            if(this._world._ops.disableTouchEvents){
+                console.warn('Touch events are disabled, you tried to call unbindOnTouchstart');
+                return false;
+            }
+            this._world._removeTouchstartHandler(this._id);
+        },
+        
+        /**
+         * @_name unbindOnTouchend
+         * @_module entity
+         * @description Removes the onTouchend callback from this entity
+         * @added by topheman
+         */    
+        unbindOnTouchend: function(){
+            if(this._world._ops.disableTouchEvents){
+                console.warn('Touch events are disabled, you tried to call unbindOnTouchend');
+                return false;
+            }
+            this._world._removeTouchendHandler(this._id);
+        },
+        
+        /**
+         * @_name unbindOnTouchmove
+         * @_module entity
+         * @description Removes the onTouchmove callback from this entity
+         * @added by topheman
+         */    
+        unbindOnTouchmove: function(){
+            if(this._world._ops.disableTouchEvents){
+                console.warn('Touch events are disabled, you tried to call unbindOnTouchmove');
+                return false;
+            }
+            this._world._removeTouchmoveHandler(this._id);
         },
 
         /**
