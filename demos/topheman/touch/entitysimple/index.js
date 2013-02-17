@@ -14,7 +14,7 @@ function init(){
       x: 2,
       y: 2,
       width: 3,
-      height: 2
+      height: 4
     });
     decor1.name('decor1');
 

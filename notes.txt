@@ -23,3 +23,5 @@ readme
 
 gh-page
 logo - done
+
+make an accurate .find(x,y) method
