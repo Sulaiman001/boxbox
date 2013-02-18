@@ -24,6 +24,7 @@ touchDraggable
  - eventDragSimpleTouch
  - eventDragMultiTouch
 
+- options :
  - regularDrag
     - allowMultitouch
         - allowPinch
@@ -32,6 +33,12 @@ touchDraggable
         - allowPinch
  - noMove
  - noRotate
+- events :
+ - start : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchmove (on the first touch ON the entity)
+ - drag : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchmove (on any touch joined to the entity)
+ - stop : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchend (on the last touch joined to the entity)
+ - touchadd : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchstart (on any touch joined to the entity)
+ - touchremove : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchend (on any touch joined to the entity)
  
  touchDragInfos =
     - touchIdentifier
@@ -42,11 +49,5 @@ touchDraggable
 
 
 special css styles (prevent text select, drag ...)
-
-license
-readme
-
-gh-page
-logo - done
 
 make an accurate .find(x,y) method

@@ -1221,7 +1221,7 @@ improve performance.</span>
                   <li>
                   
                     <span class="property">return</span>
-                    <span>a new <a href="#name-World">World</a></span>
+                    <span>a new <a href="#name-World-World">World</a></span>
                   
                   </li>
                 
@@ -1465,7 +1465,7 @@ Set to 0 to not show a border.</div>
             </ul>
             
             <div class="description">Get the Entity position in pixels. Useful for custom
-rendering. Unlike <a href="#name-position">position</a> the result
+rendering. Unlike <a href="#name-entity.position-position">position</a> the result
 is relative to the World's scale and camera position.</div>
             
           </section>
@@ -2146,7 +2146,7 @@ is relative to the World's scale and camera position.</div>
                   <li>
                   
                     <span class="property">start</span>
-                    <span>function(e,mouseInfos)</span>
+                    <span>function(e,mouseDraggableInfos)</span>
                   
                   </li>
                 
@@ -2155,7 +2155,7 @@ is relative to the World's scale and camera position.</div>
                   <li>
                   
                     <span class="property">drag</span>
-                    <span>function(e,mouseInfos)</span>
+                    <span>function(e,mouseDraggableInfos)</span>
                   
                   </li>
                 
@@ -2164,7 +2164,35 @@ is relative to the World's scale and camera position.</div>
                   <li>
                   
                     <span class="property">stop</span>
-                    <span>function(e,mouseInfos)
+                    <span>function(e,mouseDraggableInfos)
+</ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">mouseDraggableInfos</span>
+                    <span><ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">position</span>
+                    <span>: {x,y}</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">originalPosition</span>
+                    <span>: {x,y}
 </ul></span>
                   
                   </li>
@@ -2183,19 +2211,19 @@ is relative to the World's scale and camera position.</div>
             </ul>
             
             <div class="description">Turns an entity to draggable by the mouse, with multiple callbacks.
-<br>The mouseInfos variable passed within the callback function contains the original position of the mouse when the drag started and its current position.
+<br>The mouseDraggableInfos variable passed within the callback function contains the original position of the mouse when the drag started and its current position.
 <br><br>without options
 <code>entity.mouseDraggable();</code>
 With options
 <code>entity.mouseDraggable({
-start : function(e, mouseInfos){
-console.info('StartDrag', e, mouseInfos);
+start : function(e, mouseDraggableInfos){
+console.info('StartDrag', e, mouseDraggableInfos);
 },
-drag : function(e, mouseInfos){
-console.info('Drag', e, mouseInfos);
+drag : function(e, mouseDraggableInfos){
+console.info('Drag', e, mouseDraggableInfos);
 },
-stop : function(e, mouseInfos){
-console.info('StopDrag', e, mouseInfos);
+stop : function(e, mouseDraggableInfos){
+console.info('StopDrag', e, mouseDraggableInfos);
 }
 });</code>
 Enable / disable
@@ -4688,7 +4716,7 @@ collision detection</span>
                   <li>
                   
                     <span class="property">return</span>
-                    <span>a new <a href="#name-Entity">Entity</a></span>
+                    <span>a new <a href="#name-Entity-Entity">Entity</a></span>
                   
                   </li>
                 

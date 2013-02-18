@@ -120,7 +120,7 @@ See more on the readme file
      * @tickFrequency (default 50) onTick events happen every tickFrequency milliseconds
      * @collisionOutlines (default false) render outlines over everything for debugging collisions
      * </ul>
-     * @return a new <a href="#name-World">World</a>
+     * @return a new <a href="#name-World-World">World</a>
      * @description
      without options
      <code>var canvasElem = document.getElementById("myCanvas");
@@ -1292,7 +1292,7 @@ See more on the readme file
          * @onRender event handler on render
          * @onTick event handler on tick
          * </ul>
-         * @return a new <a href="#name-Entity">Entity</a>
+         * @return a new <a href="#name-Entity-Entity">Entity</a>
          * @description
          <h2>Example</h2>
          <code>var player = world.createEntity({
@@ -2279,7 +2279,7 @@ See more on the readme file
          * @_params
          * @return {x,y}
          * @description Get the Entity position in pixels. Useful for custom
-         * rendering. Unlike <a href="#name-position">position</a> the result
+         * rendering. Unlike <a href="#name-entity.position-position">position</a> the result
          * is relative to the World's scale and camera position.
          */
         canvasPosition: function(value) {
@@ -3102,19 +3102,19 @@ See more on the readme file
          * @_module entity
          * @_params [options]
          * @description Turns an entity to draggable by the mouse, with multiple callbacks.
-         *      <br>The mouseInfos variable passed within the callback function contains the original position of the mouse when the drag started and its current position.
+         *      <br>The mouseDraggableInfos variable passed within the callback function contains the original position of the mouse when the drag started and its current position.
          *      <br><br>without options
          * <code>entity.mouseDraggable();</code>
          * With options
          * <code>entity.mouseDraggable({
-         *      start : function(e, mouseInfos){
-         *          console.info('StartDrag', e, mouseInfos);
+         *      start : function(e, mouseDraggableInfos){
+         *          console.info('StartDrag', e, mouseDraggableInfos);
          *      },
-         *      drag : function(e, mouseInfos){
-         *          console.info('Drag', e, mouseInfos);
+         *      drag : function(e, mouseDraggableInfos){
+         *          console.info('Drag', e, mouseDraggableInfos);
          *      },
-         *      stop : function(e, mouseInfos){
-         *          console.info('StopDrag', e, mouseInfos);
+         *      stop : function(e, mouseDraggableInfos){
+         *          console.info('StopDrag', e, mouseDraggableInfos);
          *      }
          * });</code>
          * Enable / disable
@@ -3123,9 +3123,14 @@ See more on the readme file
          * <ul>
          * @disabled {Boolean} true/false to disable/enable the draggable state
          * @type {String} regularDrag/eventDrag - regularDrag : Moves the entity with the mouse / eventDrag : doesn't move the entity, only sends you the data and callbacks
-         * @start function(e,mouseInfos)
-         * @drag function(e,mouseInfos)
-         * @stop function(e,mouseInfos)
+         * @start function(e,mouseDraggableInfos)
+         * @drag function(e,mouseDraggableInfos)
+         * @stop function(e,mouseDraggableInfos)
+         * </ul>
+         * @mouseDraggableInfos
+         * <ul>
+         * @position : {x,y}
+         * @originalPosition : {x,y}
          * </ul>
          * @added by topheman
          */
