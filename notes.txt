@@ -16,6 +16,31 @@ delete destroyed entity handlers
 mouseDraggable : special joints (not only mouseJoint)
 
 touchDraggable
+ - regularDragSimpleTouch
+ - regularDragMultiTouch
+ - pinchDrag
+ - pinchStay
+ - pinchStayNoRotate
+ - eventDragSimpleTouch
+ - eventDragMultiTouch
+
+ - regularDrag
+    - allowMultitouch
+        - allowPinch
+ - eventDrag
+    - allowMultitouch
+        - allowPinch
+ - noMove
+ - noRotate
+ 
+ touchDragInfos =
+    - touchIdentifier
+    - originalPosition = {x,y}
+    - position = {x,y}
+
+ callback(e,[touchDragInfos])
+
+
 special css styles (prevent text select, drag ...)
 
 license

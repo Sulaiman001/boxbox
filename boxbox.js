@@ -186,7 +186,6 @@ See more on the readme file
         _touchstartHandlers: {},//@added by topheman
         _touchendHandlers: {},//@added by topheman
         _touchmoveHandlers: {},//@added by topheman
-        _touchcancelHandlers: {},//@added by topheman
         _startContactHandlers: {},
         _finishContactHandlers: {},
         _impactHandlers: {},
@@ -494,10 +493,8 @@ See more on the readme file
                 var getEntityFromTouch = function (touch){
                     var touchPos = self.calculateWorldPositionFromPointer(touch);
                     var entityX = touchPos.x,
-                    entityY = touchPos.y,
-                    entities;
-                    entities = self.find(entityX,entityY);
-                    touchPos.entity = entities.length > 0 ? entities[0] : null;
+                    entityY = touchPos.y;
+                    touchPos.entity = self.getEntityByPosition(entityX,entityY);
                     touchPos.touchIdentifier = touch.identifier;
                     return touchPos;
                 };
@@ -526,9 +523,14 @@ See more on the readme file
                     var touchInfos = getTouchInfos(e),i,key;
                     _world_touchstartHandler(e, touchInfos);
                     for(key in self._touchstartHandlers) {
-                        for (i in touchInfos){
-                            if(touchInfos[i].entity && touchInfos[i].entity._id == key && !touchInfos[i].entity._destroyed){
-                                self._touchstartHandlers[key].call(touchInfos[i].entity,e,touchInfos[i]);
+                        if(key === worldCallbackEventId){
+                            self._touchstartHandlers[key].call(self,e,touchInfos);
+                        }
+                        else{
+                            for (i in touchInfos){
+                                if(touchInfos[i].entity && touchInfos[i].entity._id == key && !touchInfos[i].entity._destroyed){
+                                    self._touchstartHandlers[key].call(touchInfos[i].entity,e,touchInfos[i]);
+                                }
                             }
                         }
                     }
@@ -545,9 +547,14 @@ See more on the readme file
                     var touchInfos = getTouchInfos(e),i,key;
                     _world_touchmoveHandler(e, touchInfos);
                     for(key in self._touchmoveHandlers) {
-                        for (i in touchInfos){
-                            if(touchInfos[i].entity && touchInfos[i].entity._id == key && !touchInfos[i].entity._destroyed){
-                                self._touchmoveHandlers[key].call(touchInfos[i].entity,e,touchInfos[i]);
+                        if(key === worldCallbackEventId){
+                            self._touchmoveHandlers[key].call(self,e,touchInfos);
+                        }
+                        else{
+                            for (i in touchInfos){
+                                if(touchInfos[i].entity && touchInfos[i].entity._id == key && !touchInfos[i].entity._destroyed){
+                                    self._touchmoveHandlers[key].call(touchInfos[i].entity,e,touchInfos[i]);
+                                }
                             }
                         }
                     }
@@ -564,26 +571,17 @@ See more on the readme file
                     var touchInfos = getTouchInfos(e),i,key;
                     _world_touchendHandler(e, touchInfos);
                     for(key in self._touchendHandlers) {
-                        for (i in touchInfos){
-                            if(touchInfos[i].entity && touchInfos[i].entity._id == key && !touchInfos[i].entity._destroyed){
-                                self._touchendHandlers[key].call(touchInfos[i].entity,e,touchInfos[i]);
+                        if(key === worldCallbackEventId){
+                            self._touchendHandlers[key].call(self,e,touchInfos);
+                        }
+                        else{
+                            for (i in touchInfos){
+                                if(touchInfos[i].entity && touchInfos[i].entity._id == key && !touchInfos[i].entity._destroyed){
+                                    self._touchendHandlers[key].call(touchInfos[i].entity,e,touchInfos[i]);
+                                }
                             }
                         }
                     }
-                };
-                
-                
-                /*
-                 * @function touchcancelHandler
-                 * @param {TouchEvent} e
-                 * @added by topheman
-                 */
-                var touchcancelHandler = function (e) {
-//                    console.warn('touchcancel',logTouchInfos(e));
-                    if(self._touchcancelHandlers[worldCallbackEventId]){
-                        self._touchcancelHandlers[worldCallbackEventId].call(self, e);
-                    }
-                    e.preventDefault();
                 };
                 
                 /*
@@ -668,9 +666,7 @@ See more on the readme file
                  * @added by topheman
                  */
                 var _world_touchstartHandler = function(e, touchInfos){
-                    if(self._touchstartHandlers[worldCallbackEventId]){
-                        self._touchstartHandlers[worldCallbackEventId].call(self, e, touchInfos);
-                    }
+                    
                 };
                 
                 /*
@@ -680,9 +676,7 @@ See more on the readme file
                  * @added by topheman
                  */
                 var _world_touchmoveHandler = function(e, touchInfos){
-                    if(self._touchmoveHandlers[worldCallbackEventId]){
-                        self._touchmoveHandlers[worldCallbackEventId].call(self, e, touchInfos);
-                    }
+                    
                 };
                 
                 /*
@@ -692,9 +686,7 @@ See more on the readme file
                  * @added by topheman
                  */
                 var _world_touchendHandler = function(e, touchInfos){
-                    if(self._touchendHandlers[worldCallbackEventId]){
-                        self._touchendHandlers[worldCallbackEventId].call(self, e, touchInfos);
-                    }
+                    
                 };
                 
                 /*
@@ -847,7 +839,6 @@ See more on the readme file
                     self._canvas.addEventListener('touchstart', touchstartHandler, false);
                     self._canvas.addEventListener('touchmove', touchmoveHandler, false);
                     self._canvas.addEventListener('touchend', touchendHandler, false);
-                    self._canvas.addEventListener('touchcancel', touchcancelHandler, false);
                 }
                 if(!self._ops.disableMouseEvents){
                     self._canvas.addEventListener('mousedown', mousedownHandler, false);
@@ -1047,16 +1038,6 @@ See more on the readme file
         _addTouchmoveHandler: function(id, f) {
             this._touchmoveHandlers[id] = f;
         },
-        
-        /*
-         * @param {Int} id
-         * @param {Function} f callback
-         * @private
-         * @added by topheman
-         */
-        _addTouchcancelHandler: function(id, f) {
-            this._touchcancelHandlers[id] = f;
-        },
                 
         /*
          * @param {Int} id
@@ -1083,15 +1064,6 @@ See more on the readme file
          */
         _removeTouchmoveHandler: function(id) {
             delete this._touchmoveHandlers[id];
-        },
-                
-        /*
-         * @param {Int} id
-         * @private
-         * @added by topheman
-         */
-        _removeTouchcancelHandler: function(id) {
-            delete this._touchHandlers[id];
         },
                 
         /*
@@ -1481,6 +1453,30 @@ See more on the readme file
                 return true;
             }, aabb);
             return result;
+        },   
+
+        /**
+         * @_name getEntityByPosition
+         * @_module world
+         * @_params x,y
+         * @x
+         * @y
+         * @return Entity
+         * @description returns the Entity at a given point (more accurate than .find())
+         * @added by topheman
+         */
+        getEntityByPosition : function(x,y){
+            var body = null;
+            this._world.QueryPoint(function (fixture) {
+                body = fixture.GetBody();
+            }, new b2Vec2(x, y));
+            
+            if(body !== null && this._entities[body._bbid]){
+                return this._entities[body._bbid];
+            }
+            else{
+                return null;
+            }
         },
         
         /**
@@ -1635,7 +1631,7 @@ See more on the readme file
          * @callback function(e,mouseInfos)
          * <ul>
          * @e MouseEvent
-         * @mouseInfos {x,y}
+         * @mouseInfos {Entity,x,y}
          * @this World
          * </ul>
          * @description Add an onMousedown callback to the World
@@ -1656,7 +1652,7 @@ See more on the readme file
          * @callback function(e,mouseInfos)
          * <ul>
          * @e MouseEvent
-         * @mouseInfos {x,y}
+         * @mouseInfos {Entity,x,y}
          * @this World
          * </ul>
          * @description Add an onMouseup callback to the World
@@ -1677,7 +1673,7 @@ See more on the readme file
          * @callback function(e,mouseInfos)
          * <ul>
          * @e MouseEvent
-         * @mouseInfos {x,y}
+         * @mouseInfos {Entity,x,y}
          * @this World
          * </ul>
          * @description Add an onMousemove callback to the World
@@ -1740,7 +1736,7 @@ See more on the readme file
          * @callback function(e,mouseInfos)
          * <ul>
          * @e MouseEvent
-         * @mouseInfos {x,y}
+         * @mouseInfos {Entity,x,y}
          * @this World
          * </ul>
          * @description Add an onMousein callback to the World
@@ -1761,7 +1757,7 @@ See more on the readme file
          * @callback function(e,mouseInfos)
          * <ul>
          * @e MouseEvent
-         * @mouseInfos {x,y}
+         * @mouseInfos {Entity,x,y}
          * @this World
          * </ul>
          * @description Add an onMouseout callback to the World
@@ -1867,27 +1863,6 @@ See more on the readme file
         },
         
         /**
-         * @_name onTouchcancel
-         * @_module world
-         * @_params callback
-         * @callback function(e,touchInfos)
-         * <ul>
-         * @e TouchEvent
-         * @touchInfos [{Entity,touchIdentifier,x,y}]
-         * @this World
-         * </ul>
-         * @description Add an onTouchcancel callback to the World
-         * @added by topheman
-         */
-        onTouchcancel : function(callback){
-            if(this._ops.disableTouchEvents){
-                console.warn('Touch events are disabled, you tried to call onTouchcancel');
-                return false;
-            }
-            this._addTouchcancelHandler(worldCallbackEventId, callback);
-        },
-        
-        /**
          * @_name unbindOnTouchstart
          * @_module world
          * @description Removes the onTouchstart callback from this World
@@ -1927,20 +1902,6 @@ See more on the readme file
                 return false;
             }
             this._removeTouchendHandler(worldCallbackEventId);
-        },
-        
-        /**
-         * @_name unbindOnTouchcancel
-         * @_module world
-         * @description Removes the onTouchcancel callback from this World
-         * @added by topheman
-         */
-        unbindOnTouchcancel : function(callback){
-            if(this._ops.disableTouchEvents){
-                console.warn('Touch events are disabled, you tried to call unbindOnTouchcancel');
-                return false;
-            }
-            this._removeTouchcancelHandler(worldCallbackEventId);
         }
         
     };

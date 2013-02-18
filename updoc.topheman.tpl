@@ -197,7 +197,7 @@ ul.properties li {
                   <a href="#header-<%= s.header.replace(/ /g, '-') %>" class="<% if (compact_index && s._depth === deepest_depth) print("inlineIndexItem") %>"><%= s.header %></a>
                 <% } %>
                 <% if (!s.header && s._name) { %>
-                  <a href="#name-<%= s._name %>" class="<% if (compact_index && s._depth === deepest_depth) print("inlineIndexItem") %>"><%= s._name %></a>
+                  <a href="#name-<%= s._module %>-<%= s._name %>" class="<% if (compact_index && s._depth === deepest_depth) print("inlineIndexItem") %>"><%= s._name %></a>
                 <% } %>
               <%= compact_index && s._depth === deepest_depth ? "" : "</li>"%>
             <% } %>
@@ -212,7 +212,7 @@ ul.properties li {
             <%= s.header ? '<h1 id="header-' + s.header.replace(/ /g, '-') + '">' + s.header + "</h1>" : "" %>
             
             <% if (s._name) { %>
-              <h2 id="name-<%= s._name %>">
+              <h2 id="name-<%= s._module %>-<%= s._name %>">
                 <%= ((s._type === "function" || s._type === "other") && !(s._name === 'Entity' || s._name === 'World' || s._name === 'boxbox') ? "." : "") %><%= s._name %><%= ((s._type === "other" || s._type === "function") && !(s._name === 'Entity' || s._name === 'World' || s._name === 'boxbox') ? "( " + (s._params ? s._params : "") + " )" : "") %>
               </h2>
             <% } %>
