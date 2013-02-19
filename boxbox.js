@@ -81,8 +81,8 @@ See more on the readme file
         if (o !== undefined) {
             for (var key in o) {
                 if (o.hasOwnProperty(key) && target[key] === undefined) {
-                    if (typeof o[key] === 'object'){
-                        target[key] = extend(o[key], o[key]);
+                    if (typeof o[key] === 'object' && o[key] !== null && o[key] !== undefined){
+                        target[key] = extend(target[key], o[key]);
                     }
                     else{
                         target[key] = o[key];
@@ -604,7 +604,7 @@ See more on the readme file
                     entityY = mousePos.y;
                     if(self._draggingEntityId === null){
                         for(var key in self._entities){
-                            if(!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY) && self._entities[key]._ops._draggable.disabled === false){
+                            if(!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY) && self._entities[key]._ops._mouseDraggable.disabled === false){
                                 _world_mousemoveHandlerForDragEvent.call(self._entities[key],e,mousePos);
                             }
                         }
@@ -745,7 +745,7 @@ See more on the readme file
                         this._world._draggingEntityId = this._id;
                         
                         //init regularDrag
-                        if(this._ops._draggable.type === 'regularDrag'){
+                        if(this._ops._mouseDraggable.type === 'regularDrag'){
                             if(!this._moveJoint){
                                 //create the joint with the mouse on first call
                                 var jointDefinition = new Box2D.Dynamics.Joints.b2MouseJointDef();
@@ -759,7 +759,7 @@ See more on the readme file
                             }
                         }
                         //init eventDrag
-                        else if(this._ops._draggable.type === 'eventDrag'){
+                        else if(this._ops._mouseDraggable.type === 'eventDrag'){
 
                         }
                     }
@@ -1939,6 +1939,10 @@ See more on the readme file
         spriteHeight: 16,
         spriteX: 0,
         spriteY: 0,
+        _mouseDraggable : {//@added by topheman
+            disabled: true,//drag disabled by default
+            type: 'regularDrag'
+        },
         init: null,
         draw: function(ctx, x, y) {
             var cameraOffsetX = -this._world._cameraX;
@@ -2139,12 +2143,6 @@ See more on the readme file
                 this._sprite = new Image();
                 this._sprite.src = ops.image;
             }
-            
-            //@added by topheman
-            ops._draggable = {
-                disabled: true,//drag disabled by default
-                type: 'regularDrag'
-            };
             
             body.active = ops.active;
             body.fixedRotation = ops.fixedRotation;
@@ -3141,29 +3139,29 @@ See more on the readme file
             }
             //simple init without options
             if(typeof options === 'undefined'){
-                this._ops._draggable.disabled = false;
-                this._ops._draggable.type = 'regularDrag';
+                this._ops._mouseDraggable.disabled = false;
+                this._ops._mouseDraggable.type = 'regularDrag';
             }
             //method call
             else if(typeof options === 'string'){
                 switch(options){
                     case 'disable':
-                        this._ops._draggable.disabled = true;
+                        this._ops._mouseDraggable.disabled = true;
                         break;
                     case 'enable':
-                        this._ops._draggable.disabled = false;
+                        this._ops._mouseDraggable.disabled = false;
                         break;
                 }
             }
             else if(typeof options === 'object'){
                 if(options.disabled === false || options.disabled === true){
-                    this._ops._draggable.disabled = options.disabled;
+                    this._ops._mouseDraggable.disabled = options.disabled;
                 }
                 else{
-                    this._ops._draggable.disabled = false;//active by default (if not specified)
+                    this._ops._mouseDraggable.disabled = false;//active by default (if not specified)
                 }
                 if(typeof options.type === 'string'){
-                    this._ops._draggable.type = options.type;
+                    this._ops._mouseDraggable.type = options.type;
                 }
                 if(typeof options.start === 'function'){
                     this._world._addStartdragHandler(this._id,options.start);
@@ -3184,6 +3182,19 @@ See more on the readme file
                     this._world._removeStopdragHandler(this._id);
                 }
             }
+        },
+          
+        /**
+         * @_name isMouseDraggable
+         * @_module entity
+         * @return {Boolean}
+         * @description Returns true if the mouse draggable event is active on the entity
+         * @added by topheman
+         */     
+        isMouseDraggable : function() {
+    
+            return !this._ops._mouseDraggable.disabled;
+    
         }
         
     };

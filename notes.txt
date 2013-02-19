@@ -48,6 +48,30 @@ touchDraggable
  callback(e,[touchDragInfos])
 
 
+mousePan
+ - includeEntities :
+    - bool : will include non draggable entities
+    - array of entityIds : will include the entities listed (possible conflicts on events)
+
+touchPan
+ - includeEntities :
+    - bool : will include non draggable entities
+    - array of entityIds : will include the entities listed (possible conflicts on events)
+ - allowMultitouch
+    - allowPinch
+        - maxScale
+        - minScale
+        - maxWindow : {x1,y1,x2,y2}
+        - minWindow : {x1,y1,x2,y2}
+
+mouseWheelZoom
+ - maxScale
+ - minScale
+ - maxWindow : {x1,y1,x2,y2}
+ - minWindow : {x1,y1,x2,y2}
+
+onMouseWheel
+
 special css styles (prevent text select, drag ...)
 
 make an accurate .find(x,y) method
