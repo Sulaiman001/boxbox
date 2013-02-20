@@ -180,9 +180,9 @@ See more on the readme file
         _mousemoveHandlers: {},//@added by topheman
         _mouseinHandlers: {},//@added by topheman
         _mouseoutHandlers: {},//@added by topheman
-        _startdragHandlers: {},//@added by topheman
-        _dragHandlers: {},//@added by topheman
-        _stopdragHandlers: {},//@added by topheman
+        _mouseStartdragHandlers: {},//@added by topheman
+        _mouseDragHandlers: {},//@added by topheman
+        _mouseStopdragHandlers: {},//@added by topheman
         _touchstartHandlers: {},//@added by topheman
         _touchendHandlers: {},//@added by topheman
         _touchmoveHandlers: {},//@added by topheman
@@ -766,15 +766,15 @@ See more on the readme file
                     else if(this._dragging) {
                         //trigger startdrag event on the first move
                         if(this._startDrag && e.type === 'mousemove'){
-                            if(this._world._startdragHandlers[this._id]){
-                                this._world._startdragHandlers[this._id].call(this,e, mergeMouseInfos(mousePos,this._dragging));
+                            if(this._world._mouseStartdragHandlers[this._id]){
+                                this._world._mouseStartdragHandlers[this._id].call(this,e, mergeMouseInfos(mousePos,this._dragging));
                             }
                             this._startDrag = false;//reset startDrag state after the first drag
                         }
                         //trigger the drag event on the next moves
                         else {
-                            if(this._world._dragHandlers[this._id]){
-                                this._world._dragHandlers[this._id].call(this,e, mergeMouseInfos(mousePos,this._dragging));
+                            if(this._world._mouseDragHandlers[this._id]){
+                                this._world._mouseDragHandlers[this._id].call(this,e, mergeMouseInfos(mousePos,this._dragging));
                             }
                         }
                     }
@@ -801,8 +801,8 @@ See more on the readme file
                             this._moveJoint = null;
                         }
                         //trigger the stopdrag event (don't trigger it if the first drag hasn't happened)
-                        if(this._startDrag === false && this._world._stopdragHandlers[this._id]){
-                            this._world._stopdragHandlers[this._id].call(this,e, mergeMouseInfos(mousePos,this._dragging));
+                        if(this._startDrag === false && this._world._mouseStopdragHandlers[this._id]){
+                            this._world._mouseStopdragHandlers[this._id].call(this,e, mergeMouseInfos(mousePos,this._dragging));
                         }
                     }
                     this._startDrag = false;//reset startDrag state if there was no drag at all
@@ -1072,8 +1072,8 @@ See more on the readme file
          * @private
          * @added by topheman
          */
-        _addStartdragHandler: function(id, f) {
-            this._startdragHandlers[id] = f;
+        _addMouseStartdragHandler: function(id, f) {
+            this._mouseStartdragHandlers[id] = f;
         },
                 
         /*
@@ -1082,8 +1082,8 @@ See more on the readme file
          * @private
          * @added by topheman
          */
-        _addDragHandler: function(id, f) {
-            this._dragHandlers[id] = f;
+        _addMouseDragHandler: function(id, f) {
+            this._mouseDragHandlers[id] = f;
         },
                 
         /*
@@ -1092,8 +1092,8 @@ See more on the readme file
          * @private
          * @added by topheman
          */
-        _addStopdragHandler: function(id, f) {
-            this._stopdragHandlers[id] = f;
+        _addMouseStopdragHandler: function(id, f) {
+            this._mouseStopdragHandlers[id] = f;
         },
                 
         /*
@@ -1139,8 +1139,8 @@ See more on the readme file
          * @private
          * @added by topheman
          */
-        _removeStartdragHandler: function(id) {
-            delete this._startdragHandlers[id];
+        _removeMouseStartdragHandler: function(id) {
+            delete this._mouseStartdragHandlers[id];
         },
                 
         /*
@@ -1148,8 +1148,8 @@ See more on the readme file
          * @private
          * @added by topheman
          */
-        _removeDragHandler: function(id) {
-            delete this._dragHandlers[id];
+        _removeMouseDragHandler: function(id) {
+            delete this._mouseDragHandlers[id];
         },
                 
         /*
@@ -1157,8 +1157,8 @@ See more on the readme file
          * @private
          * @added by topheman
          */
-        _removeStopdragHandler: function(id) {
-            delete this._stopdragHandlers[id];
+        _removeMouseStopdragHandler: function(id) {
+            delete this._mouseStopdragHandlers[id];
         },
 
         _addStartContactHandler: function(id, f) {
@@ -3164,22 +3164,22 @@ See more on the readme file
                     this._ops._mouseDraggable.type = options.type;
                 }
                 if(typeof options.start === 'function'){
-                    this._world._addStartdragHandler(this._id,options.start);
+                    this._world._addMouseStartdragHandler(this._id,options.start);
                 }
                 else if(typeof options.start !== 'undefined'){
-                    this._world._removeStartdragHandler(this._id);
+                    this._world._removeMouseStartdragHandler(this._id);
                 }
                 if(typeof options.drag === 'function'){
-                    this._world._addDragHandler(this._id,options.drag);
+                    this._world._addMouseDragHandler(this._id,options.drag);
                 }
                 else if(typeof options.drag !== 'undefined'){
-                    this._world._removeDragHandler(this._id);
+                    this._world._removeMouseDragHandler(this._id);
                 }
                 if(typeof options.stop === 'function'){
-                    this._world._addStopdragHandler(this._id,options.stop);
+                    this._world._addMouseStopdragHandler(this._id,options.stop);
                 }
                 else if(typeof options.stop !== 'undefined'){
-                    this._world._removeStopdragHandler(this._id);
+                    this._world._removeMouseStopdragHandler(this._id);
                 }
             }
         },
