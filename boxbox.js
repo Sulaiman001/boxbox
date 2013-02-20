@@ -186,6 +186,12 @@ See more on the readme file
         _touchstartHandlers: {},//@added by topheman
         _touchendHandlers: {},//@added by topheman
         _touchmoveHandlers: {},//@added by topheman
+        _touchStartdragHandlers: {},//@added by topheman
+        _touchDragHandlers: {},//@added by topheman
+        _touchStopdragHandlers: {},//@added by topheman
+        _touchAddtouchdragHandlers: {},//@added by topheman
+        _touchRemovetouchdragHandlers: {},//@added by topheman
+        _touchStopdragHandlers: {},//@added by topheman
         _startContactHandlers: {},
         _finishContactHandlers: {},
         _impactHandlers: {},
@@ -1160,6 +1166,101 @@ See more on the readme file
         _removeMouseStopdragHandler: function(id) {
             delete this._mouseStopdragHandlers[id];
         },
+                
+        /*
+         * @param {Int} id
+         * @param {Function} f callback
+         * @private
+         * @added by topheman
+         */
+        _addTouchStartdragHandler: function(id, f) {
+            this._touchStartdragHandlers[id] = f;
+        },
+                
+        /*
+         * @param {Int} id
+         * @param {Function} f callback
+         * @private
+         * @added by topheman
+         */
+        _addTouchDragHandler: function(id, f) {
+            this._touchDragHandlers[id] = f;
+        },
+                
+        /*
+         * @param {Int} id
+         * @param {Function} f callback
+         * @private
+         * @added by topheman
+         */
+        _addTouchStopdragHandler: function(id, f) {
+            this._touchStopdragHandlers[id] = f;
+        },
+                
+        /*
+         * @param {Int} id
+         * @private
+         * @added by topheman
+         */
+        _removeTouchStartdragHandler: function(id) {
+            delete this._touchStartdragHandlers[id];
+        },
+                
+        /*
+         * @param {Int} id
+         * @private
+         * @added by topheman
+         */
+        _removeTouchDragHandler: function(id) {
+            delete this._touchDragHandlers[id];
+        },
+                
+        /*
+         * @param {Int} id
+         * @private
+         * @added by topheman
+         */
+        _removeTouchStopdragHandler: function(id) {
+            delete this._touchStopdragHandlers[id];
+        },
+                
+        /*
+         * @param {Int} id
+         * @param {Function} f callback
+         * @private
+         * @added by topheman
+         */
+        _addTouchAddtouchDragHandler: function(id, f) {
+            this._touchAddtouchdragHandlers[id] = f;
+        },
+                
+        /*
+         * @param {Int} id
+         * @param {Function} f callback
+         * @private
+         * @added by topheman
+         */
+        _addTouchRemovetouchDragHandler: function(id, f) {
+            this._touchRemovetouchdragHandlers[id] = f;
+        },
+                
+        /*
+         * @param {Int} id
+         * @private
+         * @added by topheman
+         */
+        _removeTouchAddtouchDragHandler: function(id) {
+            delete this._touchAddtouchdragHandlers[id];
+        },
+                
+        /*
+         * @param {Int} id
+         * @private
+         * @added by topheman
+         */
+        _removeTouchRemovetouchDragHandler: function(id) {
+            delete this._touchRemovetouchdragHandlers[id];
+        },
 
         _addStartContactHandler: function(id, f) {
             this._startContactHandlers[id] = f;
@@ -1942,6 +2043,12 @@ See more on the readme file
         _mouseDraggable : {//@added by topheman
             disabled: true,//drag disabled by default
             type: 'regularDrag'
+        },
+        _touchDraggable : {//@added by topheman
+            disabled: true,
+            type: 'regularDrag',
+            allowMultitouch: false,
+            allowPinch: false
         },
         init: null,
         draw: function(ctx, x, y) {
@@ -3140,7 +3247,6 @@ See more on the readme file
             //simple init without options
             if(typeof options === 'undefined'){
                 this._ops._mouseDraggable.disabled = false;
-                this._ops._mouseDraggable.type = 'regularDrag';
             }
             //method call
             else if(typeof options === 'string'){
@@ -3160,21 +3266,25 @@ See more on the readme file
                 else{
                     this._ops._mouseDraggable.disabled = false;//active by default (if not specified)
                 }
+                
                 if(typeof options.type === 'string'){
                     this._ops._mouseDraggable.type = options.type;
                 }
+                
                 if(typeof options.start === 'function'){
                     this._world._addMouseStartdragHandler(this._id,options.start);
                 }
                 else if(typeof options.start !== 'undefined'){
                     this._world._removeMouseStartdragHandler(this._id);
                 }
+                
                 if(typeof options.drag === 'function'){
                     this._world._addMouseDragHandler(this._id,options.drag);
                 }
                 else if(typeof options.drag !== 'undefined'){
                     this._world._removeMouseDragHandler(this._id);
                 }
+                
                 if(typeof options.stop === 'function'){
                     this._world._addMouseStopdragHandler(this._id,options.stop);
                 }
@@ -3195,6 +3305,94 @@ See more on the readme file
     
             return !this._ops._mouseDraggable.disabled;
     
+        },
+                
+        touchDraggable: function(options){
+            if(this._world._ops.disableTouchEvents){
+                console.warn('Mouse events are disabled, you tried to call mouseDraggable');
+                return false;
+            }
+            //simple init without options
+            if(typeof options === 'undefined'){
+                this._ops._touchDraggable.disabled = false;
+            }
+            //method call
+            else if(typeof options === 'string'){
+                switch(options){
+                    case 'disable':
+                        this._ops._touchDraggable.disabled = true;
+                        break;
+                    case 'enable':
+                        this._ops._touchDraggable.disabled = false;
+                        break;
+                }
+            }
+            else if(typeof options === 'object'){
+                if(options.disabled === false || options.disabled === true){
+                    this._ops._touchDraggable.disabled = options.disabled;
+                }
+                else{
+                    this._ops._touchDraggable.disabled = false;//active by default (if not specified)
+                }
+                
+                if(options.allowMultitouch === false || options.allowMultitouch === true){
+                    this._ops._touchDraggable.allowMultitouch = options.allowMultitouch;
+                }
+                else{
+                    this._ops._touchDraggable.allowMultitouch = false;//false by default (if not specified)
+                }
+                
+                if(options.allowPinch === false || options.allowPinch === true){
+                    this._ops._touchDraggable.allowPinch = options.allowPinch;
+                }
+                else{
+                    this._ops._touchDraggable.allowPinch = false;//false by default (if not specified)
+                }
+                
+                //if pinch is allowed, multicouch is allowed
+                if(this._ops._touchDraggable.allowPinch === true){
+                    this._ops._touchDraggable.allowMultitouch = true;
+                }
+                
+                if(typeof options.type === 'string'){
+                    this._ops._touchDraggable.type = options.type;
+                }
+                
+                if(typeof options.start === 'function'){
+                    this._world._addTouchStartdragHandler(this._id,options.start);
+                }
+                else if(typeof options.start !== 'undefined'){
+                    this._world._removeTouchStartdragHandler(this._id);
+                }
+                
+                if(typeof options.drag === 'function'){
+                    this._world._addTouchDragHandler(this._id,options.drag);
+                }
+                else if(typeof options.drag !== 'undefined'){
+                    this._world._removeTouchDragHandler(this._id);
+                }
+                
+                if(typeof options.stop === 'function'){
+                    this._world._addTouchStopdragHandler(this._id,options.stop);
+                }
+                else if(typeof options.stop !== 'undefined'){
+                    this._world._removeTouchStopdragHandler(this._id);
+                }
+                
+                if(typeof options.touchadd === 'function'){
+                    this._world._addTouchAddtouchDragHandler(this._id,options.stop);
+                }
+                else if(typeof options.touchadd !== 'undefined'){
+                    this._world._removeTouchAddtouchDragHandler(this._id);
+                }
+                
+                if(typeof options.touchremove === 'function'){
+                    this._world._addTouchRemovetouchDragHandler(this._id,options.stop);
+                }
+                else if(typeof options.touchremove !== 'undefined'){
+                    this._world._removeTouchRemovetouchDragHandler(this._id);
+                }
+            }
         }
         
     };
