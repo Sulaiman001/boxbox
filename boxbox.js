@@ -209,6 +209,7 @@ See more on the readme file
         _pause: false,//@added by topheman
         _mouseHoverEntityId: null,//@added by topheman (track the entity which hovered) - used to track entities for mousein/mouseout events
         _mouseDraggingEntityId: null,//@added by topheman (track the entity which is dragged)
+        _touchDraggingEntityIds : [],//@added by topheman (track the entity which is dragged)
         
         _init: function(canvasElem, options) {
             var self = this;
@@ -667,11 +668,19 @@ See more on the readme file
                 /*
                  * @function _world_touchstartHandler
                  * @param {TouchEvent} e
-                 * @param {Object} touchInfos
+                 * @param {Array}[touchInfos]
                  * @added by topheman
                  */
                 var _world_touchstartHandler = function(e, touchInfos){
-                    
+                    //if a touch on the world is on an entity, trigger the _world_touchmoveHandlerForDragEvent
+                    var i;
+                    if(touchInfos.length > 0){
+                        for(i in touchInfos){
+                            if(touchInfos[i].entity && touchInfos[i].entity._ops._touchDraggable.disabled === false){
+                                _world_touchmoveHandlerForDragEvent.call(touchInfos[i].entity,e,touchInfos[i]);
+                            }
+                        }
+                    }
                 };
                 
                 /*
@@ -681,7 +690,28 @@ See more on the readme file
                  * @added by topheman
                  */
                 var _world_touchmoveHandler = function(e, touchInfos){
-                    
+                    //-> check if the touches in the event correspond to the touches referenced in the touchDraggable entities
+                    //if so, trigger the _world_touchmoveHandlerForDragEvent
+                    var i,entityId,touchId,j;
+                    //loop through changed touches
+                    for(i in e.changedTouches){
+                        //loop through the dragging entities
+                        for(entityId in self._touchDraggingEntityIds){
+                            //loop through the moveJoints of this entity
+                            for(touchId in self._entities[entityId]._moveJoints){
+                                //match the touchIdentifier from the changedTouches from the event To the touchIdentifier from the moveJoint of the entity
+                                if(touchId === e.changedTouches[i].identifier){
+                                    //loop through touchInfos
+                                    for(j in touchInfos){
+                                        //at last, we match the touchInfos to the correct touchIntifier in order to pass it to the callback
+                                        if(touchInfos[j].identifier === touchId){
+                                            _world_touchmoveHandlerForDragEvent.call(self._entities[entityId],e,touchInfos[j]);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 };
                 
                 /*
@@ -737,7 +767,7 @@ See more on the readme file
                  * @param {Object} mousePos
                  * @context Entity
                  * @added by topheman
-                 * @triggers the startdrag or the drag event specified in the .draggable() method
+                 * @triggers the startdrag or the drag event specified in the .mouseDraggable() method
                  */
                 var _world_mousemoveHandlerForDragEvent = function(e, mousePos) {
                     //tag as dragging when passing for the first time
@@ -796,7 +826,7 @@ See more on the readme file
                  * @param {Object} mousePos
                  * @context Entity
                  * @added by topheman
-                 * @triggers the stopdrag event specified in the .draggable() method
+                 * @triggers the stopdrag event specified in the .mouseDraggable() method
                  */
                 var _world_mouseupHandlerForDragEvent = function(e, mousePos) {
                     if(this._mouseDragging){
@@ -833,6 +863,30 @@ See more on the readme file
                         result.originalPosition.y = originalMouseInfos.y;
                     }
                     return result;
+                };
+                
+                /*
+                 * @function _world_touchmoveHandlerForDragEvent
+                 * @param {TouchEvent} e
+                 * @param {Object} touchInfos
+                 * @context Entity
+                 * @added by topheman
+                 * @triggers the startdrag or the drag event specified in the .touchDraggable() method
+                 */
+                var _world_touchmoveHandlerForDragEvent = function(e, touchInfos) {
+                    
+                };
+                
+                /*
+                 * @function _world_touchendHandlerForDragEvent
+                 * @param {TouchEvent} e
+                 * @param {Object} touchInfos
+                 * @context Entity
+                 * @added by topheman
+                 * @triggers the stopdrag or the drag event specified in the .touchDraggable() method
+                 */
+                var _world_touchendHandlerForDragEvent = function(e, touchInfos) {
+                    
                 };
                 
                 /*
