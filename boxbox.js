@@ -672,13 +672,11 @@ See more on the readme file
                  * @added by topheman
                  */
                 var _world_touchstartHandler = function(e, touchInfos){
-//                    console.info('_world_touchstartHandler',e, touchInfos);
                     //if a touch on the world is on an entity, trigger the _world_touchmoveHandlerForDragEvent
                     var touchInfoIndex;
                     if(touchInfos.length > 0){
                         for(touchInfoIndex in touchInfos){
                             if(touchInfos[touchInfoIndex].entity && touchInfos[touchInfoIndex].entity._ops._touchDraggable.disabled === false){
-//                                console.info('touchStart','entityId',touchInfos[touchInfoIndex].entity._id);
                                 _world_touchmoveHandlerForDragEvent.call(self._entities[touchInfos[touchInfoIndex].entity._id],e,touchInfos,touchInfoIndex);
                             }
                         }
@@ -710,7 +708,6 @@ See more on the readme file
                                         for(touchInfoIndex = 0; touchInfoIndex < touchInfos.length; touchInfoIndex++){
                                             //at last, we match the touchInfos to the correct touchIdentifier in order to pass it to the callback
                                             if(touchInfos[touchInfoIndex].touchIdentifier == touchId){
-//                                                console.info(touchInfoIndex,touchId);
                                                 _world_touchmoveHandlerForDragEvent.call(self._entities[self._touchDraggingEntityIds[entityId]],e,touchInfos,touchInfoIndex);
                                                 //@todo in _world_touchendHandlerForDragEvent : 
                                                 // - pass only the touchInfos that are related to the entity, remove the others
@@ -731,7 +728,7 @@ See more on the readme file
                  * @added by topheman
                  * todo - refactor code between _world_touchmoveHandler and _world_touchendHandler
                  */
-                var _world_touchendHandler = function(e, touchInfos){
+                var _world_touchendHandler = function(e, touchInfos){                  
                     //-> check if the touches in the event correspond to the touches referenced in the touchDraggable entities
                     //if so, trigger the _world_touchmoveHandlerForDragEvent
                     var i,entityId,touchId,touchInfoIndex;
@@ -903,10 +900,8 @@ See more on the readme file
                 };
                 
                 var _world_touchAddtouchHandlerForDragEvent = function(touchInfos, touchIndex){
-//                    console.info('_world_touchAddtouchHandlerForDragEvent');
                     var jointDefinition, touchesCount;
                     if(!this._touchMoveJoints){
-//                        console.info('init _touchMoveJoints');
                         this._touchMoveJoints = {};
                     }
                     //remove joint if there is already a joint on this touch (shouldn't happend on multitouch screen) - backwards compatibility for non mutitouch devices 
@@ -929,7 +924,6 @@ See more on the readme file
                     jointDefinition.maxForce = 10000000000000000000000000000;//100000
                     jointDefinition.timeStep = 1/60;//hard coded ?!!
                     this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint = this._world._world.CreateJoint(jointDefinition);
-//                    console.info('_world_touchAddtouchHandlerForDragEvent',this._touchMoveJoints);
                     //trigger the touchadd callback if not the first touch on the dragging entity
                     touchesCount = Object.keys(this._touchMoveJoints).length;
                     if(touchesCount > 0 && this._world._touchAddtouchdragHandlers[this._id]){
@@ -943,6 +937,7 @@ See more on the readme file
                     if(this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier]){
                         this._world._world.DestroyJoint(this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint);
                         this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier] = null;
+                        delete this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier];
                     }
                     //trigger the touchremove callback if not the first touch on the dragging entity
                     touchesCount = Object.keys(this._touchMoveJoints).length;
@@ -961,7 +956,6 @@ See more on the readme file
                  * @triggers the startdrag or the drag event specified in the .touchDraggable() method
                  */
                 var _world_touchmoveHandlerForDragEvent = function(e, touchInfos, touchIndex) {
-//                    console.info('_world_touchmoveHandlerForDragEvent',this.name(),touchInfos, touchIndex);
                     var touchId;
                     //tag as dragging when passing for the first time
                     if(e.type === 'touchstart' && this._world._touchDraggingEntityIds.indexOf(this._id) === -1 && !this._touchDragging && !this._touchStartDrag){
@@ -999,7 +993,6 @@ See more on the readme file
                         
                     }
                     //update the move joint if regularDrag
-//                    console.info('this._touchMoveJoints',this._touchMoveJoints);
                     if(this._touchMoveJoints){
                         this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint.SetTarget(new Box2D.Common.Math.b2Vec2(touchInfos[touchIndex].x, touchInfos[touchIndex].y));
                     }
@@ -1016,10 +1009,12 @@ See more on the readme file
                  */
                 var _world_touchendHandlerForDragEvent = function(e, touchInfos, touchIndex) {
                     _world_touchRemovetouchHandlerForDragEvent.call(this,touchInfos, touchIndex);
-                    if(this._touchMoveJoints.length === 0 && self._touchStopdragHandlers[this._id]){
-                        self._touchStopdragHandlers[this._id].call(this,e);//@todo prepare the values for callback
+                    if(Object.keys(this._touchMoveJoints).length === 0){
                         //let the entity go back sleeping eventually, only when the dragging is finished
                         this._body.SetSleepingAllowed(true);
+                        if(self._touchStopdragHandlers[this._id]){
+                            self._touchStopdragHandlers[this._id].call(this,e);//@todo prepare the values for callback
+                        }
                     }
                 };
                 

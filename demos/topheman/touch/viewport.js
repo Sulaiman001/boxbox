@@ -9,7 +9,7 @@ function initViewport(){
     var width = window.innerWidth;
     var height = window.innerHeight;
     canvas.width = width;
-    canvas.height = 400 || height;
+    canvas.height = height;
 }
 //if(true){
 if(!!('ontouchstart' in window) && !(/Chrome\/24/.test(navigator.appVersion))){
