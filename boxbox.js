@@ -508,7 +508,7 @@ See more on the readme file
                 /*
                  * Returns an array of infos about the changed touches
                  * @param {TouchEvent} e
-                 * @returns {Array}
+                 * @returns {Array}[{TouchInfos}]
                  */
                 var getTouchInfos = function(e){
                     var infos = [],i;
@@ -672,12 +672,14 @@ See more on the readme file
                  * @added by topheman
                  */
                 var _world_touchstartHandler = function(e, touchInfos){
+                    console.info('_world_touchstartHandler',e, touchInfos);
                     //if a touch on the world is on an entity, trigger the _world_touchmoveHandlerForDragEvent
-                    var i;
+                    var touchInfoIndex;
                     if(touchInfos.length > 0){
-                        for(i in touchInfos){
-                            if(touchInfos[i].entity && touchInfos[i].entity._ops._touchDraggable.disabled === false){
-                                _world_touchmoveHandlerForDragEvent.call(touchInfos[i].entity,e,touchInfos[i]);
+                        for(touchInfoIndex in touchInfos){
+                            if(touchInfos[touchInfoIndex].entity && touchInfos[touchInfoIndex].entity._ops._touchDraggable.disabled === false){
+                                console.info('touchStart','entityId',touchInfos[touchInfoIndex].entity._id);
+                                _world_touchmoveHandlerForDragEvent.call(self._entities[touchInfos[touchInfoIndex].entity._id],e,touchInfos,touchInfoIndex);
                             }
                         }
                     }
@@ -688,24 +690,35 @@ See more on the readme file
                  * @param {TouchEvent} e
                  * @param {Object} touchInfos
                  * @added by topheman
+                 * todo - refactor code between _world_touchmoveHandler and _world_touchendHandler
                  */
                 var _world_touchmoveHandler = function(e, touchInfos){
                     //-> check if the touches in the event correspond to the touches referenced in the touchDraggable entities
                     //if so, trigger the _world_touchmoveHandlerForDragEvent
-                    var i,entityId,touchId,j;
-                    //loop through changed touches
-                    for(i in e.changedTouches){
-                        //loop through the dragging entities
-                        for(entityId in self._touchDraggingEntityIds){
-                            //loop through the moveJoints of this entity
-                            for(touchId in self._entities[entityId]._moveJoints){
-                                //match the touchIdentifier from the changedTouches from the event To the touchIdentifier from the moveJoint of the entity
-                                if(touchId === e.changedTouches[i].identifier){
-                                    //loop through touchInfos
-                                    for(j in touchInfos){
-                                        //at last, we match the touchInfos to the correct touchIntifier in order to pass it to the callback
-                                        if(touchInfos[j].identifier === touchId){
-                                            _world_touchmoveHandlerForDragEvent.call(self._entities[entityId],e,touchInfos[j]);
+//                    console.info('move');
+                    var i,entityId,touchId,touchInfoIndex;
+                    if(self._touchDraggingEntityIds.length > 0){
+                        //loop through changed touches
+                        for(i = 0; i < e.changedTouches.length; i++){
+//                            console.info(e.changedTouches);
+                            //loop through the dragging entityIds
+                            for(entityId in self._touchDraggingEntityIds){
+//                                console.info('loop through the dragging entityIds',entityId, self._touchDraggingEntityIds);
+                                //loop through the moveJoints of this entity
+                                for(touchId in self._entities[self._touchDraggingEntityIds[entityId]]._touchMoveJoints){
+//                                    console.info('_touchMoveJoint',touchId,e.changedTouches[i].identifier,touchInfos);
+                                    //match the touchIdentifier from the changedTouches from the event To the touchIdentifier from the moveJoint of the entity
+                                    if(touchId == e.changedTouches[i].identifier){
+                                        //loop through touchInfos
+                                        for(touchInfoIndex = 0; touchInfoIndex < touchInfos.length; touchInfoIndex++){
+//                                            console.info(entityId,touchInfos[touchInfoIndex]);
+                                            //at last, we match the touchInfos to the correct touchIdentifier in order to pass it to the callback
+                                            if(touchInfos[touchInfoIndex].touchIdentifier == touchId){
+                                                _world_touchmoveHandlerForDragEvent.call(self._entities[entityId],e,touchInfos,touchInfoIndex);
+                                                //@todo in _world_touchendHandlerForDragEvent : 
+                                                // - pass only the touchInfos that are related to the entity, remove the others
+                                                // - process the touchInfo specified by touchInfoIndex
+                                            }
                                         }
                                     }
                                 }
@@ -719,9 +732,37 @@ See more on the readme file
                  * @param {TouchEvent} e
                  * @param {Object} touchInfos
                  * @added by topheman
+                 * todo - refactor code between _world_touchmoveHandler and _world_touchendHandler
                  */
                 var _world_touchendHandler = function(e, touchInfos){
-                    
+                    //-> check if the touches in the event correspond to the touches referenced in the touchDraggable entities
+                    //if so, trigger the _world_touchmoveHandlerForDragEvent
+                    var i,entityId,touchId,touchInfoIndex;
+//                    if(self._touchDraggingEntityIds.length > 0){
+//                        //loop through changed touches
+//                        for(i; i < e.changedTouches.length; i++){
+//                            //loop through the dragging entities
+//                            for(entityId in self._touchDraggingEntityIds){
+//                                console.info('entityId',entityId,'self._entities[entityId]',self._entities[entityId],'self._entities',self._entities);
+//                                //loop through the moveJoints of this entity
+//                                for(touchId in self._entities[self._touchDraggingEntityIds[entityId]]._touchMoveJoints){
+//                                    //match the touchIdentifier from the changedTouches from the event To the touchIdentifier from the moveJoint of the entity
+//                                    if(touchId === e.changedTouches[i].identifier){
+//                                        //loop through touchInfos
+//                                        for(touchInfoIndex in touchInfos){
+//                                            //at last, we match the touchInfos to the correct touchIdentifier in order to pass it to the callback
+//                                            if(touchInfos[touchInfoIndex].touchIdentifier === touchId){
+//                                                _world_touchendHandlerForDragEvent.call(self._entities[entityId],e,touchInfos,touchInfoIndex);
+//                                                //@todo in _world_touchendHandlerForDragEvent : 
+//                                                // - pass only the touchInfos that are related to the entity, remove the others
+//                                                // - process the touchInfo specified by touchInfoIndex
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
                 };
                 
                 /*
@@ -865,27 +906,102 @@ See more on the readme file
                     return result;
                 };
                 
+                var _world_touchAddtouchHandlerForDragEvent = function(touchInfos, touchIndex){
+                    console.info('_world_touchAddtouchHandlerForDragEvent');
+                    var jointDefinition, touchesCount;
+                    if(!this._touchMoveJoints){
+                        console.info('init _touchMoveJoints');
+                        this._touchMoveJoints = {};
+                    }
+                    //add the originalPosition of the touch
+                    this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier] = {
+                        originalPosition : {
+                            x : touchInfos[touchIndex].x,
+                            y : touchInfos[touchIndex].y
+                        }
+                    };
+                    //create the joint with the touch
+                    jointDefinition = new Box2D.Dynamics.Joints.b2MouseJointDef();
+
+                    jointDefinition.bodyA = this._world._world.GetGroundBody();
+                    jointDefinition.bodyB = this._body;
+                    jointDefinition.target.Set(touchInfos[touchIndex].x, touchInfos[touchIndex].y);
+                    jointDefinition.maxForce = 10000000000000000000000000000;//100000
+                    jointDefinition.timeStep = 1/60;//hard coded ?!!
+                    this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint = this._world._world.CreateJoint(jointDefinition);
+//                    console.info('_world_touchAddtouchHandlerForDragEvent',this._touchMoveJoints);
+                    //trigger the touchadd callback if not the first touch on the dragging entity
+                    touchesCount = Object.keys(this._touchMoveJoints).length;
+                    if(touchesCount > 0 && this._world._touchAddtouchdragHandlers[this._id]){
+                        this._world._touchAddtouchdragHandlers[this._id].call(this);//@todo prepare the values for callback
+                    }
+                };
+                
+                var _world_touchRemovetouchHandlerForDragEvent = function(touchInfos, touchIndex){
+                    
+                };
+                
                 /*
                  * @function _world_touchmoveHandlerForDragEvent
                  * @param {TouchEvent} e
-                 * @param {Object} touchInfos
+                 * @param Array[{Object}] touchInfos
+                 * @param Integer touchIndex (of the touchInfos to process)
                  * @context Entity
                  * @added by topheman
                  * @triggers the startdrag or the drag event specified in the .touchDraggable() method
                  */
-                var _world_touchmoveHandlerForDragEvent = function(e, touchInfos) {
-                    
+                var _world_touchmoveHandlerForDragEvent = function(e, touchInfos, touchIndex) {
+//                    console.info('_world_touchmoveHandlerForDragEvent',this.name(),touchInfos, touchIndex);
+                    var touchId;
+                    //tag as dragging when passing for the first time
+                    if(e.type === 'touchstart' && this._world._touchDraggingEntityIds.indexOf(this._id) === -1 && !this._touchDragging && !this._touchStartDrag){
+                        
+                        //tag as dragging (all along the drag)
+                        this._touchDragging = true;
+                        //tag as startDrag to know that startDrag event will have to be triggered next time on touchmove event
+                        this._touchStartDrag = true;
+                        //tag the entity as dragged on the world
+                        this._world._touchDraggingEntityIds.push(this._id);
+                        
+                        //here with the very first touch to this entity, we add the very first joint
+                        _world_touchAddtouchHandlerForDragEvent.call(this, touchInfos, touchIndex);
+                        console.info('startDrag','first touchMoveJoint',this._touchMoveJoints,this.name());
+                    }
+                    else if(this._touchDragging){
+                        //trigger startdrag event on the first move
+                        if(this._touchStartDrag && e.type === 'touchmove'){
+                            if(this._world._touchStartdragHandlers[this._id]){
+                                this._world._touchStartdragHandlers[this._id].call(this,e);//@todo prepare the values for callback
+                            }
+                            this._touchStartDrag = false;//reset startDrag state after the first drag
+                        }
+                        //trigger the drag event on the next moves
+                        else {
+                            if(this._world._touchDragHandlers[this._id]){
+                                this._world._touchDragHandlers[this._id].call(this,e);//@todo prepare the values for callback
+                            }
+                        }
+                        
+                    }
+                    console.info('drag','next touchMoveJoint',this._touchMoveJoints,this.name());
+                    //update the move joint if regularDrag
+                    if(this._touchMoveJoints){
+                        for(touchId in this._touchMoveJoints){
+                            this._touchMoveJoints[touchId].joint.SetTarget(new Box2D.Common.Math.b2Vec2(touchInfos[touchIndex].x, touchInfos[touchIndex].y));
+                        }
+                    }
                 };
                 
                 /*
                  * @function _world_touchendHandlerForDragEvent
                  * @param {TouchEvent} e
-                 * @param {Object} touchInfos
+                 * @param Array[{Object}] touchInfos
+                 * @param Integer touchIndex
                  * @context Entity
                  * @added by topheman
                  * @triggers the stopdrag or the drag event specified in the .touchDraggable() method
                  */
-                var _world_touchendHandlerForDragEvent = function(e, touchInfos) {
+                var _world_touchendHandlerForDragEvent = function(e, touchInfos, touchIndex) {
                     
                 };
                 

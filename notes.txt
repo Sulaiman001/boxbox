@@ -16,7 +16,7 @@ delete destroyed entity handlers
 mouseDraggable : special joints (not only mouseJoint)
 
 world._touchDraggingEntityIds[]
-entity._touchMoveJoints[touchIdentifier] = joint
+entity._touchMoveJoints[touchIdentifier] = {joint,originalPosition}
 
 touchDraggable
  - regularDragSimpleTouch
