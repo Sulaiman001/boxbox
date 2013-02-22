@@ -691,30 +691,26 @@ See more on the readme file
                  * @param {Object} touchInfos
                  * @added by topheman
                  * todo - refactor code between _world_touchmoveHandler and _world_touchendHandler
+                 * toto - optimize for loop , deep object watching ...
                  */
                 var _world_touchmoveHandler = function(e, touchInfos){
                     //-> check if the touches in the event correspond to the touches referenced in the touchDraggable entities
                     //if so, trigger the _world_touchmoveHandlerForDragEvent
-//                    console.info('move');
                     var i,entityId,touchId,touchInfoIndex;
                     if(self._touchDraggingEntityIds.length > 0){
                         //loop through changed touches
                         for(i = 0; i < e.changedTouches.length; i++){
-//                            console.info(e.changedTouches);
                             //loop through the dragging entityIds
                             for(entityId in self._touchDraggingEntityIds){
-//                                console.info('loop through the dragging entityIds',entityId, self._touchDraggingEntityIds);
                                 //loop through the moveJoints of this entity
                                 for(touchId in self._entities[self._touchDraggingEntityIds[entityId]]._touchMoveJoints){
-//                                    console.info('_touchMoveJoint',touchId,e.changedTouches[i].identifier,touchInfos);
                                     //match the touchIdentifier from the changedTouches from the event To the touchIdentifier from the moveJoint of the entity
                                     if(touchId == e.changedTouches[i].identifier){
                                         //loop through touchInfos
                                         for(touchInfoIndex = 0; touchInfoIndex < touchInfos.length; touchInfoIndex++){
-//                                            console.info(entityId,touchInfos[touchInfoIndex]);
                                             //at last, we match the touchInfos to the correct touchIdentifier in order to pass it to the callback
                                             if(touchInfos[touchInfoIndex].touchIdentifier == touchId){
-                                                _world_touchmoveHandlerForDragEvent.call(self._entities[entityId],e,touchInfos,touchInfoIndex);
+                                                _world_touchmoveHandlerForDragEvent.call(self._entities[self._touchDraggingEntityIds[entityId]],e,touchInfos,touchInfoIndex);
                                                 //@todo in _world_touchendHandlerForDragEvent : 
                                                 // - pass only the touchInfos that are related to the entity, remove the others
                                                 // - process the touchInfo specified by touchInfoIndex
@@ -738,31 +734,30 @@ See more on the readme file
                     //-> check if the touches in the event correspond to the touches referenced in the touchDraggable entities
                     //if so, trigger the _world_touchmoveHandlerForDragEvent
                     var i,entityId,touchId,touchInfoIndex;
-//                    if(self._touchDraggingEntityIds.length > 0){
-//                        //loop through changed touches
-//                        for(i; i < e.changedTouches.length; i++){
-//                            //loop through the dragging entities
-//                            for(entityId in self._touchDraggingEntityIds){
-//                                console.info('entityId',entityId,'self._entities[entityId]',self._entities[entityId],'self._entities',self._entities);
-//                                //loop through the moveJoints of this entity
-//                                for(touchId in self._entities[self._touchDraggingEntityIds[entityId]]._touchMoveJoints){
-//                                    //match the touchIdentifier from the changedTouches from the event To the touchIdentifier from the moveJoint of the entity
-//                                    if(touchId === e.changedTouches[i].identifier){
-//                                        //loop through touchInfos
-//                                        for(touchInfoIndex in touchInfos){
-//                                            //at last, we match the touchInfos to the correct touchIdentifier in order to pass it to the callback
-//                                            if(touchInfos[touchInfoIndex].touchIdentifier === touchId){
-//                                                _world_touchendHandlerForDragEvent.call(self._entities[entityId],e,touchInfos,touchInfoIndex);
-//                                                //@todo in _world_touchendHandlerForDragEvent : 
-//                                                // - pass only the touchInfos that are related to the entity, remove the others
-//                                                // - process the touchInfo specified by touchInfoIndex
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
+                    if(self._touchDraggingEntityIds.length > 0){
+                        //loop through changed touches
+                        for(i = 0; i < e.changedTouches.length; i++){
+                            //loop through the dragging entityIds
+                            for(entityId in self._touchDraggingEntityIds){
+                                //loop through the moveJoints of this entity
+                                for(touchId in self._entities[self._touchDraggingEntityIds[entityId]]._touchMoveJoints){
+                                    //match the touchIdentifier from the changedTouches from the event To the touchIdentifier from the moveJoint of the entity
+                                    if(touchId == e.changedTouches[i].identifier){
+                                        //loop through touchInfos
+                                        for(touchInfoIndex = 0; touchInfoIndex < touchInfos.length; touchInfoIndex++){
+                                            //at last, we match the touchInfos to the correct touchIdentifier in order to pass it to the callback
+                                            if(touchInfos[touchInfoIndex].touchIdentifier == touchId){
+                                                _world_touchendHandlerForDragEvent.call(self._entities[self._touchDraggingEntityIds[entityId]],e,touchInfos,touchInfoIndex);
+                                                //@todo in _world_touchendHandlerForDragEvent : 
+                                                // - pass only the touchInfos that are related to the entity, remove the others
+                                                // - process the touchInfo specified by touchInfoIndex
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 };
                 
                 /*
@@ -965,7 +960,6 @@ See more on the readme file
                         
                         //here with the very first touch to this entity, we add the very first joint
                         _world_touchAddtouchHandlerForDragEvent.call(this, touchInfos, touchIndex);
-                        console.info('startDrag','first touchMoveJoint',this._touchMoveJoints,this.name());
                     }
                     else if(this._touchDragging){
                         //trigger startdrag event on the first move
@@ -983,7 +977,6 @@ See more on the readme file
                         }
                         
                     }
-                    console.info('drag','next touchMoveJoint',this._touchMoveJoints,this.name());
                     //update the move joint if regularDrag
                     if(this._touchMoveJoints){
                         for(touchId in this._touchMoveJoints){
