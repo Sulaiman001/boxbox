@@ -1,80 +1,63 @@
-world
-- onTouchstart(e)
-- onTouchmove(e)
-- onTouchend(e)
-- onTouchcancel(e)
-- _touchInfos
-	- activeTouches
-	- activeEntityIds
-
-touchOnly
-mouseOnly
-
-pointerSpecialHandlers
-
-delete destroyed entity handlers
-mouseDraggable : special joints (not only mouseJoint)
-
-world._touchDraggingEntityIds[]
-entity._touchMoveJoints[touchIdentifier] = {joint,originalPosition}
+DOING
 
 touchDraggable
- - regularDragSimpleTouch
- - regularDragMultiTouch
- - pinchDrag
- - pinchStay
- - pinchStayNoRotate
- - eventDragSimpleTouch
- - eventDragMultiTouch
-
 - options :
- - regularDrag
-    - allowMultitouch
-        - allowPinch
- - eventDrag
-    - allowMultitouch
-        - allowPinch
- - noMove
- - noRotate
+    - regularDrag
+        - allowMultitouch
+           - allowPinch
+    - eventDrag
+        - allowMultitouch
+           - allowPinch
+    - noMove
+    - noRotate
 - events :
- - start : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchmove (on the first touch ON the entity)
- - drag : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchmove (on any touch joined to the entity)
- - stop : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchend (on the last touch joined to the entity)
- - touchadd : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchstart (on any touch joined to the entity)
- - touchremove : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchend (on any touch joined to the entity)
+    - start : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchmove (on the first touch ON the entity)
+    - drag : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchmove (on any touch joined to the entity)
+    - stop : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchend (on the last touch joined to the entity)
+    - touchadd : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchstart (on any touch joined to the entity)
+    - touchremove : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchend (on any touch joined to the entity)
  
- touchDragInfos =
+ touchDraggableInfos =
     - touchIdentifier
     - originalPosition = {x,y}
     - position = {x,y}
 
  callback(e,[touchDragInfos])
+world._touchDraggingEntityIds[]
+entity._touchMoveJoints[touchIdentifier] = {joint,originalPosition}
 
+------------------------------------------------------------------------------------------------------------------------------
 
-mousePan
- - includeEntities :
-    - bool : will include non draggable entities
-    - array of entityIds : will include the entities listed (possible conflicts on events)
+TODO
 
-touchPan
- - includeEntities :
-    - bool : will include non draggable entities
-    - array of entityIds : will include the entities listed (possible conflicts on events)
- - allowMultitouch
+- world.focusAll() - recadrer sur tous les objets présents dans le world
+- special css styles (prevent text select, drag ...)
+- mouseWheelZoom
+    - maxScale
+    - minScale
+    - maxWindow : {x1,y1,x2,y2}
+    - minWindow : {x1,y1,x2,y2}
+- onMouseWheel
+- mousePan : include all non draggable entities
+    - excludeEntityIds : [id ...] will exclude the entities listed (possible conflicts on events)
+- touchPan
+    - excludeEntityIds : [id ...] will exclude the entities listed (possible conflicts on events)
     - allowPinch
         - maxScale
         - minScale
         - maxWindow : {x1,y1,x2,y2}
         - minWindow : {x1,y1,x2,y2}
+- mouseDraggable/touchDraggable : special joints (not only mouseJoint) - good thing todo ?
+- delete destroyed entity handlers
+------------------------------------------------------------------------------------------------------------------------------
 
-mouseWheelZoom
- - maxScale
- - minScale
- - maxWindow : {x1,y1,x2,y2}
- - minWindow : {x1,y1,x2,y2}
+DONE
 
-onMouseWheel
-
-special css styles (prevent text select, drag ...)
-
-make an accurate .find(x,y) method
+- make an accurate .find(x,y) method => world.getEntityByPosition()
+- world
+    - onTouchstart(e)
+    - onTouchmove(e)
+    - onTouchend(e)
+    - onTouchcancel(e) -> canceled
+- touchOnly
+- mouseOnly
