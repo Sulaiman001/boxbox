@@ -135,6 +135,7 @@ code {
   margin: .7em;
   padding: .3em .5em;
   color: #1f1f1f;
+  overflow:auto;
 }
 
 ul.properties {

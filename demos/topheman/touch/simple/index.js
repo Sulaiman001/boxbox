@@ -42,12 +42,12 @@ function init(){
     ground.name('ground');
     
     function onTouchstartHandler(e,touchInfos){
-        console.info('start',logTouchInfos(e),logTouchInfos(touchInfos));
+        console.info('start',e,touchInfos);
     }
     
     function onTouchmoveHandler(e,touchInfos){
         var i, jointDefinition;
-//        console.info('move',logTouchInfos(e),logTouchInfos(touchInfos));
+//        console.info('move',e,touchInfos);
         if(touchInfos.length > 0){
             for(i=0; i<touchInfos.length; i++){
                 if(touchInfos[i].entity){
@@ -69,7 +69,7 @@ function init(){
     
     function onTouchendHandler(e,touchInfos){
         var i, jointDefinition;
-        console.info('end',logTouchInfos(e),logTouchInfos(touchInfos));
+        console.info('end',e,touchInfos);
         if(touchInfos.length > 0){
             for(i=0; i<touchInfos.length; i++){
                 if(touchInfos[i].entity){

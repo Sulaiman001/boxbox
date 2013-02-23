@@ -13,7 +13,6 @@ See more on the readme file
 
 /**
  * @_page_title boxbox
- * @_page_css updoc-custom.css
  * @_page_description api documentation
  * @_page_home_path .
  * @_page_compact_index
@@ -147,7 +146,10 @@ See more on the readme file
         disableTouchEvents : false, //@added by topheman
         disableMouseEvents : false, //@added by topheman
         disableKeyEvents : false, //@added by topheman
-        preventScroll : false //@added by topheman
+        preventScroll : false, //@added by topheman
+        _touchPan : {
+            
+        }
     };
     
     var JOINT_DEFAULT_OPTIONS = {
@@ -952,7 +954,7 @@ See more on the readme file
                         this._touchMoveJoints = {};
                     }
                     //remove joint if there is already a joint on this touch (shouldn't happend on multitouch screen) - backwards compatibility for non mutitouch devices 
-                    if(this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier]){
+                    if(this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier] && this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint){
                         this._world._world.DestroyJoint(this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint);
                     }
                     //add the originalPosition of the touch
@@ -962,19 +964,28 @@ See more on the readme file
                             y : touchInfos[touchIndex].y
                         }
                     };
-                    //create the joint with the touch
-                    jointDefinition = new Box2D.Dynamics.Joints.b2MouseJointDef();
+                    
+                    //init the regularDrag (only create a joint in that case)
+                    if(this._ops._touchDraggable.type === 'regularDrag'){
+                        //create the joint with the touch
+                        jointDefinition = new Box2D.Dynamics.Joints.b2MouseJointDef();
 
-                    jointDefinition.bodyA = this._world._world.GetGroundBody();
-                    jointDefinition.bodyB = this._body;
-                    jointDefinition.target.Set(touchInfos[touchIndex].x, touchInfos[touchIndex].y);
-                    jointDefinition.maxForce = 10000000000000000000000000000;//100000
-                    jointDefinition.timeStep = 1/60;//hard coded ?!!
-                    this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint = this._world._world.CreateJoint(jointDefinition);
+                        jointDefinition.bodyA = this._world._world.GetGroundBody();
+                        jointDefinition.bodyB = this._body;
+                        jointDefinition.target.Set(touchInfos[touchIndex].x, touchInfos[touchIndex].y);
+                        jointDefinition.maxForce = 10000000000000000000000000000;//100000
+                        jointDefinition.timeStep = 1/60;//hard coded ?!!
+                        this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint = this._world._world.CreateJoint(jointDefinition);
+                    }
+                    //init eventDrag
+                    else if(this._ops._touchDraggable.type === 'eventDrag'){
+
+                    }
+                    
                     //trigger the touchadd callback if not the first touch on the dragging entity
                     touchesCount = Object.keys(this._touchMoveJoints).length;
                     if(touchesCount > 1 && this._world._touchAddtouchdragHandlers[this._id]){
-                        this._world._touchAddtouchdragHandlers[this._id].call(this,e, mergeTouchDraggableInfos(touchInfos,this), touchIndex);
+                        this._world._touchAddtouchdragHandlers[this._id].call(this,e, mergeTouchDraggableInfos(touchInfos,this)[0],touchesCount);
                     }
                 };
                 
@@ -990,17 +1001,20 @@ See more on the readme file
                  */
                 var _world_touchRemovetouchHandlerForDragEvent = function(e, touchInfos, touchIndex){
                     var touchesCount,
-                        touchDraggableInfos = mergeTouchDraggableInfos(touchInfos, this);
+                        touchDraggableInfos = mergeTouchDraggableInfos(touchInfos, this)[0];
                     //remove the joint
                     if(this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier]){
-                        this._world._world.DestroyJoint(this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint);
+                        //destroy the mouseJoint created in case of a regularDrag
+                        if(this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint){
+                            this._world._world.DestroyJoint(this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint);
+                        }
                         this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier] = null;
                         delete this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier];
                     }
                     //trigger the touchremove callback if not the first touch on the dragging entity
                     touchesCount = Object.keys(this._touchMoveJoints).length;
                     if(touchesCount > 0 && this._world._touchRemovetouchdragHandlers[this._id]){
-                        this._world._touchRemovetouchdragHandlers[this._id].call(this,e, touchDraggableInfos, touchIndex);
+                        this._world._touchRemovetouchdragHandlers[this._id].call(this,e, touchDraggableInfos,touchesCount);
                     }
                 };
                 
@@ -1044,14 +1058,16 @@ See more on the readme file
                     }
                     //if it's a new touch while dragging the same entity
                     else if(e.type === 'touchstart' && this._world._touchDraggingEntityIds.indexOf(this._id) > -1){
-                        //here with the nth touch to this entity, we add the nth joint
-                        _world_touchAddtouchHandlerForDragEvent.call(this, e, touchInfos, touchIndex);
+                        if(Object.keys(this._touchMoveJoints).length < this._ops._touchDraggable.maxTouches){
+                            //here with the nth touch to this entity, we add the nth joint
+                            _world_touchAddtouchHandlerForDragEvent.call(this, e, touchInfos, touchIndex);
+                        }
                     }
                     else if(this._touchDragging){
                         //trigger startdrag event on the first move
                         if(this._touchStartDrag && e.type === 'touchmove'){
                             if(this._world._touchStartdragHandlers[this._id]){
-                                this._world._touchStartdragHandlers[this._id].call(this,e, mergeTouchDraggableInfos(touchInfos,this), touchIndex);
+                                this._world._touchStartdragHandlers[this._id].call(this,e, mergeTouchDraggableInfos(touchInfos,this)[0]);
                             }
                             this._touchStartDrag = false;//reset startDrag state after the first drag
                         }
@@ -1061,7 +1077,9 @@ See more on the readme file
                     }
                     //update the move joint if regularDrag
                     if(this._touchMoveJoints){
-                        this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint.SetTarget(new Box2D.Common.Math.b2Vec2(touchInfos[touchIndex].x, touchInfos[touchIndex].y));
+                        if(this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint){
+                            this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint.SetTarget(new Box2D.Common.Math.b2Vec2(touchInfos[touchIndex].x, touchInfos[touchIndex].y));
+                        }
                     }
                 };
                 
@@ -1077,14 +1095,14 @@ See more on the readme file
                  * It there are still touches on the entity, removes the joint and triggers the touchremove callback
                  */
                 var _world_touchendHandlerForDragEvent = function(e, touchInfos, touchIndex) {
-                    var touchDraggableInfos = mergeTouchDraggableInfos(touchInfos, this);
+                    var touchDraggableInfos = mergeTouchDraggableInfos(touchInfos, this)[0];
                     _world_touchRemovetouchHandlerForDragEvent.call(this,e,touchInfos, touchIndex);
                     if(Object.keys(this._touchMoveJoints).length === 0){
                         //let the entity go back sleeping eventually, only when the dragging is finished
                         this._body.SetSleepingAllowed(true);
                         //trigger the stopdrag event (don't trigger it if the first drag hasn't happened)
                         if(this._touchStartDrag === false && self._touchStopdragHandlers[this._id]){
-                            self._touchStopdragHandlers[this._id].call(this,e, touchDraggableInfos, touchIndex);
+                            self._touchStopdragHandlers[this._id].call(this,e, touchDraggableInfos);
                         }
                         this._touchStartDrag = false;//reset startDrag state if there was no drag at all
                         this._touchDragging = false;//all the dragging process is ended, reset this propertie
@@ -2303,8 +2321,7 @@ See more on the readme file
         _touchDraggable : {//@added by topheman
             disabled: true,
             type: 'regularDrag',
-            allowMultitouch: false,
-            allowPinch: false
+            maxTouches: 100
         },
         init: null,
         draw: function(ctx, x, y) {
@@ -3462,28 +3479,34 @@ See more on the readme file
          * @_name mouseDraggable
          * @_module entity
          * @_params [options]
-         * @description Turns an entity to draggable by the mouse, with multiple callbacks.
-         *      <br>The mouseDraggableInfos variable passed within the callback function contains the original position of the mouse when the drag started and its current position.
-         *      <br><br>without options
-         * <code>entity.mouseDraggable();</code>
-         * With options
-         * <code>entity.mouseDraggable({
-         *      start : function(e, mouseDraggableInfos){
-         *          console.info('StartDrag', e, mouseDraggableInfos);
-         *      },
-         *      drag : function(e, mouseDraggableInfos){
-         *          console.info('Drag', e, mouseDraggableInfos);
-         *      },
-         *      stop : function(e, mouseDraggableInfos){
-         *          console.info('StopDrag', e, mouseDraggableInfos);
-         *      }
-         * });</code>
-         * Enable / disable
-         * <code>entity.mouseDraggable('disable');</code>
+         * @description 
+         Turns an entity to draggable by the mouse, with multiple callbacks.
+         <br>The mouseDraggableInfos variable passed within the callback function contains the original position of the mouse when the drag started and its current position.
+         <h2>Examples</h2>
+         <h3>Without options</h3>
+         <code>entity.mouseDraggable();</code>
+         <h3>With options</h3>
+         <code>entity.mouseDraggable({
+         &nbsp;&nbsp;start : function(e, mouseDraggableInfos){
+         &nbsp;&nbsp;&nbsp;&nbsp;console.info('start dragging '+this.name()+' at position',{mouseDraggableInfos.position.x, mouseDraggableInfos.position.y});
+         &nbsp;&nbsp;},
+         &nbsp;&nbsp;drag : function(e, mouseDraggableInfos){
+         &nbsp;&nbsp;&nbsp;&nbsp;console.info('dragging '+this.name()+' at position', {mouseDraggableInfos.position.x, mouseDraggableInfos.position.y});
+         &nbsp;&nbsp;},
+         &nbsp;&nbsp;stop : function(e, mouseDraggableInfos){
+         &nbsp;&nbsp;&nbsp;&nbsp;console.info('just dragged '+this.name(), 'from', {mouseDraggableInfos.originalPosition.x, mouseDraggableInfos.originalPosition.y}, 'to', {mouseDraggableInfos.position.x, mouseDraggableInfos.position.y});
+         &nbsp;&nbsp;}
+         });</code>
+         <h3>Enable / disable</h3>
+         <code>entity.mouseDraggable('disable');</code>
          * @options
          * <ul>
          * @disabled {Boolean} true/false to disable/enable the draggable state
-         * @type {String} regularDrag/eventDrag - regularDrag : Moves the entity with the mouse / eventDrag : doesn't move the entity, only sends you the data and callbacks
+         * @type {String} "regularDrag" or "eventDrag"
+         * <ul>
+         * @regularDrag : Moves the entity with the mouse
+         * @eventDrag : doesn't move the entity, only sends you the data and callbacks
+         * </ul>
          * @start function(e,mouseDraggableInfos)
          * @drag function(e,mouseDraggableInfos)
          * @stop function(e,mouseDraggableInfos)
@@ -3563,6 +3586,59 @@ See more on the readme file
     
         },
                 
+        /**
+         * @_name touchDraggable
+         * @_module entity
+         * @_params [options]
+         * @description 
+         Turns an entity to draggable by touch, with multiple callbacks.
+         <br>The touchDraggableInfos variable passed within the callback function contains the original position of the mouse when the drag started, its current position and the touchIdentifier (to id the touch in the event object).
+         <h2>Examples</h2>
+         <h3>Without options</h3>
+         <code>entity.touchDraggable();</code>
+         <h3>With options</h3>
+         <code>entity.touchDraggable({
+         &nbsp;&nbsp;start : function(e, touchDraggableInfos){
+         &nbsp;&nbsp;&nbsp;&nbsp;console.info('start dragging '+this.name()+' at position',{touchDraggableInfos.position.x, touchDraggableInfos.position.y});
+         &nbsp;&nbsp;},
+         &nbsp;&nbsp;drag : function(e, touchDraggableInfos){
+         &nbsp;&nbsp;&nbsp;&nbsp;console.info('dragging'+this.name(), 'all the touches infos active are available here : ',touchDraggableInfos);
+         &nbsp;&nbsp;},
+         &nbsp;&nbsp;stop : function(e, touchDraggableInfos){
+         &nbsp;&nbsp;&nbsp;&nbsp;console.info('just dragged '+this.name(), 'from', {touchDraggableInfos.originalPosition.x, touchDraggableInfos.originalPosition.y}, 'to', {touchDraggableInfos.position.x, touchDraggableInfos.position.y});
+         &nbsp;&nbsp;},
+         &nbsp;&nbsp;touchadd : function(e, touchDraggableInfos, totalTouches){
+         &nbsp;&nbsp;&nbsp;&nbsp;console.info('a touch has been made while dragging at this position ',{touchDraggableInfos.position.x, touchDraggableInfos.position.y}, 'there are now '+totalTouches+' touche(s)');
+         &nbsp;&nbsp;},
+         &nbsp;&nbsp;touchremove : function(e, touchDraggableInfos, totalTouches){
+         &nbsp;&nbsp;&nbsp;&nbsp;console.info('a touch has been made while dragging at this position ',{touchDraggableInfos.position.x, touchDraggableInfos.position.y}, 'there are now '+totalTouches+' touche(s) remaining on this entity');
+         &nbsp;&nbsp;}
+         });</code>
+         <h3>Enable / disable</h3>
+         <code>entity.touchDraggable('disable');</code>
+         * @options
+         * <ul>
+         * @disabled {Boolean} true/false to disable/enable the draggable state
+         * @maxTouches {Number}
+         * @type {String} "regularDrag" or "eventDrag"
+         * <ul>
+         * @regularDrag : Moves the entity with the mouse
+         * @eventDrag : doesn't move the entity, only sends you the data and callbacks
+         * </ul>
+         * @start function(e,touchDraggableInfos)
+         * @drag function(e,[touchDraggableInfos, ...])
+         * @stop function(e,touchDraggableInfos)
+         * @touchadd function(e,touchDraggableInfos,totalTouches)
+         * @touchremove function(e,touchDraggableInfos,totalTouches)
+         * </ul>
+         * touchDraggableInfos
+         * <ul>
+         * @position : {x,y}
+         * @originalPosition : {x,y}
+         * @touchIdentifier : Number (the identifier of the touch in the TouchEvent object)
+         * </ul>
+         * @added by topheman
+         */
         touchDraggable: function(options){
             if(this._world._ops.disableTouchEvents){
                 console.warn('Mouse events are disabled, you tried to call mouseDraggable');
@@ -3591,23 +3667,11 @@ See more on the readme file
                     this._ops._touchDraggable.disabled = false;//active by default (if not specified)
                 }
                 
-                if(options.allowMultitouch === false || options.allowMultitouch === true){
-                    this._ops._touchDraggable.allowMultitouch = options.allowMultitouch;
+                if(options.maxTouches > 0){
+                    this._ops._touchDraggable.maxTouches = options.maxTouches;
                 }
                 else{
-                    this._ops._touchDraggable.allowMultitouch = false;//false by default (if not specified)
-                }
-                
-                if(options.allowPinch === false || options.allowPinch === true){
-                    this._ops._touchDraggable.allowPinch = options.allowPinch;
-                }
-                else{
-                    this._ops._touchDraggable.allowPinch = false;//false by default (if not specified)
-                }
-                
-                //if pinch is allowed, multicouch is allowed
-                if(this._ops._touchDraggable.allowPinch === true){
-                    this._ops._touchDraggable.allowMultitouch = true;
+                    this._ops._touchDraggable.maxTouches = 100;//100 by default (if not specified)
                 }
                 
                 if(typeof options.type === 'string'){

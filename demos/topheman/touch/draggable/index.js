@@ -11,35 +11,35 @@ function init(){
     //create entities
     left = myWorld.createEntity({
       color: "orange",
-      x: 2,
+      x: 4,
       y: 2,
-      width: 3,
-      height: 4
+      width: 5,
+      height: 6
     });
     left.name('left');
 
     right = myWorld.createEntity({
-        x: 10,
+        x: 20,
         y: 0,
-      width: 4,
-      height: 4
+      width: 5,
+      height: 6
     });
     right.name('right');
     
     center = myWorld.createEntity({
         color : 'red',
-        x: 6,
+        x: 12,
         y: 0,
-        width: 3,
+        width: 5,
         density: 10,
-        height: 4
+        height: 7
     });
     center.name('center');
 
     ground = myWorld.createEntity({
       color: "green",
       x: 15,
-      y: 16,
+      y: 14,
       width: 30,
       height: 0.5,
       type: "static"
@@ -47,24 +47,43 @@ function init(){
     ground.name('ground');
     
     center.touchDraggable({
-        start : function(e, touchDraggableInfos, touchIndex){
-            console.info('start callback',e, touchDraggableInfos, touchIndex);
+        start : function(e, touchDraggableInfos){
+            console.info('start callback',e, touchDraggableInfos);
         },
-        drag : function(e, touchDraggableInfos, touchIndex){
-            console.info('drag callback',e, (function(){var r = ''; for(var i=0;i<touchDraggableInfos.length;i++){ r += touchDraggableInfos[i].touchIdentifier } return r; })(), touchIndex);
+        drag : function(e, touchDraggableInfos){
+//            console.info('drag callback',e, touchDraggableInfos);
         },
-        stop : function(e, touchDraggableInfos, touchIndex){
-            console.info('stop callback',e, touchDraggableInfos, touchIndex);
+        stop : function(e, touchDraggableInfos){
+            console.info('stop callback',e, touchDraggableInfos);
         },
-        touchadd : function(e, touchDraggableInfos, touchIndex){
-            console.info('touchadd callback',e, touchDraggableInfos, touchIndex);
+        touchadd : function(e, touchDraggableInfos,touchesCount){
+            console.info('touchadd callback',e, touchDraggableInfos,touchesCount);
         },
-        touchremove : function(e, touchDraggableInfos, touchIndex){
-            console.info('touchremove callback',e, touchDraggableInfos, touchIndex);
+        touchremove : function(e, touchDraggableInfos,touchesCount){
+            console.info('touchremove callback',e, touchDraggableInfos,touchesCount);
         }
     });
-    left.touchDraggable();
-    right.touchDraggable();
+    left.touchDraggable({
+        type: 'eventDrag',
+        start : function(e, touchDraggableInfos){
+            console.info('eventdrag start callback',e,touchDraggableInfos);
+        },
+        drag : function(e, touchDraggableInfos){
+//            console.info('eventdrag drag callback',e, touchDraggableInfos);
+        },
+        stop : function(e, touchDraggableInfos){
+            console.info('eventdrag stop callback',e, touchDraggableInfos);
+        },
+        touchadd : function(e, touchDraggableInfos,touchesCount){
+            console.info('eventdrag touchadd callback',e,touchDraggableInfos,touchesCount);
+        },
+        touchremove : function(e, touchDraggableInfos,touchesCount){
+            console.info('eventdrag touchremove callback',e,touchDraggableInfos,touchesCount);
+        }
+    });
+    right.touchDraggable({
+        maxTouches : 2
+    });
 
 }   
 

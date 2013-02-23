@@ -3,11 +3,11 @@ DOING
 touchDraggable
 - options :
     - regularDrag
-        - allowMultitouch
-           - allowPinch
-    - eventDrag
-        - allowMultitouch
-           - allowPinch
+        - maxTouches
+           - allowPinch (later)
+    - eventDrag @todo
+        - maxTouches
+           - allowPinch (later)
     - noMove
     - noRotate
 - events :
@@ -24,14 +24,17 @@ touchDraggable
     - originalPosition = {x,y}
     - position = {x,y}
 
- callback(e,[touchDragInfos])
 world._touchDraggingEntityIds[]
 entity._touchMoveJoints[touchIdentifier] = {joint,originalPosition}
+
+Bug on evnt/regular drags mixed (starting with event drag)
 
 ------------------------------------------------------------------------------------------------------------------------------
 
 TODO
 
+- rethink all the params passed by callback on touch events
+    -> do I pass only the changedTouch
 - world.focusAll() - recadrer sur tous les objets présents dans le world
 - special css styles (prevent text select, drag ...)
 - mouseWheelZoom
@@ -44,7 +47,7 @@ TODO
     - excludeEntityIds : [id ...] will exclude the entities listed (possible conflicts on events)
 - touchPan
     - excludeEntityIds : [id ...] will exclude the entities listed (possible conflicts on events)
-    - allowPinch
+    - allowPinch = on a touchmove, when touches.length > 2 && none of touchInfos contains an entity
         - maxScale
         - minScale
         - maxWindow : {x1,y1,x2,y2}
@@ -52,6 +55,7 @@ TODO
 - mouseDraggable/touchDraggable : special joints (not only mouseJoint) - good thing todo ?
 - delete destroyed entity handlers
 - optimize the for loops
+- pass the private attribute inside _ops
 ------------------------------------------------------------------------------------------------------------------------------
 
 DONE

@@ -47,25 +47,25 @@ function init(){
     ground.name('ground');
     
 //    function world_onTouchstartHandler(e,touchInfos){
-//        console.info('world_start',logTouchInfos(e),logTouchInfos(touchInfos));
+//        console.info('world_start',e,touchInfos);
 //    }
     
 //    myWorld.onTouchstart(world_onTouchstartHandler);
     enemy.onTouchstart(function(e, touchInfos){
         this.color('#'+Math.floor(Math.random()*16777215).toString(16));
-//        console.info('touchstart',logTouchInfos(e),logTouchInfos(touchInfos));
+//        console.info('touchstart',e,touchInfos);
     });
     
     player.onTouchmove(function(e, touchInfos){
         this.color('#'+Math.floor(Math.random()*16777215).toString(16));
-//        console.info('touchmove',logTouchInfos(touchInfos));
+//        console.info('touchmove',touchInfos);
     });
     
     decor1.onTouchend(function(e, touchInfos){
 //        console.info('touchend callback',this.name(),player.color(),decor1.color(),player._ops.color,decor1._ops.color);
         this.color('#'+Math.floor(Math.random()*16777215).toString(16));
 //        console.info('touchend callback',this.name(),player.color(),decor1.color(),player._ops.color,decor1._ops.color);
-//        console.info('touchend',logTouchInfos(e),logTouchInfos(touchInfos));
+//        console.info('touchend',e,touchInfos);
     });
 
 }   

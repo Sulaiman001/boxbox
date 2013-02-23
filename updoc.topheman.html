@@ -135,6 +135,7 @@ code {
   margin: .7em;
   padding: .3em .5em;
   color: #1f1f1f;
+  overflow:auto;
 }
 
 ul.properties {
@@ -171,8 +172,6 @@ ul.properties li {
   display:none;
 }
     </style>
-    
-      <link rel="stylesheet" href="updoc-custom.css"></style>
     
   </head>
   <body>
@@ -680,6 +679,16 @@ ul.properties li {
                 
                 
                   <a href="#name-entity.spriteWidth-spriteWidth" class="inlineIndexItem">spriteWidth</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#name-entity.touchDraggable-touchDraggable" class="inlineIndexItem">touchDraggable</a>
                 
               
             
@@ -2193,7 +2202,27 @@ is relative to the World's scale and camera position.</div>
                   <li>
                   
                     <span class="property">type</span>
-                    <span>{String} regularDrag/eventDrag - regularDrag : Moves the entity with the mouse / eventDrag : doesn't move the entity, only sends you the data and callbacks</span>
+                    <span>{String} "regularDrag" or "eventDrag"
+<ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">regularDrag</span>
+                    <span>: Moves the entity with the mouse</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">eventDrag</span>
+                    <span>: doesn't move the entity, only sends you the data and callbacks
+</ul></span>
                   
                   </li>
                 
@@ -2268,21 +2297,22 @@ is relative to the World's scale and camera position.</div>
             
             <div class="description">Turns an entity to draggable by the mouse, with multiple callbacks.
 <br>The mouseDraggableInfos variable passed within the callback function contains the original position of the mouse when the drag started and its current position.
-<br><br>without options
+<h2>Examples</h2>
+<h3>Without options</h3>
 <code>entity.mouseDraggable();</code>
-With options
+<h3>With options</h3>
 <code>entity.mouseDraggable({
-start : function(e, mouseDraggableInfos){
-console.info('StartDrag', e, mouseDraggableInfos);
-},
-drag : function(e, mouseDraggableInfos){
-console.info('Drag', e, mouseDraggableInfos);
-},
-stop : function(e, mouseDraggableInfos){
-console.info('StopDrag', e, mouseDraggableInfos);
-}
+&nbsp;&nbsp;start : function(e, mouseDraggableInfos){
+&nbsp;&nbsp;&nbsp;&nbsp;console.info('start dragging '+this.name()+' at position',{mouseDraggableInfos.position.x, mouseDraggableInfos.position.y});
+&nbsp;&nbsp;},
+&nbsp;&nbsp;drag : function(e, mouseDraggableInfos){
+&nbsp;&nbsp;&nbsp;&nbsp;console.info('dragging '+this.name()+' at position', {mouseDraggableInfos.position.x, mouseDraggableInfos.position.y});
+&nbsp;&nbsp;},
+&nbsp;&nbsp;stop : function(e, mouseDraggableInfos){
+&nbsp;&nbsp;&nbsp;&nbsp;console.info('just dragged '+this.name(), 'from', {mouseDraggableInfos.originalPosition.x, mouseDraggableInfos.originalPosition.y}, 'to', {mouseDraggableInfos.position.x, mouseDraggableInfos.position.y});
+&nbsp;&nbsp;}
 });</code>
-Enable / disable
+<h3>Enable / disable</h3>
 <code>entity.mouseDraggable('disable');</code></div>
             
           </section>
@@ -3872,6 +3902,201 @@ Used only on entities with spriteSheet:true</div>
             </ul>
             
             <div class="description">get or set width of a sprite on the sprite sheet</div>
+            
+          </section>
+        
+        
+          <section class="depth2 header" data-module="entity.touchDraggable">
+          
+            
+            
+            
+              <h2 id="name-entity.touchDraggable-touchDraggable">
+                .touchDraggable( [options] )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">options</span>
+                    <span><ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">disabled</span>
+                    <span>{Boolean} true/false to disable/enable the draggable state</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">maxTouches</span>
+                    <span>{Number}</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">type</span>
+                    <span>{String} "regularDrag" or "eventDrag"
+<ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">regularDrag</span>
+                    <span>: Moves the entity with the mouse</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">eventDrag</span>
+                    <span>: doesn't move the entity, only sends you the data and callbacks
+</ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">start</span>
+                    <span>function(e,touchDraggableInfos)</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">drag</span>
+                    <span>function(e,[touchDraggableInfos, ...])</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">stop</span>
+                    <span>function(e,touchDraggableInfos)</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">touchadd</span>
+                    <span>function(e,touchDraggableInfos,totalTouches)</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">touchremove</span>
+                    <span>function(e,touchDraggableInfos,totalTouches)
+</ul>
+touchDraggableInfos
+<ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">position</span>
+                    <span>: {x,y}</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">originalPosition</span>
+                    <span>: {x,y}</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">touchIdentifier</span>
+                    <span>: Number (the identifier of the touch in the TouchEvent object)
+</ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Turns an entity to draggable by touch, with multiple callbacks.
+<br>The touchDraggableInfos variable passed within the callback function contains the original position of the mouse when the drag started, its current position and the touchIdentifier (to id the touch in the event object).
+<h2>Examples</h2>
+<h3>Without options</h3>
+<code>entity.touchDraggable();</code>
+<h3>With options</h3>
+<code>entity.touchDraggable({
+&nbsp;&nbsp;start : function(e, touchDraggableInfos){
+&nbsp;&nbsp;&nbsp;&nbsp;console.info('start dragging '+this.name()+' at position',{touchDraggableInfos.position.x, touchDraggableInfos.position.y});
+&nbsp;&nbsp;},
+&nbsp;&nbsp;drag : function(e, touchDraggableInfos){
+&nbsp;&nbsp;&nbsp;&nbsp;console.info('dragging'+this.name(), 'all the touches infos active are available here : ',touchDraggableInfos);
+&nbsp;&nbsp;},
+&nbsp;&nbsp;stop : function(e, touchDraggableInfos){
+&nbsp;&nbsp;&nbsp;&nbsp;console.info('just dragged '+this.name(), 'from', {touchDraggableInfos.originalPosition.x, touchDraggableInfos.originalPosition.y}, 'to', {touchDraggableInfos.position.x, touchDraggableInfos.position.y});
+&nbsp;&nbsp;},
+&nbsp;&nbsp;touchadd : function(e, touchDraggableInfos, totalTouches){
+&nbsp;&nbsp;&nbsp;&nbsp;console.info('a touch has been made while dragging at this position ',{touchDraggableInfos.position.x, touchDraggableInfos.position.y}, 'there are now '+totalTouches+' touche(s)');
+&nbsp;&nbsp;},
+&nbsp;&nbsp;touchremove : function(e, touchDraggableInfos, totalTouches){
+&nbsp;&nbsp;&nbsp;&nbsp;console.info('a touch has been made while dragging at this position ',{touchDraggableInfos.position.x, touchDraggableInfos.position.y}, 'there are now '+totalTouches+' touche(s) remaining on this entity');
+&nbsp;&nbsp;}
+});</code>
+<h3>Enable / disable</h3>
+<code>entity.touchDraggable('disable');</code></div>
             
           </section>
         
