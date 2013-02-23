@@ -11,12 +11,14 @@ touchDraggable
     - noMove
     - noRotate
 - events :
-    - start : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchmove (on the first touch ON the entity)
-    - drag : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchmove (on any touch joined to the entity)
-    - stop : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchend (on the last touch joined to the entity)
-    - touchadd : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchstart (on any touch joined to the entity)
-    - touchremove : function(e,{touchIdentifier,[touchDragInfos, ...]})//triggered on touchend (on any touch joined to the entity)
+    - start : function(e,[touchDragInfos, ...],touchIndex)//triggered on touchmove (on the first touch ON the entity)
+    - drag : function(e,[touchDragInfos, ...])//triggered on touchmove (on any touch joined to the entity)
+    - stop : function(e,[touchDragInfos, ...],touchIndex)//triggered on touchend (on the last touch joined to the entity)
+    - touchadd : function(e,[touchDragInfos, ...],touchIndex)//triggered on touchstart (on any touch joined to the entity)
+    - touchremove : function(e,[touchDragInfos, ...],touchIndex)//triggered on touchend (on any touch joined to the entity)
  
+    queue the drag events so that they will be fired only once per touchmove event
+
  touchDraggableInfos =
     - touchIdentifier
     - originalPosition = {x,y}
@@ -49,6 +51,7 @@ TODO
         - minWindow : {x1,y1,x2,y2}
 - mouseDraggable/touchDraggable : special joints (not only mouseJoint) - good thing todo ?
 - delete destroyed entity handlers
+- optimize the for loops
 ------------------------------------------------------------------------------------------------------------------------------
 
 DONE

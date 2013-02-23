@@ -6,7 +6,7 @@ function init(){
     
     //init canvas and world
     canvas = document.getElementById("canvas");
-    myWorld = boxbox.createWorld(canvas,{scale:60, preventScroll:false, disableTouchEvents : false, disableKeyEvents : true, disableMouseEvents : true, debugDraw:true});
+    myWorld = boxbox.createWorld(canvas,{scale:30, preventScroll:false, disableTouchEvents : false, disableKeyEvents : true, disableMouseEvents : true, debugDraw:true});
     
     //create entities
     left = myWorld.createEntity({
@@ -46,7 +46,23 @@ function init(){
     });
     ground.name('ground');
     
-    center.touchDraggable();
+    center.touchDraggable({
+        start : function(e, touchDraggableInfos, touchIndex){
+            console.info('start callback',e, touchDraggableInfos, touchIndex);
+        },
+        drag : function(e, touchDraggableInfos, touchIndex){
+            console.info('drag callback',e, (function(){var r = ''; for(var i=0;i<touchDraggableInfos.length;i++){ r += touchDraggableInfos[i].touchIdentifier } return r; })(), touchIndex);
+        },
+        stop : function(e, touchDraggableInfos, touchIndex){
+            console.info('stop callback',e, touchDraggableInfos, touchIndex);
+        },
+        touchadd : function(e, touchDraggableInfos, touchIndex){
+            console.info('touchadd callback',e, touchDraggableInfos, touchIndex);
+        },
+        touchremove : function(e, touchDraggableInfos, touchIndex){
+            console.info('touchremove callback',e, touchDraggableInfos, touchIndex);
+        }
+    });
     left.touchDraggable();
     right.touchDraggable();
 
