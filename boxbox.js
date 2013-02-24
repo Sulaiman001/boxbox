@@ -74,6 +74,7 @@ See more on the readme file
     
     // A minimal extend for simple objects inspired by jQuery @modifier by topheman : deep copy added because of reference problems @todo verify on the prototype
     function extend(target, o) {
+        var index;
         if (target === undefined) {
             target = {};
         }
@@ -82,6 +83,14 @@ See more on the readme file
                 if (o.hasOwnProperty(key) && target[key] === undefined) {
                     if (typeof o[key] === 'object' && o[key] !== null && o[key] !== undefined){
                         target[key] = extend(target[key], o[key]);
+                        //update the length attribute if this is an array @todo check
+                        if(o[key].length){
+                            index = 0;
+                            for(var i in target[key]){
+                                index++;
+                            }
+                            target[key].length = index;
+                        }
                     }
                     else{
                         target[key] = o[key];
@@ -2277,6 +2286,154 @@ See more on the readme file
                 return false;
             }
             this._removeTouchendHandler(worldCallbackEventId);
+        },
+                
+        mouseWheelZoom : function(options){
+    
+        },
+        
+        
+        /**
+         * 
+         * @_name getCurrentWindowInfos
+         * @_module world
+         * @description Returns the position/size/scale the of the actual camera
+         * @forceCurrentRatio Force with the current ratio of the canvas
+         * @added by topheman
+         */
+        getCurrentWindowInfos : function(){
+            var result, camera = this.camera(), scale = this.scale();
+            result = {
+                x : camera.x,
+                y : camera.y,
+                width : this._canvas.width / scale,
+                height : this._canvas.height / scale,
+                scale : scale
+            };
+            
+            return result;
+        },
+        
+        /**
+         * 
+         * @_name getMaxWindowInfos
+         * @_module world
+         * @_params forceCurrentRatio
+         * @description Returns the position/size/scale the of a rectangle that would cover all the objects present in the world
+         * @forceCurrentRatio Force with the current ratio of the canvas
+         * @added by topheman
+         */
+        getMaxWindowInfos : function(forceCurrentRatio){
+            var top, bottom, left, right,i,tmpPosition,tmpRadius,tmpAngle, hWidth, hHeight,tX,tY,_xpos,_ypos,body,vertices,tmpVertices,j,currentWindowInfos,tmpHeight,tmpWidth,canvasRatio,stageRatio,
+                x = [],y = [], minX, maxX, minY, maxY, result, currentScale = this.scale();
+            
+            for (i in this._entities){
+                tmpPosition = this._entities[i].position();
+                tmpAngle    = this._entities[i]._body.GetAngle();
+                if(this._entities[i]._ops.shape === 'circle'){
+                    tmpRadius = this._entities[i]._ops.radius;
+                    x.push(tmpPosition.x+tmpRadius);
+                    x.push(tmpPosition.x-tmpRadius);
+                    y.push(tmpPosition.y+tmpRadius);
+                    y.push(tmpPosition.y-tmpRadius);
+                }
+                else if(this._entities[i]._ops.shape === 'square'){
+                    //http://www.cocos2d-iphone.org/forum/topic/17387
+                    // hWidth, hHeight = half the rectangle's width & height
+                    // _xpos, _ypos = center position of the rectangle
+                    hWidth = this._entities[i]._ops.width/2;
+                    hHeight = this._entities[i]._ops.height/2;
+                    _xpos = tmpPosition.x;
+                    _ypos = tmpPosition.y;
+                    
+                    //bottomLeft
+                    tX = -(hWidth * Math.cos(tmpAngle) - hHeight * Math.sin(tmpAngle) ) + _xpos;
+                    tY = -(hWidth * Math.sin(tmpAngle) + hHeight * Math.cos(tmpAngle) ) + _ypos;
+                    x.push(tX);
+                    y.push(tY);
+                    //topLeft
+                    tX = -(hWidth * Math.cos(tmpAngle) + hHeight * Math.sin(tmpAngle) ) + _xpos;
+                    tY = -(hWidth * Math.sin(tmpAngle) - hHeight * Math.cos(tmpAngle) ) + _ypos;
+                    x.push(tX);
+                    y.push(tY);
+                    //topRightS
+                    tX = (hWidth * Math.cos(tmpAngle) - hHeight * Math.sin(tmpAngle) ) + _xpos;
+                    tY = (hWidth * Math.sin(tmpAngle) + hHeight * Math.cos(tmpAngle) ) + _ypos;
+                    x.push(tX);
+                    y.push(tY);
+                    //bottomRight
+                    tX = (hWidth * Math.cos(tmpAngle) + hHeight * Math.sin(tmpAngle) ) + _xpos;
+                    tY = (hWidth * Math.sin(tmpAngle) - hHeight * Math.cos(tmpAngle) ) + _ypos;
+                    x.push(tX);
+                    y.push(tY);
+                }
+                else {
+                    body = this._entities[i]._body;
+                    vertices = body.GetFixtureList().GetShape().GetVertices();
+                    tmpVertices = {};
+                    for(j= 0; j < vertices.length; j++){
+                        tmpVertices[j] = body.GetWorldPoint(vertices[j]);
+                        x.push(tmpVertices[j].x);
+                        y.push(tmpVertices[j].y);
+                    }
+                }
+            }
+            x.sort(function(a,b){return a-b;});
+            y.sort(function(a,b){return a-b;});
+            minX = x[0];
+            maxX = x[x.length - 1];
+            minY = y[0];
+            maxY = y[y.length - 1];
+            
+            result = {
+                x : minX,
+                y : minY,
+                width : maxX - minX,
+                height : maxY - minY,
+                scale : currentScale
+            };
+            
+            if(forceCurrentRatio){
+                currentWindowInfos = this.getCurrentWindowInfos();
+                tmpHeight = result.height;
+                tmpWidth = result.width;
+                canvasRatio = this._canvas.width/this._canvas.height;
+                stageRatio = result.width/result.height;
+                result.scale = stageRatio >= 1 ? this._canvas.width / result.width : this._canvas.height / result.height;
+                //case width > height
+                if(canvasRatio >= 1){
+                    result.height = result.width * currentWindowInfos.height/currentWindowInfos.width;
+                }
+                //case height > width
+                else{
+                    result.width = result.height * currentWindowInfos.width/currentWindowInfos.height;
+                }
+                
+                //adjust the origin point to center the stage
+                if(stageRatio >= 1){
+                    result.y = result.y - (this._canvas.height/result.scale - tmpHeight)/2;
+                }
+                else{
+                    result.x = result.x - (this._canvas.width/result.scale - tmpWidth)/2;
+                }
+            }
+            
+            return result;
+    
+        },
+        
+        /**
+         * 
+         * @_name focusAll
+         * @_module world
+         * @description Adjust the camera to see all th objects present in the world and centers the camera (buggy with mouseDraggable for the moment)
+         * @added by topheman
+         */
+        focusAll : function(){
+            var windowInfos = this.getMaxWindowInfos(true);
+            this.camera({x:windowInfos.x,y:windowInfos.y});
+            this.scale(windowInfos.scale);
+            return windowInfos;
         }
         
     };
@@ -3713,6 +3870,19 @@ See more on the readme file
                     this._world._removeTouchRemovetouchDragHandler(this._id);
                 }
             }
+        },
+          
+        /**
+         * @_name isTouchDraggable
+         * @_module entity
+         * @return {Boolean}
+         * @description Returns true if the touch draggable event is active on the entity
+         * @added by topheman
+         */     
+        isTouchDraggable : function() {
+    
+            return !this._ops._touchDraggable.disabled;
+    
         }
         
     };

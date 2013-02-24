@@ -1,5 +1,59 @@
 DOING
 
+------------------------------------------------------------------------------------------------------------------------------
+
+TODO
+
+- world.createBoundaryZone(x1,y1,x2,y2)
+- world.destroyBoundaryZone(boundaryZone) -> unbinds any entity binded to this zone
+- entity.bindBoundaryZone(boundaryZone, callback) -> execute callback when entity jumps out
+- entity.unBindBoundaryZone(boundaryZone)
+
+- world.getWorldCurrentWindowInfos() -> x,y,width,height
+
+- world.focusAll() - recadrer sur tous les objets présents dans le world
+=> FIX the problem with mouseDraggable after focusAll
+- special css styles (prevent text select, drag ...)
+- mouseWheelZoom
+    - maxScale
+    - minScale
+    - maxWindow : {x1,y1,x2,y2}
+    - minWindow : {x1,y1,x2,y2}
+- onMouseWheel
+- mousePan : include all non draggable entities
+    - excludeEntityIds : [id ...] will exclude the entities listed (possible conflicts on events)
+- touchPan
+    - excludeEntityIds : [id ...] will exclude the entities listed (possible conflicts on events)
+    - allowPinch = on a touchmove, when touches.length > 2 && none of touchInfos contains an entity
+        - maxScale
+        - minScale
+        - maxWindow : {x1,y1,x2,y2}
+        - minWindow : {x1,y1,x2,y2}
+- mouseDraggable/touchDraggable : special joints (not only mouseJoint) - good thing todo ?
+- delete destroyed entity handlers
+- optimize the for loops
+- pass the private attribute inside _ops
+
+- compatibility mouseDraggable -> touchDraggable ?
+- draggable : releaseDrag -> release allMouseJoints
+
+------------------------------------------------------------------------------------------------------------------------------
+
+DONE
+
+- make an accurate .find(x,y) method => world.getEntityByPosition()
+- world
+    - onTouchstart(e)
+    - onTouchmove(e)
+    - onTouchend(e)
+    - onTouchcancel(e) -> canceled
+- touchOnly
+- mouseOnly
+-fix the creation of polygon : in the extends method, the length of the array in erased ...
+
+
+---- DONE --- touchDraggable :
+
 touchDraggable
 - options :
     - regularDrag
@@ -26,45 +80,3 @@ touchDraggable
 
 world._touchDraggingEntityIds[]
 entity._touchMoveJoints[touchIdentifier] = {joint,originalPosition}
-
-Bug on evnt/regular drags mixed (starting with event drag)
-
-------------------------------------------------------------------------------------------------------------------------------
-
-TODO
-
-- rethink all the params passed by callback on touch events
-    -> do I pass only the changedTouch
-- world.focusAll() - recadrer sur tous les objets présents dans le world
-- special css styles (prevent text select, drag ...)
-- mouseWheelZoom
-    - maxScale
-    - minScale
-    - maxWindow : {x1,y1,x2,y2}
-    - minWindow : {x1,y1,x2,y2}
-- onMouseWheel
-- mousePan : include all non draggable entities
-    - excludeEntityIds : [id ...] will exclude the entities listed (possible conflicts on events)
-- touchPan
-    - excludeEntityIds : [id ...] will exclude the entities listed (possible conflicts on events)
-    - allowPinch = on a touchmove, when touches.length > 2 && none of touchInfos contains an entity
-        - maxScale
-        - minScale
-        - maxWindow : {x1,y1,x2,y2}
-        - minWindow : {x1,y1,x2,y2}
-- mouseDraggable/touchDraggable : special joints (not only mouseJoint) - good thing todo ?
-- delete destroyed entity handlers
-- optimize the for loops
-- pass the private attribute inside _ops
-------------------------------------------------------------------------------------------------------------------------------
-
-DONE
-
-- make an accurate .find(x,y) method => world.getEntityByPosition()
-- world
-    - onTouchstart(e)
-    - onTouchmove(e)
-    - onTouchend(e)
-    - onTouchcancel(e) -> canceled
-- touchOnly
-- mouseOnly

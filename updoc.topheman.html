@@ -398,6 +398,16 @@ ul.properties li {
                 
                 
                 
+                  <a href="#name-entity.isTouchDraggable-isTouchDraggable" class="inlineIndexItem">isTouchDraggable</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
                   <a href="#name-entity.maxVelocityX-maxVelocityX" class="inlineIndexItem">maxVelocityX</a>
                 
               
@@ -860,7 +870,37 @@ ul.properties li {
                 
                 
                 
+                  <a href="#name-world.focusAll-focusAll" class="inlineIndexItem">focusAll</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#name-world.getCurrentWindowInfos-getCurrentWindowInfos" class="inlineIndexItem">getCurrentWindowInfos</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
                   <a href="#name-world.getEntityByPosition-getEntityByPosition" class="inlineIndexItem">getEntityByPosition</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#name-world.getMaxWindowInfos-getMaxWindowInfos" class="inlineIndexItem">getMaxWindowInfos</a>
                 
               
             
@@ -2056,6 +2096,52 @@ is relative to the World's scale and camera position.</div>
             </ul>
             
             <div class="description">Returns true if the entity is pined to the world</div>
+            
+          </section>
+        
+        
+          <section class="depth2 header" data-module="entity.isTouchDraggable">
+          
+            
+            
+            
+              <h2 id="name-entity.isTouchDraggable-isTouchDraggable">
+                .isTouchDraggable(  )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">return</span>
+                    <span>{Boolean}</span>
+                  
+                  </li>
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Returns true if the touch draggable event is active on the entity</div>
             
           </section>
         
@@ -5268,6 +5354,89 @@ info.</div>
           </section>
         
         
+          <section class="depth2 header" data-module="world.focusAll">
+          
+            
+            
+            
+              <h2 id="name-world.focusAll-focusAll">
+                .focusAll(  )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Adjust the camera to see all th objects present in the world and centers the camera (buggy with mouseDraggable for the moment)</div>
+            
+          </section>
+        
+        
+          <section class="depth2 header" data-module="world.getCurrentWindowInfos">
+          
+            
+            
+            
+              <h2 id="name-world.getCurrentWindowInfos-getCurrentWindowInfos">
+                .getCurrentWindowInfos(  )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">forceCurrentRatio</span>
+                    <span>Force with the current ratio of the canvas</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Returns the position/size/scale the of the actual camera</div>
+            
+          </section>
+        
+        
           <section class="depth2 header" data-module="world.getEntityByPosition">
           
             
@@ -5330,6 +5499,54 @@ info.</div>
             </ul>
             
             <div class="description">returns the Entity at a given point (more accurate than .find())</div>
+            
+          </section>
+        
+        
+          <section class="depth2 header" data-module="world.getMaxWindowInfos">
+          
+            
+            
+            
+              <h2 id="name-world.getMaxWindowInfos-getMaxWindowInfos">
+                .getMaxWindowInfos( forceCurrentRatio )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">forceCurrentRatio</span>
+                    <span>Force with the current ratio of the canvas</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Returns the position/size/scale the of a rectangle that would cover all the objects present in the world</div>
             
           </section>
         
