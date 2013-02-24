@@ -6,7 +6,7 @@ function init(){
     
     //init canvas and world
     canvas = document.getElementById("canvas");
-    myWorld = boxbox.createWorld(canvas,{scale:30, preventScroll:false, disableTouchEvents : false, disableKeyEvents : true, disableMouseEvents : true, debugDraw:true});
+    myWorld = boxbox.createWorld(canvas,{scale:30, preventScroll:false, disableTouchEvents : false, disableKeyEvents : true, disableMouseEvents : true, debugDraw:false});
     
     //create entities
     left = myWorld.createEntity({
@@ -85,6 +85,7 @@ function init(){
         maxTouches : 2
     });
 
+    myWorld.focusAll();
 }   
 
 init();

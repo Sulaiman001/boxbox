@@ -1607,8 +1607,8 @@ See more on the readme file
          */
         calculateWorldPositionFromPointer: function(e){
             return {
-                x: (e.offsetX || e.layerX || e.pageX) / this.scale(),
-                y: (e.offsetY || e.layerY || e.pageY) / this.scale()
+                x: (e.offsetX || e.layerX || e.pageX) / this.scale() + this._cameraX,
+                y: (e.offsetY || e.layerY || e.pageY) / this.scale() + this._cameraY
             };
         },
 

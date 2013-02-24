@@ -171,6 +171,9 @@ ul.properties li {
 .depth0.header {
   display:none;
 }
+.warning{
+    color:red;
+}
     </style>
     <% if (css) { %>
       <link rel="stylesheet" href="<%= css %>"></style>
@@ -230,6 +233,8 @@ ul.properties li {
                   <li>
                   <%if (val === 'by topheman') { %>
                     <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  <% } else if (prop === 'warning') { %>
+                    <span class="warning"><span class="property">Warning : </span><%= val %></span>
                   <% } else { %>
                     <span class="property"><%= prop %></span>
                     <span><%= val %></span>

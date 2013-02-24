@@ -12,7 +12,7 @@ TODO
 - world.getWorldCurrentWindowInfos() -> x,y,width,height
 
 - world.focusAll() - recadrer sur tous les objets présents dans le world
-=> FIX the problem with mouseDraggable after focusAll
+
 - special css styles (prevent text select, drag ...)
 - mouseWheelZoom
     - maxScale
@@ -36,6 +36,8 @@ TODO
 
 - compatibility mouseDraggable -> touchDraggable ?
 - draggable : releaseDrag -> release allMouseJoints
+
+- world._getDebugDraw() -> returns a new b2DebugDraw() with the new scale
 
 ------------------------------------------------------------------------------------------------------------------------------
 
