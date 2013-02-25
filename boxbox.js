@@ -156,8 +156,14 @@ See more on the readme file
         disableMouseEvents : false, //@added by topheman
         disableKeyEvents : false, //@added by topheman
         preventScroll : false, //@added by topheman
-        _touchPan : {
-            
+        _mousePan : { //@added by topheman
+            disabled: false,
+            excludeEntityIds: []
+        },
+        _touchPan : { //@added by topheman
+            disabled: false,
+            excludeEntityIds: [],
+            allowPinch:{}
         }
     };
     
@@ -221,6 +227,8 @@ See more on the readme file
         _mouseHoverEntityId: null,//@added by topheman (track the entity which hovered) - used to track entities for mousein/mouseout events
         _mouseDraggingEntityId: null,//@added by topheman (track the entity which is dragged)
         _touchDraggingEntityIds : [],//@added by topheman (track the entity which is dragged)
+        _mouseDraggableEntityIds: [],//@added by topheman (track the entities which can be dragged)
+        _touchDraggableEntityIds: [],//@added by topheman (track the entities which can be dragged)
         
         _init: function(canvasElem, options) {
             var self = this;
@@ -1596,6 +1604,58 @@ See more on the readme file
             delete this._constantForces[name + id];
         },
                 
+        _addMouseDraggableEntityId : function(id){
+            if(this._mouseDraggableEntityIds.indexOf(id) === -1){
+                this._mouseDraggableEntityIds.push(id);
+            }
+        },
+                
+        _addTouchDraggableEntityId : function(id){
+            if(this._touchDraggableEntityIds.indexOf(id) === -1){
+                this._touchDraggableEntityIds.push(id);
+            }
+        },
+                
+        _removeMouseDraggableEntityId : function(id){
+            var index = this._mouseDraggableEntityIds.indexOf(id);
+            if(index > -1){
+                this._mouseDraggableEntityIds.splice(index, 1);
+            }
+        },
+                
+        _removeTouchDraggableEntityId : function(id){
+            var index = this._touchDraggableEntityIds.indexOf(id);
+            if(index > -1){
+                this._touchDraggableEntityIds.splice(index, 1);
+            }
+        },
+                
+        _addMousePanExcludeEntityId : function(id){
+            if(this._ops._mousePan.excludeEntityIds.indexOf(id) === -1){
+                this._ops._mousePan.excludeEntityIds.push(id);
+            }
+        },
+                
+        _addTouchPanExcludeEntityId : function(id){
+            if(this._ops._touchPan.excludeEntityIds.indexOf(id) === -1){
+                this._ops._touchPan.excludeEntityIds.push(id);
+            }
+        },
+                
+        _removeMousePanExcludeEntityId : function(id){
+            var index = this._ops._mousePan.excludeEntityIds.indexOf(id);
+            if(index > -1){
+                this._ops._mousePan.excludeEntityIds.splice(index, 1);
+            }
+        },
+                
+        _removeTouchPanExcludeEntityId : function(id){
+            var index = this._ops._touchPan.excludeEntityIds.indexOf(id);
+            if(index > -1){
+                this._ops._touchPan.excludeEntityIds.splice(index, 1);
+            }
+        },
+                
         /**
          * @_name calculateWorldPositionFromPointer
          * @_module world
@@ -2288,10 +2348,76 @@ See more on the readme file
             this._removeTouchendHandler(worldCallbackEventId);
         },
                 
-        mouseWheelZoom : function(options){
+        mousePan : function(options,value){
+            var i;
+            if(this._world._ops.disableMouseEvents){
+                console.warn('Mouse events are disabled, you tried to call mousePan');
+                return false;
+            }
+            //simple init without options
+            if(typeof options === 'undefined'){
+                this._ops._mousePan.disabled = false;
+            }
+            //method call
+            else if(typeof options === 'string'){
+                switch(options){
+                    case 'disable':
+                        this._ops._mousePan.disabled = true;
+                        break;
+                    case 'enable':
+                        this._ops._mousePan.disabled = false;
+                        break;
+                    case 'exclude':
+                        if(!value.length){
+                            value = [value];
+                        }
+                        for(i = 0; i < value.length; i++){
+                            this._addMousePanExcludeEntityId(value[i]);
+                        }
+                        break;
+                    case 'include':
+                        if(!value.length){
+                            value = [value];
+                        }
+                        for(i = 0; i < value.length; i++){
+                            this._removeMousePanExcludeEntityId(value[i]);
+                        }
+                        break;
+                }
+            }
+            else if(typeof options === 'object'){
+                if(options.disabled === false || options.disabled === true){
+                    this._ops._mousePan.disabled = options.disabled;
+                }
+                else{
+                    this._ops._mousePan.disabled = false;//active by default (if not specified)
+                }
+                
+                if(typeof options.excludeEntityIds !== 'undefined' && options.excludeEntityIds !== false){
+                    this._ops._mousePan.excludeEntityIds = typeof options.excludeEntityIds === 'number' ? [options.excludeEntityIds] : options.excludeEntityIds;
+                }
+                else if(options.excludeEntityIds === false){
+                    this._ops._mousePan.excludeEntityIds = [];//reset
+                }
+            }
     
         },
-        
+                
+        isMousePanEnabled : function(){
+            return !this._ops._mousePan.disabled;
+        },
+                
+        touchPan : function(options){
+            if(this._world._ops.disableTouchEvents){
+                console.warn('Touch events are disabled, you tried to call touchPan');
+                return false;
+            }
+    
+        },
+                
+        isTouchPanEnabled : function(){
+            return !this._ops._touchPan.disabled;
+        },
         
         /**
          * 
@@ -3728,6 +3854,14 @@ See more on the readme file
                     this._world._removeMouseStopdragHandler(this._id);
                 }
             }
+            
+            //tag or untag the entity as draggable in the world to exclude it from the pan
+            if(this._ops._mouseDraggable.disabled === false){
+                this._world._addMouseDraggableEntityId(this._id);
+            }
+            else{
+                this._world._removeMouseDraggableEntityId(this._id);
+            }
         },
           
         /**
@@ -3869,6 +4003,14 @@ See more on the readme file
                 else if(typeof options.touchremove !== 'undefined'){
                     this._world._removeTouchRemovetouchDragHandler(this._id);
                 }
+            }
+            
+            //tag or untag the entity as draggable in the world to exclude it from the pan
+            if(this._ops._touchDraggable.disabled === false){
+                this._world._addTouchDraggableEntityId(this._id);
+            }
+            else{
+                this._world._removeTouchDraggableEntityId(this._id);
             }
         },
           

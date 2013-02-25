@@ -9,9 +9,6 @@ TODO
 - entity.bindBoundaryZone(boundaryZone, callback) -> execute callback when entity jumps out
 - entity.unBindBoundaryZone(boundaryZone)
 
-- world.getWorldCurrentWindowInfos() -> x,y,width,height
-
-- world.focusAll() - recadrer sur tous les objets présents dans le world
 
 - special css styles (prevent text select, drag ...)
 - mouseWheelZoom
@@ -39,6 +36,24 @@ TODO
 
 - world._getDebugDraw() -> returns a new b2DebugDraw() with the new scale
 
+- mouseDraggable -> 
+     - enable -> add entityId to world._mousePan.excludeEntityIds
+     - disable -> remove entityId from world._mousePan.excludeEntityIds
+- touchDraggable -> 
+     - enable -> add entityId to world._touchPan.excludeEntityIds
+     - disable -> remove entityId from world._touchPan.excludeEntityIds
+
+world._addMousePanExcludeEnityId(id)        //done
+world._removeMousePanExcludeEnityId(id)     //done
+world._addTouchPanExcludeEnityId(id)        //done
+world._removeTouchPanExcludeEnityId(id)     //done
+
+//specific excludeEntityId for draggable entitys ? -> no, pick in the list of draggables, use :
+_mouseDraggableEntityIds
+_touchDraggableEntityIds
+
+-> update these at .mouseDraggable + touchDraggable
+
 ------------------------------------------------------------------------------------------------------------------------------
 
 DONE
@@ -53,6 +68,9 @@ DONE
 - mouseOnly
 -fix the creation of polygon : in the extends method, the length of the array in erased ...
 
+- world.getWorldCurrentWindowInfos() -> x,y,width,height
+
+- world.focusAll() - recadrer sur tous les objets présents dans le world
 
 ---- DONE --- touchDraggable :
 
