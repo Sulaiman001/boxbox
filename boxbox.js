@@ -200,6 +200,9 @@ See more on the readme file
         _mouseStartdragHandlers: {},//@added by topheman
         _mouseDragHandlers: {},//@added by topheman
         _mouseStopdragHandlers: {},//@added by topheman
+        _mousePanStartDragHandler: null,//@added by topheman
+        _mousePanDragHandler: null,//@added by topheman
+        _mousePanStopDragHandler: null,//@added by topheman
         _touchstartHandlers: {},//@added by topheman
         _touchendHandlers: {},//@added by topheman
         _touchmoveHandlers: {},//@added by topheman
@@ -208,6 +211,9 @@ See more on the readme file
         _touchStopdragHandlers: {},//@added by topheman
         _touchAddtouchdragHandlers: {},//@added by topheman
         _touchRemovetouchdragHandlers: {},//@added by topheman
+        _touchPanStartDragHandler: null,//@added by topheman
+        _touchPanDragHandler: null,//@added by topheman
+        _touchPanStopDragHandler: null,//@added by topheman
         _startContactHandlers: {},
         _finishContactHandlers: {},
         _impactHandlers: {},
@@ -2398,6 +2404,27 @@ See more on the readme file
                 }
                 else if(options.excludeEntityIds === false){
                     this._ops._mousePan.excludeEntityIds = [];//reset
+                }
+                
+                if(typeof options.start === 'function'){
+                    this._world._mousePanStartDragHandler = options.start;
+                }
+                else if(typeof options.start !== 'undefined'){
+                    this._world._mousePanStartDragHandler = null;
+                }
+                
+                if(typeof options.drag === 'function'){
+                    this._world._mousePanDragHandler = options.drag;
+                }
+                else if(typeof options.drag !== 'undefined'){
+                    this._world._mousePanDragHandler = null;
+                }
+                
+                if(typeof options.stop === 'function'){
+                    this._world._mousePanStopDragHandler = options.stop;
+                }
+                else if(typeof options.stop !== 'undefined'){
+                    this._world._mousePanStopDragHandler = null;
                 }
             }
     

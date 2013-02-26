@@ -19,13 +19,15 @@ TODO
 - onMouseWheel
 - mousePan : include all non draggable entities
     - excludeEntityIds : [id ...] will exclude the entities listed (possible conflicts on events)
+    - start
+    - drag
+    - stop
 - touchPan
     - excludeEntityIds : [id ...] will exclude the entities listed (possible conflicts on events)
+    - start
+    - drag
+    - stop
     - allowPinch = on a touchmove, when touches.length > 2 && none of touchInfos contains an entity
-        - maxScale
-        - minScale
-        - maxWindow : {x1,y1,x2,y2}
-        - minWindow : {x1,y1,x2,y2}
 - mouseDraggable/touchDraggable : special joints (not only mouseJoint) - good thing todo ?
 - delete destroyed entity handlers
 - optimize the for loops
@@ -54,6 +56,10 @@ _touchDraggableEntityIds
 
 -> update these at .mouseDraggable + touchDraggable
 
+world._mousePanStartDrag = true
+world._mousePanDragging = originalWindowInfos
+
+world.restrictStage({maxWindow,maxScale}) @optional params
 ------------------------------------------------------------------------------------------------------------------------------
 
 DONE
