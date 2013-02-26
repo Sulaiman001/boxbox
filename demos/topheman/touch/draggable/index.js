@@ -85,7 +85,7 @@ function init(){
         maxTouches : 2
     });
 
-    myWorld.focusAll();
+    myWorld.viewport.focusAll();
 }   
 
 init();

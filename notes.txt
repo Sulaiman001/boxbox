@@ -4,10 +4,17 @@ DOING
 
 TODO
 
+//later
 - world.createBoundaryZone(x1,y1,x2,y2)
 - world.destroyBoundaryZone(boundaryZone) -> unbinds any entity binded to this zone
 - entity.bindBoundaryZone(boundaryZone, callback) -> execute callback when entity jumps out
 - entity.unBindBoundaryZone(boundaryZone)
+- world._boundaryZones = {}
+- by default, world.restrictStage creates a "world" boundary zone
+- entity.onEnterWorld(callback)
+- entity.onOutWorld(callback)
+- entity.onEnterBoundaryZone(boundaryZoneId,callback)
+- entity.onOutBoundaryZone(boundaryZoneId,callback)
 
 
 - special css styles (prevent text select, drag ...)
@@ -59,7 +66,11 @@ _touchDraggableEntityIds
 world._mousePanStartDrag = true
 world._mousePanDragging = originalWindowInfos
 
-world.restrictStage({maxWindow,maxScale}) @optional params
+regroup apis in world.viewport namespace
+
+world.restrictStage({maxWindow,maxScale}) @optional params -> insert it in createWorld
+- will need apis to know if
+	- is
 ------------------------------------------------------------------------------------------------------------------------------
 
 DONE
