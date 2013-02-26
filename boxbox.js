@@ -157,11 +157,11 @@ See more on the readme file
         disableKeyEvents : false, //@added by topheman
         preventScroll : false, //@added by topheman
         _mousePan : { //@added by topheman
-            disabled: false,
+            disabled: true,
             excludeEntityIds: []
         },
         _touchPan : { //@added by topheman
-            disabled: false,
+            disabled: true,
             excludeEntityIds: [],
             allowPinch:{}
         }
@@ -200,9 +200,9 @@ See more on the readme file
         _mouseStartdragHandlers: {},//@added by topheman
         _mouseDragHandlers: {},//@added by topheman
         _mouseStopdragHandlers: {},//@added by topheman
-        _mousePanStartDragHandler: null,//@added by topheman
+        _mousePanStartdragHandler: null,//@added by topheman
         _mousePanDragHandler: null,//@added by topheman
-        _mousePanStopDragHandler: null,//@added by topheman
+        _mousePanStopdragHandler: null,//@added by topheman
         _touchstartHandlers: {},//@added by topheman
         _touchendHandlers: {},//@added by topheman
         _touchmoveHandlers: {},//@added by topheman
@@ -266,7 +266,6 @@ See more on the readme file
                      * @added by topheman
                      */
                     getCurrentWindowInfos : function(){
-                        console.info(this);
                         var result, camera = this._world.camera(), scale = this._world.scale();
                         result = {
                             x : camera.x,
@@ -791,6 +790,10 @@ See more on the readme file
                             }
                         }
                     }
+                    //if after searching for starting a drag on an entity, after all, no drag has began, we can try to start a pan if pan is enabled
+                    if(self._ops._mousePan.disabled === false && self._mouseDraggingEntityId === null){
+                        _world_mousemoveHandlerForPanEvent.call(self,e, mousePos);
+                    }
                 };
                 
                 /*
@@ -800,10 +803,16 @@ See more on the readme file
                  * @added by topheman
                  */
                 var _world_mousemoveHandler = function(e, mousePos){
-                    // --- dragging part ---
+                    // --- dragging entity part ---
                     //if a dragging is active, trigger the _world_mousemoveHandlerForDragEvent (no matter if the mouse is on an entity)
                     if(self._mouseDraggingEntityId !== null && self._entities[self._mouseDraggingEntityId]._mouseDragging){
                         _world_mousemoveHandlerForDragEvent.call(self._entities[self._mouseDraggingEntityId],e,mousePos);
+                    }
+                    
+                    // --- pan part ---
+                    //if a pan dragging is active, trigger the _world_mousemoveHandlerForPanDragEvent
+                    if(self._ops._mousePan.disabled === false && self._mousePanDragging){
+                        _world_mousemoveHandlerForPanEvent.call(self,e, mousePos);
                     }
                     
                     // --- mouse in/out part ---
@@ -837,6 +846,11 @@ See more on the readme file
                     //if a dragging is active, trigger the _world_mouseupHandlerForDragEvent (to stop drag)
                     if(self._mouseDraggingEntityId !== null && self._entities[self._mouseDraggingEntityId]._mouseDragging){
                         _world_mouseupHandlerForDragEvent.call(self._entities[self._mouseDraggingEntityId],e,mousePos);
+                    }
+                    
+                    //if a pan dragging is active, trigger the _world_mousemoveHandlerForPanDragEvent
+                    if(self._ops._mousePan.disabled === false && self._mousePanDragging){
+                        _world_mouseupdHandlerForPanEvent.call(self,e, mousePos);
                     }
                     
                 };
@@ -1282,6 +1296,98 @@ See more on the readme file
                         this._touchDragging = false;//all the dragging process is ended, reset this propertie
                         this._world._touchDraggingEntityIds.splice(this._world._touchDraggingEntityIds.indexOf(this._id),1);//untag the dragging entity on world
                     }
+                };
+                
+                /*
+                 * @todo refactor - should be usable for mouseWheelZoom and touchPan ? use some sort of extend ?
+                 * @context World
+                 */
+                var mergeMousePanInfos = function(originalInfos, e, start){
+                    var currentX = (e.offsetX || e.layerX || e.pageX) / this.scale() + (start ? this.cameraX : 0),
+                        currentY = (e.offsetY || e.layerY || e.pageY) / this.scale() + (start ? this.cameraY : 0),
+                        result;
+//                    console.info('current',currentX,currentY,'diff',currentX - originalInfos.originalPosition.x,currentY - originalInfos.originalPosition.y);
+                    result = {
+                        originalViewPort : {
+                            x : originalInfos.originalViewport.x,
+                            y : originalInfos.originalViewport.y,
+                            width : originalInfos.originalViewport.width,
+                            height : originalInfos.originalViewport.height,
+                            scale : originalInfos.originalViewport.scale
+                        },
+                        viewport : {
+                            x : originalInfos.originalViewport.x - (currentX - originalInfos.originalPosition.x),
+                            y : originalInfos.originalViewport.y - (currentY - originalInfos.originalPosition.y),
+                            width : originalInfos.originalViewport.width,
+                            height : originalInfos.originalViewport.height,
+                            scale : originalInfos.originalViewport.scale
+                        }
+                    };
+                    return result;
+                };
+                
+                /*
+                 * @function _world_mousemoveHandlerForPanEvent
+                 * @param {MouseEvent} e
+                 * @param {Object} mousePos
+                 * @context World
+                 * @added by topheman
+                 * @triggers the startdrag or the drag event specified in the .mousePan() method
+                 */
+                var _world_mousemoveHandlerForPanEvent = function(e, mousePos){
+                    var viewportInfos; 
+                    //tag as dragging when passing for the first time
+                    if(!this._mousePanDragging && !this._mousePanStartDrag){
+                        //tag as dragging (all along the drag), with the original viewport
+                        this._mousePanDragging = {originalViewport : this.viewport.getCurrentWindowInfos(), originalPosition : mousePos };
+                        //tag as startDrag to know that startDrag event will have to be triggered next time on mousemove event
+                        this._mousePanStartDrag = true;                        
+                    }
+                    else if(this._mousePanDragging){
+                        viewportInfos = mergeMousePanInfos.call(this,this._mousePanDragging, e, this._mousePanStartDrag);
+                        //check viewport constraint
+                        
+                        //update viewport
+                        this.camera({x:viewportInfos.viewport.x,y:viewportInfos.viewport.y});
+                        
+                        //trigger startdrag event on the first move
+                        if(this._mousePanStartDrag && e.type === 'mousemove'){
+                            if(this._mousePanStartdragHandler){
+                                this._mousePanStartdragHandler.call(this,e, viewportInfos);
+                            }
+                            this._mousePanStartDrag = false;//reset startDrag state after the first drag
+                        }
+                        //trigger the drag event on the next moves
+                        else {
+                            if(this._mousePanDragHandler){
+                                this._mousePanDragHandler.call(this,e, viewportInfos);
+                            }
+                        }
+                    }                    
+                };
+                
+                /*
+                 * @function _world_mouseupdHandlerForPanEvent
+                 * @param {MouseEvent} e
+                 * @param {Object} mousePos
+                 * @context World
+                 * @added by topheman
+                 * @triggers the stopdrag event specified in the .mousePan() method
+                 */
+                var _world_mouseupdHandlerForPanEvent = function(e, mousePos){
+                    var viewportInfos;
+                    if(this._mousePanDragging){
+                        viewportInfos = mergeMousePanInfos.call(this,this._mousePanDragging, e);
+                        //trigger the stopdrag event (don't trigger it if the first drag hasn't happened)
+                        if(this._mousePanStartDrag === false && this._mousePanStopdragHandler){
+                            this._mousePanStopdragHandler.call(this,e,viewportInfos);
+                        }
+                        
+                        //update viewport
+                        this.camera({x:viewportInfos.viewport.x,y:viewportInfos.viewport.y});
+                    }
+                    this._mousePanStartDrag = false;//reset startDrag state if there was no drag at all
+                    this._mousePanDragging = false;//all the dragging process is ended, reset this propertie
                 };
                 
                 /*
@@ -2507,7 +2613,7 @@ See more on the readme file
                 
         mousePan : function(options,value){
             var i;
-            if(this._world._ops.disableMouseEvents){
+            if(this._ops.disableMouseEvents){
                 console.warn('Mouse events are disabled, you tried to call mousePan');
                 return false;
             }
@@ -2558,24 +2664,24 @@ See more on the readme file
                 }
                 
                 if(typeof options.start === 'function'){
-                    this._world._mousePanStartDragHandler = options.start;
+                    this._mousePanStartdragHandler = options.start;
                 }
                 else if(typeof options.start !== 'undefined'){
-                    this._world._mousePanStartDragHandler = null;
+                    this._mousePanStartdragHandler = null;
                 }
                 
                 if(typeof options.drag === 'function'){
-                    this._world._mousePanDragHandler = options.drag;
+                    this._mousePanDragHandler = options.drag;
                 }
                 else if(typeof options.drag !== 'undefined'){
-                    this._world._mousePanDragHandler = null;
+                    this._mousePanDragHandler = null;
                 }
                 
                 if(typeof options.stop === 'function'){
-                    this._world._mousePanStopDragHandler = options.stop;
+                    this._mousePanStopdragHandler = options.stop;
                 }
                 else if(typeof options.stop !== 'undefined'){
-                    this._world._mousePanStopDragHandler = null;
+                    this._mousePanStopdragHandler = null;
                 }
             }
     

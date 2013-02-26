@@ -35,6 +35,11 @@ TODO
     - drag
     - stop
     - allowPinch = on a touchmove, when touches.length > 2 && none of touchInfos contains an entity
+callback infos : viewportInfos :
+- originalViewport
+- viewport
+
+
 - mouseDraggable/touchDraggable : special joints (not only mouseJoint) - good thing todo ?
 - delete destroyed entity handlers
 - optimize the for loops
@@ -46,11 +51,11 @@ TODO
 - world._getDebugDraw() -> returns a new b2DebugDraw() with the new scale
 
 - mouseDraggable -> 
-     - enable -> add entityId to world._mousePan.excludeEntityIds
-     - disable -> remove entityId from world._mousePan.excludeEntityIds
+     - enable -> add entityId to world._mouseDraggableEntityIds         //done
+     - disable -> remove entityId from world._mouseDraggableEntityIds   //done
 - touchDraggable -> 
-     - enable -> add entityId to world._touchPan.excludeEntityIds
-     - disable -> remove entityId from world._touchPan.excludeEntityIds
+     - enable -> add entityId to world.touchDraggableEntityIds          //done
+     - disable -> remove entityId from world.touchDraggableEntityIds    //done
 
 world._addMousePanExcludeEnityId(id)        //done
 world._removeMousePanExcludeEnityId(id)     //done
@@ -58,19 +63,21 @@ world._addTouchPanExcludeEnityId(id)        //done
 world._removeTouchPanExcludeEnityId(id)     //done
 
 //specific excludeEntityId for draggable entitys ? -> no, pick in the list of draggables, use :
-_mouseDraggableEntityIds
-_touchDraggableEntityIds
+_mouseDraggableEntityIds    //done
+_touchDraggableEntityIds    //done
 
 -> update these at .mouseDraggable + touchDraggable
 
 world._mousePanStartDrag = true
 world._mousePanDragging = originalWindowInfos
 
-regroup apis in world.viewport namespace
+regroup apis in world.viewport namespace//done
 
 world.restrictStage({maxWindow,maxScale}) @optional params -> insert it in createWorld
 - will need apis to know if
 	- is
+
+
 ------------------------------------------------------------------------------------------------------------------------------
 
 DONE
