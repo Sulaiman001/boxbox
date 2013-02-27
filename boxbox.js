@@ -72,25 +72,23 @@ See more on the readme file
         return new F();
     }
     
-    // A minimal extend for simple objects inspired by jQuery @modifier by topheman : deep copy added because of reference problems @todo verify on the prototype
+    // A minimal extend for simple objects inspired by jQuery modified by topheman : simple deep copy + array copy added because of reference problems
     function extend(target, o) {
-        var index;
+        var index, key, i;
         if (target === undefined) {
             target = {};
         }
         if (o !== undefined) {
-            for (var key in o) {
+            for (key in o) {
                 if (o.hasOwnProperty(key) && target[key] === undefined) {
-                    if (typeof o[key] === 'object' && o[key] !== null && o[key] !== undefined){
-                        target[key] = extend(target[key], o[key]);
-                        //update the length attribute if this is an array @todo check
-                        if(o[key].length){
-                            index = 0;
-                            for(var i in target[key]){
-                                index++;
-                            }
-                            target[key].length = index;
+                    if(Object.prototype.toString.call(o[key]) === '[object Array]'){
+                        target[key] = [];
+                        for(i = 0; i < o[key].length; i++){
+                            target[key].push(o[key][i]);
                         }
+                    }
+                    else if (typeof o[key] === 'object' && o[key] !== null && o[key] !== undefined){
+                        target[key] = extend(target[key], o[key]);
                     }
                     else{
                         target[key] = o[key];
@@ -158,10 +156,12 @@ See more on the readme file
         preventScroll : false, //@added by topheman
         _mousePan : { //@added by topheman
             disabled: true,
-            excludeEntityIds: []
+            excludeEntityIds: [],
+            multiplier: 1
         },
         _touchPan : { //@added by topheman
             disabled: true,
+            multiplier: 1,
             excludeEntityIds: [],
             allowPinch:{}
         }
@@ -259,10 +259,18 @@ See more on the readme file
         
                     /**
                      * 
-                     * @_name getCurrentWindowInfos
+                     * @_name viewport&#46;getCurrentWindowInfos
                      * @_module world
-                     * @description Returns the position/size/scale the of the actual camera
-                     * @forceCurrentRatio Force with the current ratio of the canvas
+                     * @description Returns the position/size/scale the of the current viewport
+                     * @return viewportInfos
+                     * @viewportInfos
+                     * <ul>
+                     * @x
+                     * @y
+                     * @width
+                     * @height
+                     * @scale
+                     * </ul>
                      * @added by topheman
                      */
                     getCurrentWindowInfos : function(){
@@ -280,11 +288,20 @@ See more on the readme file
 
                     /**
                      * 
-                     * @_name getMaxWindowInfos
+                     * @_name viewport&#46;getMaxWindowInfos
                      * @_module world
                      * @_params forceCurrentRatio
-                     * @description Returns the position/size/scale the of a rectangle that would cover all the objects present in the world
-                     * @forceCurrentRatio Force with the current ratio of the canvas
+                     * @description Returns the position/size/scale of the map that would cover all the objects present in the world
+                     * @forceCurrentRatio true will force with the current ratio of the canvas
+                     * @return viewportInfos
+                     * @viewportInfos
+                     * <ul>
+                     * @x
+                     * @y
+                     * @width
+                     * @height
+                     * @scale
+                     * </ul>
                      * @added by topheman
                      */
                     getMaxWindowInfos : function(forceCurrentRatio){
@@ -388,9 +405,18 @@ See more on the readme file
 
                     /**
                      * 
-                     * @_name focusAll
+                     * @_name viewport&#46;focusAll
                      * @_module world
-                     * @description Adjust the camera to see all th objects present in the world and centers the camera (buggy with mouseDraggable for the moment)
+                     * @description Adjust the camera to see all the objects present in the world and centers the camera
+                     * @return viewportInfos
+                     * @viewportInfos
+                     * <ul>
+                     * @x
+                     * @y
+                     * @width
+                     * @height
+                     * @scale
+                     * </ul>
                      * @added by topheman
                      */
                     focusAll : function(){
@@ -782,7 +808,8 @@ See more on the readme file
                 var _world_mousedownHandler = function(e, mousePos){
                     //if no dragging active and if a click on the world is on an entity, trigger the _world_mousemoveHandlerForDragEvent
                     var entityX = mousePos.x,
-                    entityY = mousePos.y;
+                    entityY = mousePos.y,
+                    currentEntity;//@todo use getEntityByPosition instead of looping through the entities
                     if(self._mouseDraggingEntityId === null){
                         for(var key in self._entities){
                             if(!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY) && self._entities[key]._ops._mouseDraggable.disabled === false){
@@ -792,7 +819,11 @@ See more on the readme file
                     }
                     //if after searching for starting a drag on an entity, after all, no drag has began, we can try to start a pan if pan is enabled
                     if(self._ops._mousePan.disabled === false && self._mouseDraggingEntityId === null){
-                        _world_mousemoveHandlerForPanEvent.call(self,e, mousePos);
+                        currentEntity = self.getEntityByPosition(entityX,entityY);
+                        //if ever we are on a non draggable entity, but it isn't on the list of excludeEntityIds for the mousePan
+                        if(currentEntity === null || self._ops._mousePan.excludeEntityIds.indexOf(currentEntity._id) === -1){
+                            _world_mousemoveHandlerForPanEvent.call(self,e, mousePos);
+                        }
                     }
                 };
                 
@@ -964,8 +995,8 @@ See more on the readme file
                 
                 /*
                  * @function _world_mouseinHandler
-                 * @param {TouchEvent} e
-                 * @param {Object} touchInfos
+                 * @param MouseEvent e
+                 * @param {Object} mousePos
                  * @added by topheman
                  */
                 var _world_mouseinHandler = function(e, mousePos){
@@ -976,15 +1007,19 @@ See more on the readme file
                 };
                 
                 /*
-                 * @function _world_mouseinHandler
-                 * @param {TouchEvent} e
-                 * @param {Object} touchInfos
+                 * @function _world_mouseoutHandler
+                 * @param MouseEvent e
+                 * @param {Object} mousePos
                  * @added by topheman
                  */
                 var _world_mouseoutHandler = function(e, mousePos){
                     //trigger the mouseup of the dragging - to prevent the entity to be stuck dragging if the mouse goes out of the canvas
                     if(self._mouseDraggingEntityId !== null && self._entities[self._mouseDraggingEntityId]._mouseDragging){
                         _world_mouseupHandlerForDragEvent.call(self._entities[self._mouseDraggingEntityId],e,mousePos);
+                    }
+                    //trigger the mouseup of the pan - to prevent the dragging world to be stuck waiting for a mouseup
+                    if(self._mousePanDragging){
+                        _world_mouseupdHandlerForPanEvent.call(self,e,mousePos);
                     }
                     //trigger the mouseout
                     if(self._mouseHoverEntityId !== null && self._mouseoutHandlers[self._mouseHoverEntityId]){
@@ -1302,13 +1337,14 @@ See more on the readme file
                  * @todo refactor - should be usable for mouseWheelZoom and touchPan ? use some sort of extend ?
                  * @context World
                  */
-                var mergeMousePanInfos = function(originalInfos, e, start){
-                    var currentX = (e.offsetX || e.layerX || e.pageX) / this.scale() + (start ? this.cameraX : 0),
-                        currentY = (e.offsetY || e.layerY || e.pageY) / this.scale() + (start ? this.cameraY : 0),
+                var mergeMousePanInfos = function(originalInfos, e){
+                    var relativeMousePos = {
+                            x : (e.offsetX || e.layerX || e.pageX) / this.scale(),
+                            y : (e.offsetY || e.layerY || e.pageY) / this.scale()
+                        },
                         result;
-//                    console.info('current',currentX,currentY,'diff',currentX - originalInfos.originalPosition.x,currentY - originalInfos.originalPosition.y);
                     result = {
-                        originalViewPort : {
+                        originalViewport : {
                             x : originalInfos.originalViewport.x,
                             y : originalInfos.originalViewport.y,
                             width : originalInfos.originalViewport.width,
@@ -1316,8 +1352,8 @@ See more on the readme file
                             scale : originalInfos.originalViewport.scale
                         },
                         viewport : {
-                            x : originalInfos.originalViewport.x - (currentX - originalInfos.originalPosition.x),
-                            y : originalInfos.originalViewport.y - (currentY - originalInfos.originalPosition.y),
+                            x : originalInfos.originalViewport.x - (relativeMousePos.x - originalInfos.originalRelativeMousePos.x)*this._ops._mousePan.multiplier,
+                            y : originalInfos.originalViewport.y - (relativeMousePos.y - originalInfos.originalRelativeMousePos.y)*this._ops._mousePan.multiplier,
                             width : originalInfos.originalViewport.width,
                             height : originalInfos.originalViewport.height,
                             scale : originalInfos.originalViewport.scale
@@ -1334,17 +1370,21 @@ See more on the readme file
                  * @added by topheman
                  * @triggers the startdrag or the drag event specified in the .mousePan() method
                  */
-                var _world_mousemoveHandlerForPanEvent = function(e, mousePos){
-                    var viewportInfos; 
+                var _world_mousemoveHandlerForPanEvent = function(e){
+                    var viewportInfos,
+                        originalRelativeMousePos = {
+                            x : (e.offsetX || e.layerX || e.pageX) / this.scale(),
+                            y : (e.offsetY || e.layerY || e.pageY) / this.scale()
+                        };
                     //tag as dragging when passing for the first time
                     if(!this._mousePanDragging && !this._mousePanStartDrag){
                         //tag as dragging (all along the drag), with the original viewport
-                        this._mousePanDragging = {originalViewport : this.viewport.getCurrentWindowInfos(), originalPosition : mousePos };
+                        this._mousePanDragging = {originalViewport : this.viewport.getCurrentWindowInfos(), originalRelativeMousePos : originalRelativeMousePos };
                         //tag as startDrag to know that startDrag event will have to be triggered next time on mousemove event
                         this._mousePanStartDrag = true;                        
                     }
                     else if(this._mousePanDragging){
-                        viewportInfos = mergeMousePanInfos.call(this,this._mousePanDragging, e, this._mousePanStartDrag);
+                        viewportInfos = mergeMousePanInfos.call(this,this._mousePanDragging, e, 'move');
                         //check viewport constraint
                         
                         //update viewport
@@ -1380,7 +1420,7 @@ See more on the readme file
                         viewportInfos = mergeMousePanInfos.call(this,this._mousePanDragging, e);
                         //trigger the stopdrag event (don't trigger it if the first drag hasn't happened)
                         if(this._mousePanStartDrag === false && this._mousePanStopdragHandler){
-                            this._mousePanStopdragHandler.call(this,e,viewportInfos);
+                            this._mousePanStopdragHandler.call(this,e,viewportInfos,'stop');
                         }
                         
                         //update viewport
@@ -2611,12 +2651,70 @@ See more on the readme file
             this._removeTouchendHandler(worldCallbackEventId);
         },
                 
+                
+        /**
+         * @_name mousePan
+         * @_module world
+         * @_params [options]
+         * @description 
+         Enables pan with the mouse, on the world
+         <br>The viewportInfos variable passed within the callback function contains the original viewport parameters when the drag started, and the current viewport parameters at the time of your callback.
+         <br>Draggable entities are excluded by default (pan will not trigger if you click on it), you exclude other entities in the "excludeEntityIds" array (if you have special behaviours on them that would mess with the pan for example)
+         <h2>Examples</h2>
+         <h3>Without options</h3>
+         <code>world.mousePan();</code>
+         <h3>With options</h3>
+         <code>world.mousePan({
+        &nbsp;&nbsp;start:function(e,viewportInfos){
+        &nbsp;&nbsp;&nbsp;&nbsp;console.info('pan-start',viewportInfos);
+        &nbsp;&nbsp;},
+        &nbsp;&nbsp;drag:function(e,viewportInfos){
+        &nbsp;&nbsp;&nbsp;&nbsp;console.info('pan-drag',e,viewportInfos);
+        &nbsp;&nbsp;},
+        &nbsp;&nbsp;stop:function(e,viewportInfos){
+        &nbsp;&nbsp;&nbsp;&nbsp;console.info('pan-stop',e,viewportInfos);
+        &nbsp;&nbsp;},
+        &nbsp;&nbsp;excludeEntityIds:[
+        &nbsp;&nbsp;&nbsp;&nbsp;2,5
+        &nbsp;&nbsp;]
+        });</code>
+         <h3>Enable / disable</h3>
+         <code>world.mousePan('disable');
+         world.mousePan('enable');</code>
+         <h3>Exclude / include entities by their ids</h3>
+         <code>world.mousePan('exclude',2);
+         world.mousePan('include',4);
+         world.mousePan('exclude',[7,8,12]);</code>
+         * @options
+         * <ul>
+         * @disabled {Boolean} true/false to disable/enable the draggable state
+         * @multiplier {Number} 1 by default
+         * @excludeEntityIds [Ids ...] Ids of entities (optional)
+         * @start function(e,viewportInfos)
+         * @drag function(e,viewportInfos)
+         * @stop function(e,viewportInfos)
+         * </ul>
+         * @viewportInfos
+         * <ul>
+         * @x
+         * @y
+         * @width
+         * @height
+         * @scale
+         * </ul>
+         * @added by topheman
+         */
         mousePan : function(options,value){
-            var i;
+            var i,tmpValue;
             if(this._ops.disableMouseEvents){
                 console.warn('Mouse events are disabled, you tried to call mousePan');
                 return false;
             }
+            
+            if(!this._ops._mousePan.excludeEntityIds){
+                this._ops._mousePan.excludeEntityIds = [];
+            }
+            
             //simple init without options
             if(typeof options === 'undefined'){
                 this._ops._mousePan.disabled = false;
@@ -2632,7 +2730,9 @@ See more on the readme file
                         break;
                     case 'exclude':
                         if(!value.length){
-                            value = [value];
+                            tmpValue = value;
+                            value = [];
+                            value.push(tmpValue);
                         }
                         for(i = 0; i < value.length; i++){
                             this._addMousePanExcludeEntityId(value[i]);
@@ -2640,7 +2740,9 @@ See more on the readme file
                         break;
                     case 'include':
                         if(!value.length){
-                            value = [value];
+                            tmpValue = value;
+                            value = [];
+                            value.push(tmpValue);
                         }
                         for(i = 0; i < value.length; i++){
                             this._removeMousePanExcludeEntityId(value[i]);
@@ -2661,6 +2763,13 @@ See more on the readme file
                 }
                 else if(options.excludeEntityIds === false){
                     this._ops._mousePan.excludeEntityIds = [];//reset
+                }
+                
+                if(typeof options.multiplier === 'number'){
+                    this._ops._mousePan.multiplier = options.multiplier;
+                }
+                else if(typeof options.multiplier !== 'undefined'){
+                    this._ops._mousePan.multiplier = 1;//1 by default
                 }
                 
                 if(typeof options.start === 'function'){

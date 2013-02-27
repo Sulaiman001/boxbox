@@ -873,26 +873,6 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.focusAll-focusAll" class="inlineIndexItem">focusAll</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-world.getCurrentWindowInfos-getCurrentWindowInfos" class="inlineIndexItem">getCurrentWindowInfos</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
                   <a href="#name-world.getEntityByPosition-getEntityByPosition" class="inlineIndexItem">getEntityByPosition</a>
                 
               
@@ -903,7 +883,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.getMaxWindowInfos-getMaxWindowInfos" class="inlineIndexItem">getMaxWindowInfos</a>
+                  <a href="#name-world.gravity-gravity" class="inlineIndexItem">gravity</a>
                 
               
             
@@ -913,7 +893,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.gravity-gravity" class="inlineIndexItem">gravity</a>
+                  <a href="#name-world.mousePan-mousePan" class="inlineIndexItem">mousePan</a>
                 
               
             
@@ -1134,6 +1114,36 @@ ul.properties li {
                 
                 
                   <a href="#name-world.unbindOnTouchstart-unbindOnTouchstart" class="inlineIndexItem">unbindOnTouchstart</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#name-world.viewport&#46;focusAll-viewport&#46;focusAll" class="inlineIndexItem">viewport&#46;focusAll</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#name-world.viewport&#46;getCurrentWindowInfos-viewport&#46;getCurrentWindowInfos" class="inlineIndexItem">viewport&#46;getCurrentWindowInfos</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#name-world.viewport&#46;getMaxWindowInfos-viewport&#46;getMaxWindowInfos" class="inlineIndexItem">viewport&#46;getMaxWindowInfos</a>
                 
               
             
@@ -5357,89 +5367,6 @@ info.</div>
           </section>
         
         
-          <section class="depth2 header" data-module="world.focusAll">
-          
-            
-            
-            
-              <h2 id="name-world.focusAll-focusAll">
-                .focusAll(  )
-              </h2>
-            
-            
-            <ul class="properties">
-              
-                
-              
-                
-              
-                
-              
-                
-              
-                
-                  <li>
-                  
-                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
-                  
-                  </li>
-                
-              
-                
-              
-            </ul>
-            
-            <div class="description">Adjust the camera to see all th objects present in the world and centers the camera (buggy with mouseDraggable for the moment)</div>
-            
-          </section>
-        
-        
-          <section class="depth2 header" data-module="world.getCurrentWindowInfos">
-          
-            
-            
-            
-              <h2 id="name-world.getCurrentWindowInfos-getCurrentWindowInfos">
-                .getCurrentWindowInfos(  )
-              </h2>
-            
-            
-            <ul class="properties">
-              
-                
-              
-                
-              
-                
-              
-                
-              
-                
-                  <li>
-                  
-                    <span class="property">forceCurrentRatio</span>
-                    <span>Force with the current ratio of the canvas</span>
-                  
-                  </li>
-                
-              
-                
-                  <li>
-                  
-                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
-                  
-                  </li>
-                
-              
-                
-              
-            </ul>
-            
-            <div class="description">Returns the position/size/scale the of the actual camera</div>
-            
-          </section>
-        
-        
           <section class="depth2 header" data-module="world.getEntityByPosition">
           
             
@@ -5506,54 +5433,6 @@ info.</div>
           </section>
         
         
-          <section class="depth2 header" data-module="world.getMaxWindowInfos">
-          
-            
-            
-            
-              <h2 id="name-world.getMaxWindowInfos-getMaxWindowInfos">
-                .getMaxWindowInfos( forceCurrentRatio )
-              </h2>
-            
-            
-            <ul class="properties">
-              
-                
-              
-                
-              
-                
-              
-                
-              
-                
-              
-                
-                  <li>
-                  
-                    <span class="property">forceCurrentRatio</span>
-                    <span>Force with the current ratio of the canvas</span>
-                  
-                  </li>
-                
-              
-                
-                  <li>
-                  
-                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
-                  
-                  </li>
-                
-              
-                
-              
-            </ul>
-            
-            <div class="description">Returns the position/size/scale the of a rectangle that would cover all the objects present in the world</div>
-            
-          </section>
-        
-        
           <section class="depth2 header" data-module="world.gravity">
           
             
@@ -5599,6 +5478,190 @@ info.</div>
             </ul>
             
             <div class="description">get or set the world's gravity</div>
+            
+          </section>
+        
+        
+          <section class="depth2 header" data-module="world.mousePan">
+          
+            
+            
+            
+              <h2 id="name-world.mousePan-mousePan">
+                .mousePan( [options] )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">options</span>
+                    <span><ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">disabled</span>
+                    <span>{Boolean} true/false to disable/enable the draggable state</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">multiplier</span>
+                    <span>{Number} 1 by default</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">excludeEntityIds</span>
+                    <span>[Ids ...] Ids of entities (optional)</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">start</span>
+                    <span>function(e,viewportInfos)</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">drag</span>
+                    <span>function(e,viewportInfos)</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">stop</span>
+                    <span>function(e,viewportInfos)
+</ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">viewportInfos</span>
+                    <span><ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">x</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">y</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">width</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">height</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">scale</span>
+                    <span></ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Enables pan with the mouse, on the world
+<br>The viewportInfos variable passed within the callback function contains the original viewport parameters when the drag started, and the current viewport parameters at the time of your callback.
+<br>Draggable entities are excluded by default (pan will not trigger if you click on it), you exclude other entities in the "excludeEntityIds" array (if you have special behaviours on them that would mess with the pan for example)
+<h2>Examples</h2>
+<h3>Without options</h3>
+<code>world.mousePan();</code>
+<h3>With options</h3>
+<code>world.mousePan({
+&nbsp;&nbsp;start:function(e,viewportInfos){
+&nbsp;&nbsp;&nbsp;&nbsp;console.info('pan-start',viewportInfos);
+&nbsp;&nbsp;},
+&nbsp;&nbsp;drag:function(e,viewportInfos){
+&nbsp;&nbsp;&nbsp;&nbsp;console.info('pan-drag',e,viewportInfos);
+&nbsp;&nbsp;},
+&nbsp;&nbsp;stop:function(e,viewportInfos){
+&nbsp;&nbsp;&nbsp;&nbsp;console.info('pan-stop',e,viewportInfos);
+&nbsp;&nbsp;},
+&nbsp;&nbsp;excludeEntityIds:[
+&nbsp;&nbsp;&nbsp;&nbsp;2,5
+&nbsp;&nbsp;]
+});</code>
+<h3>Enable / disable</h3>
+<code>world.mousePan('disable');
+world.mousePan('enable');</code>
+<h3>Exclude / include entities by their ids</h3>
+<code>world.mousePan('exclude',2);
+world.mousePan('include',4);
+world.mousePan('exclude',[7,8,12]);</code></div>
             
           </section>
         
@@ -6804,6 +6867,317 @@ World, it is removed.</div>
             </ul>
             
             <div class="description">Removes the onTouchstart callback from this World</div>
+            
+          </section>
+        
+        
+          <section class="depth2 header" data-module="world.viewport&#46;focusAll">
+          
+            
+            
+            
+              <h2 id="name-world.viewport&#46;focusAll-viewport&#46;focusAll">
+                .viewport&#46;focusAll(  )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">return</span>
+                    <span>viewportInfos</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">viewportInfos</span>
+                    <span><ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">x</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">y</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">width</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">height</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">scale</span>
+                    <span></ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Adjust the camera to see all the objects present in the world and centers the camera</div>
+            
+          </section>
+        
+        
+          <section class="depth2 header" data-module="world.viewport&#46;getCurrentWindowInfos">
+          
+            
+            
+            
+              <h2 id="name-world.viewport&#46;getCurrentWindowInfos-viewport&#46;getCurrentWindowInfos">
+                .viewport&#46;getCurrentWindowInfos(  )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">return</span>
+                    <span>viewportInfos</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">viewportInfos</span>
+                    <span><ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">x</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">y</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">width</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">height</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">scale</span>
+                    <span></ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Returns the position/size/scale the of the current viewport</div>
+            
+          </section>
+        
+        
+          <section class="depth2 header" data-module="world.viewport&#46;getMaxWindowInfos">
+          
+            
+            
+            
+              <h2 id="name-world.viewport&#46;getMaxWindowInfos-viewport&#46;getMaxWindowInfos">
+                .viewport&#46;getMaxWindowInfos( forceCurrentRatio )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">forceCurrentRatio</span>
+                    <span>true will force with the current ratio of the canvas</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">return</span>
+                    <span>viewportInfos</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">viewportInfos</span>
+                    <span><ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">x</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">y</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">width</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">height</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">scale</span>
+                    <span></ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Returns the position/size/scale of the map that would cover all the objects present in the world</div>
             
           </section>
         

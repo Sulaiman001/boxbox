@@ -84,15 +84,18 @@ function init(){
     center.mouseDraggable();
     
     myWorld.mousePan({
-        start:function(e,mouseInfos){
-            console.info('pan-start',e,mouseInfos);
+        start:function(e,viewportInfos){
+            console.info('pan-start',viewportInfos);
         },
-//        drag:function(e,mouseInfos){
-//            console.info('pan-drag',e,mouseInfos);
-//        },
-        stop:function(e,mouseInfos){
-            console.info('pan-stop',e,mouseInfos);
-        }
+        drag:function(e,viewportInfos){
+            console.info('pan-drag',e,viewportInfos);
+        },
+        stop:function(e,viewportInfos){
+            console.info('pan-stop',e,viewportInfos);
+        },
+        excludeEntityIds:[
+            1
+        ]
     });
 
 }   
