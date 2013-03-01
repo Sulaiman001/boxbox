@@ -77,6 +77,7 @@ world.restrictStage({maxWindow,maxScale}) @optional params -> insert it in creat
 - will need apis to know if
 	- is
 
+- refactor : use getEntityFromMouse and remove checkPosition from the for loops in the top level handlers
 
 ------------------------------------------------------------------------------------------------------------------------------
 

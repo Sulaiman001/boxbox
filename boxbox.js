@@ -214,6 +214,7 @@ See more on the readme file
         _touchPanStartDragHandler: null,//@added by topheman
         _touchPanDragHandler: null,//@added by topheman
         _touchPanStopDragHandler: null,//@added by topheman
+        _mousewheelHandlers: {},//@added by topheman
         _startContactHandlers: {},
         _finishContactHandlers: {},
         _impactHandlers: {},
@@ -689,6 +690,42 @@ See more on the readme file
                     if(self._mouseoutHandlers[worldCallbackEventId]){
                         self._mouseoutHandlers[worldCallbackEventId].call(self, e, mousePos);
                     }
+                };
+                
+                /*
+                 * Callback binded on the mousewheel eventListener of the canvas (so only for the world, not the entities)
+                 * @function mousewheelHandler
+                 * @param {MouseEvent} e
+                 * @added by topheman
+                 */
+                var mousewheelHandler = function(e) {
+                    var mousePos = getEntityFromMouse(e),
+                        delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+                    mousePos.delta = delta;
+                    _world_mousewheelHandler(e, mousePos);
+                    for (var key in self._mousewheelHandlers) {
+                        if(key === worldCallbackEventId){
+                            self._mousewheelHandlers[key].call(self, e, mousePos);
+                        }
+                        else if (!self._entities[key]._destroyed/* && self._entities[key].checkPosition(entityX,entityY)*/) {
+                            self._mousewheelHandlers[key].call(self._entities[key], e, mousePos);
+                        }
+                    }
+                    e.preventDefault();
+                };
+                
+                /*
+                 * Returns an object with the entity corresponding to the MouseEvent
+                 * @param {MouseEvent} e
+                 * @returns {Object}
+                 * @added by topheman
+                 */
+                var getEntityFromMouse = function (e){
+                    var mousePos = self.calculateWorldPositionFromPointer(e);
+                    var entityX = mousePos.x,
+                    entityY = mousePos.y;
+                    mousePos.entity = self.getEntityByPosition(entityX,entityY);
+                    return mousePos;
                 };
                 
                 /*
@@ -1431,6 +1468,18 @@ See more on the readme file
                 };
                 
                 /*
+                 * @function _world_mousewheelHandler
+                 * @param {MouseEvent} e
+                 * @param {Object} mousePos
+                 * @context World
+                 * @added by topheman
+                 * @triggers the mousewheel event specified in the .onMousewheel() method
+                 */
+                var _world_mousewheelHandler = function(e, mousePos){
+                    
+                };
+                
+                /*
                  * adding mouse/touch events to the canvas with the previous handlers
                  * @added by topheman
                  */
@@ -1854,6 +1903,25 @@ See more on the readme file
          */
         _removeTouchRemovetouchDragHandler: function(id) {
             delete this._touchRemovetouchdragHandlers[id];
+        },
+                
+        /*
+         * @param {Int} id
+         * @param {Function} f callback
+         * @private
+         * @added by topheman
+         */
+        _addMousewheelHandler: function(id, f) {
+            this._mousewheelHandlers[id] = f;
+        },
+                
+        /*
+         * @param {Int} id
+         * @private
+         * @added by topheman
+         */
+        _removeMousewheelHandler: function(id) {
+            delete this._mousewheelHandlers[id];
         },
 
         _addStartContactHandler: function(id, f) {
