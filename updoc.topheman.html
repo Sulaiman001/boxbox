@@ -541,6 +541,16 @@ ul.properties li {
                 
                 
                 
+                  <a href="#name-entity.onMousewheel-onMousewheel" class="inlineIndexItem">onMousewheel</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
                   <a href="#name-entity.onRender-onRender" class="inlineIndexItem">onRender</a>
                 
               
@@ -761,6 +771,16 @@ ul.properties li {
                 
                 
                 
+                  <a href="#name-entity.unbindOnMousewheel-unbindOnMousewheel" class="inlineIndexItem">unbindOnMousewheel</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
                   <a href="#name-entity.unbindOnTouchend-unbindOnTouchend" class="inlineIndexItem">unbindOnTouchend</a>
                 
               
@@ -953,6 +973,16 @@ ul.properties li {
                 
                 
                 
+                  <a href="#name-world.onMousewheel-onMousewheel" class="inlineIndexItem">onMousewheel</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
                   <a href="#name-world.onRender-onRender" class="inlineIndexItem">onRender</a>
                 
               
@@ -1064,6 +1094,16 @@ ul.properties li {
                 
                 
                   <a href="#name-world.unbindOnMouseup-unbindOnMouseup" class="inlineIndexItem">unbindOnMouseup</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#name-world.unbindOnMousewheel-unbindOnMousewheel" class="inlineIndexItem">unbindOnMousewheel</a>
                 
               
             
@@ -3100,6 +3140,111 @@ is relative to the World's scale and camera position.</div>
           </section>
         
         
+          <section class="depth2 header" data-module="entity.onMousewheel">
+          
+            
+            
+            
+              <h2 id="name-entity.onMousewheel-onMousewheel">
+                .onMousewheel( callback )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">callback</span>
+                    <span>function(e,mousewheelInfos)
+<ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">e</span>
+                    <span>MouseEvent</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">mousewheelInfos</span>
+                    <span><ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">x</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">y</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">delta</span>
+                    <span>: -1 or 1
+</ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">this</span>
+                    <span>Entity
+</ul></span>
+                  
+                  </li>
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Add an onMousewheel callback to this entity</div>
+            
+          </section>
+        
+        
           <section class="depth2 header" data-module="entity.onRender">
           
             
@@ -4381,6 +4526,43 @@ touchDraggableInfos
             </ul>
             
             <div class="description">Removes the onMouseup callback from this entity</div>
+            
+          </section>
+        
+        
+          <section class="depth2 header" data-module="entity.unbindOnMousewheel">
+          
+            
+            
+            
+              <h2 id="name-entity.unbindOnMousewheel-unbindOnMousewheel">
+                .unbindOnMousewheel(  )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Removes the onMousewheel callback from this entity</div>
             
           </section>
         
@@ -6051,6 +6233,120 @@ world.mousePan('exclude',[7,8,12]);</code></div>
           </section>
         
         
+          <section class="depth2 header" data-module="world.onMousewheel">
+          
+            
+            
+            
+              <h2 id="name-world.onMousewheel-onMousewheel">
+                .onMousewheel( callback )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">callback</span>
+                    <span>function(e,mousewheelInfos)
+<ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">e</span>
+                    <span>MouseEvent</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">mousewheelInfos</span>
+                    <span><ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">x</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">y</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">delta</span>
+                    <span>: -1 or 1</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">entity</span>
+                    <span>: Entity
+</ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">this</span>
+                    <span>World
+</ul></span>
+                  
+                  </li>
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Add an onMousewheel callback to the World</div>
+            
+          </section>
+        
+        
           <section class="depth2 header" data-module="world.onRender">
           
             
@@ -6678,6 +6974,43 @@ with unbindOnTick.</div>
             </ul>
             
             <div class="description">Removes the onMouseup callback from this World</div>
+            
+          </section>
+        
+        
+          <section class="depth2 header" data-module="world.unbindOnMousewheel">
+          
+            
+            
+            
+              <h2 id="name-world.unbindOnMousewheel-unbindOnMousewheel">
+                .unbindOnMousewheel(  )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Removes the onMousewheel callback from this World</div>
             
           </section>
         

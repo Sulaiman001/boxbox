@@ -675,17 +675,20 @@ See more on the readme file
                  */
                 var mousewheelHandler = function(e) {
                     var mousePos = getEntityFromMouse(e),
-                        delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+                        delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail))),
+                        callMousewheelzoom = true;
                     mousePos.delta = delta;
-                    _world_mousewheelHandler(e, mousePos);
                     for (var key in self._mousewheelHandlers) {
                         if(key === worldCallbackEventId){
                             self._mousewheelHandlers[key].call(self, e, mousePos);
                         }
-                        else if (!self._entities[key]._destroyed/* && self._entities[key].checkPosition(entityX,entityY)*/) {
+                        else if (mousePos.entity && mousePos.entity._id == key && !mousePos.entity._destroyed) {
                             self._mousewheelHandlers[key].call(self._entities[key], e, mousePos);
+                            callMousewheelzoom = false;//if an entity catches the mousewheel event, don't trigger the mousewheelZoomEvent
                         }
                     }
+                    //at the opposite of the others events (where the special events are called before the user events), here we call it after
+                    _world_mousewheelHandler(e, mousePos,callMousewheelzoom);
                     e.preventDefault();
                 };
                 
@@ -815,6 +818,7 @@ See more on the readme file
                  * @function _world_mousedownHandler
                  * @param {MouseEvent} e
                  * @param {Object} mousePos
+                 * @description manages special events on world_mousemove such as dragEvent or panEvents
                  * @added by topheman
                  */
                 var _world_mousedownHandler = function(e, mousePos){
@@ -839,6 +843,7 @@ See more on the readme file
                  * @function _world_mousemoveHandler
                  * @param {MouseEvent} e
                  * @param {Object} mousePos
+                 * @description manages special events on world_mousemove such as dragEvent or panEvents
                  * @added by topheman
                  */
                 var _world_mousemoveHandler = function(e, mousePos){
@@ -879,6 +884,7 @@ See more on the readme file
                  * @function _world_mouseupHandler
                  * @param {MouseEvent} e
                  * @param {Object} mousePos
+                 * @description manages special events on world_mouseup such as dragEvent or panEvents
                  * @added by topheman
                  */
                 var _world_mouseupHandler = function(e, mousePos){
@@ -898,6 +904,7 @@ See more on the readme file
                  * @function _world_touchstartHandler
                  * @param {TouchEvent} e
                  * @param {Array}[touchInfos]
+                 * @description manages special events on world_start such as dragEvent
                  * @added by topheman
                  */
                 var _world_touchstartHandler = function(e, touchInfos){
@@ -916,6 +923,7 @@ See more on the readme file
                  * @function _world_touchmoveHandler
                  * @param {TouchEvent} e
                  * @param {Object} touchInfos
+                 * @description manages special events on world_touchmove such as dragEvent
                  * @added by topheman
                  * todo - refactor code between _world_touchmoveHandler and _world_touchendHandler
                  * toto - optimize for loop , deep object watching ...
@@ -965,11 +973,11 @@ See more on the readme file
                 };
                 
                 /*
-                 * @function _world_touchmoveHandler
+                 * @function _world_touchendHandler
                  * @param {TouchEvent} e
                  * @param {Object} touchInfos
+                 * @description manages special events on world_touchend such as dragEvent
                  * @added by topheman
-                 * todo - refactor code between _world_touchmoveHandler and _world_touchendHandler
                  */
                 var _world_touchendHandler = function(e, touchInfos){                  
                     //-> check if the touches in the event correspond to the touches referenced in the touchDraggable entities
@@ -1005,6 +1013,7 @@ See more on the readme file
                  * @function _world_mouseinHandler
                  * @param MouseEvent e
                  * @param {Object} mousePos
+                 * @description manages special events on world_mousein such as the very first mousein on the world
                  * @added by topheman
                  */
                 var _world_mouseinHandler = function(e, mousePos){
@@ -1018,6 +1027,7 @@ See more on the readme file
                  * @function _world_mouseoutHandler
                  * @param MouseEvent e
                  * @param {Object} mousePos
+                 * @description manages special events on world_mouseout such as stopping dragging, panning (when the mouse goes out of the canvas) or trggering the mouseout of the canvas
                  * @added by topheman
                  */
                 var _world_mouseoutHandler = function(e, mousePos){
@@ -1032,6 +1042,21 @@ See more on the readme file
                     //trigger the mouseout
                     if(self._mouseHoverEntityId !== null && self._mouseoutHandlers[self._mouseHoverEntityId]){
                         self._mouseoutHandlers[self._mouseHoverEntityId].call(self._entities[self._mouseHoverEntityId],e, mousePos);
+                    }
+                };
+                
+                /*
+                 * @function _world_mousewheelHandler
+                 * @param {MouseEvent} e
+                 * @param {Object} mousePos
+                 * @param {Boolean} callMousewheelEvent
+                 * @context World
+                 * @description manages special events on world_mousewheel such as the mousewheelZoom
+                 * @added by topheman
+                 */
+                var _world_mousewheelHandler = function(e, mousePos, callMousewheelEvent){
+                    if(callMousewheelEvent === true){
+                        
                     }
                 };
                 
@@ -1146,6 +1171,12 @@ See more on the readme file
                     return result;
                 };
                 
+                /*
+                 * Prepares the touchDraggableInfos object passed in callback
+                 * @param {Object} touchInfos
+                 * @param {Entity} entity
+                 * @added by topheman
+                 */
                 var mergeTouchDraggableInfos = function(touchInfos,entity){
                     var entityId = entity._id,
                         result = [],
@@ -1439,19 +1470,7 @@ See more on the readme file
                 };
                 
                 /*
-                 * @function _world_mousewheelHandler
-                 * @param {MouseEvent} e
-                 * @param {Object} mousePos
-                 * @context World
-                 * @added by topheman
-                 * @triggers the mousewheel event specified in the .onMousewheel() method
-                 */
-                var _world_mousewheelHandler = function(e, mousePos){
-                    
-                };
-                
-                /*
-                 * adding mouse/touch events to the canvas with the previous handlers
+                 * adding mouse/touch events to the canvas with the level1 handlers
                  * @added by topheman
                  */
                 
@@ -1466,6 +1485,9 @@ See more on the readme file
                     self._canvas.addEventListener('mousemove', mousemoveHandler, false);
                     self._canvas.addEventListener('mouseover', mouseinHandler, false);
                     self._canvas.addEventListener('mouseout', mouseoutHandler, false);
+                    self._canvas.addEventListener("mousewheel", mousewheelHandler, false);
+                    // Firefox
+                    self._canvas.addEventListener("DOMMouseScroll", mousewheelHandler, false);
                 }
                 
                 if(self._ops.preventScroll){
@@ -2009,8 +2031,8 @@ See more on the readme file
          */
         calculateWorldPositionFromPointer: function(e){
             return {
-                x: (e.offsetX || e.layerX || e.pageX) / this.scale() + this._cameraX,
-                y: (e.offsetY || e.layerY || e.pageY) / this.scale() + this._cameraY
+                x: (e.offsetX || (e.layerX ? e.clientX - e.target.offsetLeft : false) || e.pageX) / this.scale() + this._cameraX,
+                y: (e.offsetY || (e.layerY ? e.clientY - e.target.offsetTop : false) || e.pageY) / this.scale() + this._cameraY
             };
         },
 
@@ -2688,6 +2710,47 @@ See more on the readme file
                 return false;
             }
             this._removeTouchendHandler(worldCallbackEventId);
+        },
+        
+        /**
+         * @_name onMousewheel
+         * @_module world
+         * @_params callback
+         * @callback function(e,mousewheelInfos)
+         * <ul>
+         * @e MouseEvent
+         * @mousewheelInfos
+         * <ul>
+         * @x
+         * @y
+         * @delta : -1 or 1
+         * @entity : Entity
+         * </ul>
+         * @this World
+         * </ul>
+         * @description Add an onMousewheel callback to the World
+         * @added by topheman
+         */
+        onMousewheel : function(callback){
+            if(this._ops.disableMouseEvents){
+                console.warn('Mouse events are disabled, you tried to call onMousewheel');
+                return false;
+            }
+            this._addMousewheelHandler(worldCallbackEventId, callback);
+        },
+        
+        /**
+         * @_name unbindOnMousewheel
+         * @_module world
+         * @description Removes the onMousewheel callback from this World
+         * @added by topheman
+         */
+        unbindOnMousewheel : function(callback){
+            if(this._ops.disableMouseEvents){
+                console.warn('Mouse events are disabled, you tried to call unbindOnMousewheel');
+                return false;
+            }
+            this._removeMousewheelHandler(worldCallbackEventId);
         },
                 
                 
@@ -3882,6 +3945,46 @@ See more on the readme file
                 return false;
             }
             this._world._removeTouchmoveHandler(this._id);
+        },
+        
+        /**
+         * @_name onMousewheel
+         * @_module entity
+         * @_params callback
+         * @callback function(e,mousewheelInfos)
+         * <ul>
+         * @e MouseEvent
+         * @mousewheelInfos
+         * <ul>
+         * @x
+         * @y
+         * @delta : -1 or 1
+         * </ul>
+         * @this Entity
+         * </ul>
+         * @description Add an onMousewheel callback to this entity
+         * @added by topheman
+         */
+        onMousewheel : function(callback){
+            if(this._world._ops.disableMouseEvents){
+                console.warn('Mouse events are disabled, you tried to call onMousewheel');
+                return false;
+            }
+            this._world._addMousewheelHandler(this._id, callback);
+        },
+        
+        /**
+         * @_name unbindOnMousewheel
+         * @_module entity
+         * @description Removes the onMousewheel callback from this entity
+         * @added by topheman
+         */ 
+        unbindOnMousewheel: function(){
+            if(this._world._ops.disableMouseEvents){
+                console.warn('Mouse events are disabled, you tried to call unbindOnMousewheel');
+                return false;
+            }
+            this._world._removeMousewheelHandler(this._id);
         },
 
         /**
