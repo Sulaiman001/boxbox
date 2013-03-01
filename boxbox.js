@@ -591,19 +591,14 @@ See more on the readme file
                  * @added by topheman
                  */
                 var mousedownHandler = function(e) {
-                    var mousePos = self.calculateWorldPositionFromPointer(e);
-                    var entityX = mousePos.x,
-                    entityY = mousePos.y,
-                    entities;
+                    var mousePos = getEntityFromMouse(e);
                     _world_mousedownHandler(e, mousePos);
                     for (var key in self._mousedownHandlers) {
                         if(key === worldCallbackEventId){
-                            entities = self.find(entityX,entityY);
-                            mousePos.entity = entities.length > 0 ? entities[0] : null;
                             self._mousedownHandlers[key].call(self, e, mousePos);
                         }
-                        else if (!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY)) {
-                            self._mousedownHandlers[key].call(self._entities[key], e, mousePos);
+                        else if (mousePos.entity && mousePos.entity._id == key && !mousePos.entity._destroyed) {
+                            self._mousedownHandlers[key].call(mousePos.entity, e, mousePos);
                         }
                     }
                 };
@@ -614,19 +609,14 @@ See more on the readme file
                  * @added by topheman
                  */
                 var mouseupHandler = function(e) {
-                    var mousePos = self.calculateWorldPositionFromPointer(e);
-                    var entityX = mousePos.x,
-                    entityY = mousePos.y,
-                    entities;
+                    var mousePos = getEntityFromMouse(e);
                     _world_mouseupHandler(e, mousePos);
                     for (var key in self._mouseupHandlers) {
                         if(key === worldCallbackEventId){
-                            entities = self.find(entityX,entityY);
-                            mousePos.entity = entities.length > 0 ? entities[0] : null;
                             self._mouseupHandlers[key].call(self, e, mousePos);
                         }
-                        else if (!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY)) {
-                            self._mouseupHandlers[key].call(self._entities[key], e, mousePos);
+                        else if (mousePos.entity && mousePos.entity._id == key && !mousePos.entity._destroyed) {
+                            self._mouseupHandlers[key].call(mousePos.entity, e, mousePos);
                         }
                     }
                 };
@@ -637,19 +627,14 @@ See more on the readme file
                  * @added by topheman
                  */
                 var mousemoveHandler = function(e) {
-                    var mousePos = self.calculateWorldPositionFromPointer(e);
-                    var entityX = mousePos.x,
-                    entityY = mousePos.y,
-                    entities;
+                    var mousePos = getEntityFromMouse(e);
                     _world_mousemoveHandler(e, mousePos);
                     for (var key in self._mousemoveHandlers) {
                         if(key === worldCallbackEventId){
-                            entities = self.find(entityX,entityY);
-                            mousePos.entity = entities.length > 0 ? entities[0] : null;
                             self._mousemoveHandlers[key].call(self, e, mousePos);
                         }
-                        else if (!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY)) {
-                            self._mousemoveHandlers[key].call(self._entities[key], e, mousePos);
+                        else if (mousePos.entity && mousePos.entity._id == key && !mousePos.entity._destroyed) {
+                            self._mousemoveHandlers[key].call(mousePos.entity, e, mousePos);
                         }
                     }
                 };
@@ -661,12 +646,7 @@ See more on the readme file
                  * @added by topheman
                  */
                 var mouseinHandler = function (e) {
-                    var mousePos = self.calculateWorldPositionFromPointer(e);
-                    var entityX = mousePos.x,
-                    entityY = mousePos.y,
-                    entities;
-                    entities = self.find(entityX,entityY);
-                    mousePos.entity = entities.length > 0 ? entities[0] : null;
+                    var mousePos = getEntityFromMouse(e);
                     _world_mouseinHandler(e, mousePos);
                     if(self._mouseinHandlers[worldCallbackEventId]){
                         self._mouseinHandlers[worldCallbackEventId].call(self, e, mousePos);
@@ -680,12 +660,7 @@ See more on the readme file
                  * @added by topheman
                  */
                 var mouseoutHandler = function (e) {
-                    var mousePos = self.calculateWorldPositionFromPointer(e);
-                    var entityX = mousePos.x,
-                    entityY = mousePos.y,
-                    entities;
-                    entities = self.find(entityX,entityY);
-                    mousePos.entity = entities.length > 0 ? entities[0] : null;
+                    var mousePos = getEntityFromMouse(e);
                     _world_mouseoutHandler(e, mousePos);
                     if(self._mouseoutHandlers[worldCallbackEventId]){
                         self._mouseoutHandlers[worldCallbackEventId].call(self, e, mousePos);
@@ -843,22 +818,18 @@ See more on the readme file
                  * @added by topheman
                  */
                 var _world_mousedownHandler = function(e, mousePos){
-                    //if no dragging active and if a click on the world is on an entity, trigger the _world_mousemoveHandlerForDragEvent
-                    var entityX = mousePos.x,
-                    entityY = mousePos.y,
-                    currentEntity;//@todo use getEntityByPosition instead of looping through the entities
-                    if(self._mouseDraggingEntityId === null){
-                        for(var key in self._entities){
-                            if(!self._entities[key]._destroyed && self._entities[key].checkPosition(entityX,entityY) && self._entities[key]._ops._mouseDraggable.disabled === false){
-                                _world_mousemoveHandlerForDragEvent.call(self._entities[key],e,mousePos);
-                            }
-                        }
+                    // --- dragging entity part ---
+                    //if no dragging active and if a click on the world is on an entity, trigger the _world_mousemoveHandlerForDragEvent,
+                    //no need to loop through the entities of the world, we already have the mousePos.entity which has been clicked
+                    if(self._mouseDraggingEntityId === null && mousePos.entity !== null && mousePos.entity._ops._mouseDraggable.disabled === false){
+                        _world_mousemoveHandlerForDragEvent.call(mousePos.entity,e,mousePos);
                     }
+                    
+                    // --- pan part ---
                     //if after searching for starting a drag on an entity, after all, no drag has began, we can try to start a pan if pan is enabled
                     if(self._ops._mousePan.disabled === false && self._mouseDraggingEntityId === null){
-                        currentEntity = self.getEntityByPosition(entityX,entityY);
                         //if ever we are on a non draggable entity, but it isn't on the list of excludeEntityIds for the mousePan
-                        if(currentEntity === null || self._ops._mousePan.excludeEntityIds.indexOf(currentEntity._id) === -1){
+                        if(mousePos.entity === null || self._ops._mousePan.excludeEntityIds.indexOf(mousePos.entity._id) === -1){
                             _world_mousemoveHandlerForPanEvent.call(self,e, mousePos);
                         }
                     }
