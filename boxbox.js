@@ -296,7 +296,6 @@ See more on the readme file
                      * @_name viewport&#46;getScaledWindowInfos
                      * @_module world
                      * @newScale
-                     * @pointerPos {x,y}
                      * @description Returns the position/size/scale the of the rescaled viewport
                      * @return viewportInfos
                      * @viewportInfos
@@ -308,16 +307,37 @@ See more on the readme file
                      * @scale
                      * </ul>
                      * @added by topheman
+                     * todo take account of the pointerPos or the event (for the moment scaling on the center of the viewport)
                      */
-                    getScaledWindowInfos: function(newScale, pointerPos){
+                    getScaledWindowInfos: function(newScale, pointerPos,e){
                         var result,currentViewport = this.getCurrentWindowInfos(),
-                            newWidth = this._world._canvas.width / newScale,
-                            newHeight = this._world._canvas.height / newScale,
-                            newX, newY;
+                            canvasWidth = this._world._canvas.width,
+                            canvasHeight = this._world._canvas.height,
+                            newWidth = canvasWidth / newScale,
+                            newHeight = canvasHeight / newScale,
+                            newX, newY, currentCenterX, currentCenterY, newCenterX, newCenterY, mouseX, mouseY,
+                            restrictX = newWidth/8, restrictY = newHeight/8;
+                    
+                        //restrict mousePos
+//                        mouseX = Math.max(currentViewport.width/2 - restrictX, Math.min(currentViewport.width/2 + restrictX, pointerPos.x));
+//                        mouseY = Math.max(currentViewport.height/2 - restrictY, Math.min(currentViewport.height/2 + restrictY, pointerPos.y));
+//                                            
+//                        newX = -newWidth / 2 + mouseX * Math.abs(newScale/currentViewport.scale);
+//                        newY = -newHeight / 2 + mouseY * Math.abs(newScale/currentViewport.scale);
                         
-                        //@todo calculate new viewport x and y
-                        newX = currentViewport.x;
-                        newY = currentViewport.y;
+//                        mouseX = e.offsetX + currentViewport.x*currentViewport.scale;
+//                        mouseY = e.offsetY + currentViewport.y*currentViewport.scale;
+//                        
+//                        newX = -newWidth / 2 + mouseX / newScale;
+//                        newY = -newHeight / 2 + mouseY / newScale;
+
+                        //process newX and newY zooming on center of the viewport
+                        newX = (currentViewport.width - newWidth)/2 + currentViewport.x;
+                        newY = (currentViewport.height - newHeight)/2 + currentViewport.y;
+                        
+                        //adjus newX and newY with the pointerPosition (mouse or touch)
+//                        newX =  newX + ((e.offsetX - canvasWidth/2)/newScale)/2;
+//                        newY =  newY + ((e.offsetY - canvasHeight/2)/newScale)/2;
                         
                         result = {
                             x : newX,
@@ -347,10 +367,15 @@ See more on the readme file
                      * @scale
                      * </ul>
                      * @added by topheman
+                     * todo adjust process for stageRatio < 1
                      */
                     getMaxWindowInfos : function(forceCurrentRatio){
-                        var top, bottom, left, right,i,tmpPosition,tmpRadius,tmpAngle, hWidth, hHeight,tX,tY,_xpos,_ypos,body,vertices,tmpVertices,j,currentWindowInfos,tmpHeight,tmpWidth,tmpScale,canvasRatio,stageRatio,
-                            x = [],y = [], minX, maxX, minY, maxY, result, currentScale = this._world.scale();
+                        var i,tmpPosition,tmpRadius,tmpAngle, body,vertices,tmpVertices,j,currentWindowInfos,stageRatio,
+                            x = [],y = [], minX, maxX, minY, maxY, result,
+                            canvasWidth = this._world._canvas.width,
+                            canvasHeight = this._world._canvas.height,
+                            newX,newY, nonRescaledWorldWidth, nonRescaledWorldHeight,
+                            currentScale = this._world.scale();
 
                         for (i in this._world._entities){
                             tmpPosition = this._world._entities[i].position();
@@ -390,27 +415,23 @@ See more on the readme file
 
                         if(forceCurrentRatio){
                             currentWindowInfos = this.getCurrentWindowInfos();
-                            tmpHeight = result.height;
-                            tmpWidth = result.width;
-                            canvasRatio = this._world._canvas.width/this._world._canvas.height;
-                            stageRatio = result.width/result.height;
-                            result.scale = stageRatio >= 1 ? this._world._canvas.width / result.width : this._world._canvas.height / result.height;
-                            //case width > height
-                            if(canvasRatio >= 1){
-                                result.height = result.width * currentWindowInfos.height/currentWindowInfos.width;
-                            }
-                            //case height > width
-                            else{
-                                result.width = result.height * currentWindowInfos.width/currentWindowInfos.height;
-                            }
-
-                            //adjust the origin point to center the stage
-                            if(stageRatio >= 1){
-                                result.y = result.y - (this._world._canvas.height/result.scale - tmpHeight)/2;
+                            nonRescaledWorldWidth = result.width;
+                            nonRescaledWorldHeight = result.height;
+                            stageRatio = nonRescaledWorldWidth/nonRescaledWorldHeight;
+                            result.width = Math.max(result.height * currentWindowInfos.width/currentWindowInfos.height, result.width);
+                            result.height = Math.max(result.width * currentWindowInfos.height/currentWindowInfos.width, result.height);
+                            result.scale = Math.min(canvasWidth/nonRescaledWorldWidth,canvasHeight/nonRescaledWorldHeight);
+                            if(stageRatio > 1){
+                                newX = Math.max( (result.x - result.width + nonRescaledWorldWidth)/2, (result.x - result.width + nonRescaledWorldWidth) );
+                                newY = Math.min( (result.y - result.height + nonRescaledWorldHeight)/2, (result.y - result.height + nonRescaledWorldHeight) );
                             }
                             else{
-                                result.x = result.x - (this._world._canvas.width/result.scale - tmpWidth)/2;
+                                newX = Math.min( (result.x + result.width - nonRescaledWorldWidth)/2, (result.x + result.width - nonRescaledWorldWidth) );
+                                newY = Math.max( (result.y - result.height + nonRescaledWorldHeight)/2, (result.y - result.height + nonRescaledWorldHeight) );
+                                console.warn('Troubles with computing the correct x/y coordinates with stageRatio < 1 worlds');
                             }
+                            result.x = newX;
+                            result.y = newY;
                         }
 
                         return result;
@@ -1070,12 +1091,12 @@ See more on the readme file
                 var _world_mousewheelHandler = function(e, mousewheelInfos, callMousewheelEvent){
                     var rescaledViewport;
                     if(callMousewheelEvent === true && self._ops._mousewheelZoom.disabled === false){
-                        rescaledViewport = self.viewport.getScaledWindowInfos();
+                        rescaledViewport = self.viewport.getScaledWindowInfos(self.scale()+mousewheelInfos.delta*self._ops._mousewheelZoom.step,mousewheelInfos,e);
                         //check if not out of bound @todo
-                        
-                        //when viewport.getScaledWindowInfos() will calculate x and y , uncomment the line below
-//                        self.camera({x: rescaledViewport.x,y : rescaledViewport.y});
-                        self.scale(self.scale()+mousewheelInfos.delta*self._ops._mousewheelZoom.step);
+                        if(rescaledViewport.scale > 0){
+                            self.camera({x: rescaledViewport.x,y : rescaledViewport.y});
+                            self.scale(rescaledViewport.scale);
+                        }
                     }
                 };
                 

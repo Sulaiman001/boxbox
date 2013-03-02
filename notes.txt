@@ -74,10 +74,15 @@ world._mousePanDragging = originalWindowInfos
 regroup apis in world.viewport namespace//done
 
 world.restrictStage({maxWindow,maxScale}) @optional params -> insert it in createWorld
-- will need apis to know if
-	- is
+    - top
+    - right
+    - bottom
+    - left
+    - maxScale
+viewport.check(viewport) return boolean
+viewport.resolve(viewport) return viewport
 
-- refactor : use getEntityFromMouse and remove checkPosition from the for loops in the top level handlers
+- refactor : use getEntityFromMouse and remove checkPosition from the for loops in the top level handlers//done
 
 ------------------------------------------------------------------------------------------------------------------------------
 

@@ -99,7 +99,7 @@ function init(){
     });
     
     right.onMousewheel(function(e,mouseWheelInfos){
-        console.info('right - mousewheel',e,mouseWheelInfos);
+//        console.info('right - mousewheel',e,mouseWheelInfos);
         if(mouseWheelInfos.delta === 1){
             this.color('red');
         }
@@ -109,8 +109,10 @@ function init(){
     });
     
     myWorld.onMousewheel(function(e,mouseWheelInfos){
-        console.info('world - mousewheel',e,mouseWheelInfos);
+//        console.info('world - mousewheel',e,mouseWheelInfos);
     });
+    
+    myWorld.mousewheelZoom({step:1});
 
 }   
 

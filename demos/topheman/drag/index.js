@@ -87,6 +87,8 @@ function init(){
             console.info('stopdrag callback','event',e,'world pos',pos);
         }
     });
+    
+    myWorld.mousePan();
 
         //if you wan't to disable or enable the drag :
 //    player.mouseDraggable('disable');

@@ -107,12 +107,12 @@ function init(){
     //draw callback binded onRender
     function drawTargetting(ctx){
         console.info('onRender','this',this);
-        if(this._mouseInfos){
+        if(this._canvasMouseInfos){
             ctx.lineWidth = 3;
             ctx.strokeStyle='#33a99a';
             ctx.beginPath();
-            ctx.moveTo(this.position().x*this._world.scale(),this.position().y*this._world.scale());
-            ctx.lineTo(this._mouseInfos.position.x*this._world.scale(),this._mouseInfos.position.y*this._world.scale());
+            ctx.moveTo(this.canvasPosition().x,this.canvasPosition().y);
+            ctx.lineTo(this._canvasMouseInfos.x,this._canvasMouseInfos.y);
             ctx.stroke();
         }
     }
@@ -128,13 +128,13 @@ function init(){
         },
         drag: function(e,mouseInfos){
             //adding infos for the render callback
-            this._mouseInfos = mouseInfos;
-            console.info('drag callback','event',e.type,'world pos',mouseInfos);
+            this._canvasMouseInfos = this._world.canvasPositionAt(mouseInfos.position.x,mouseInfos.position.y);
+            console.info('drag callback','event',e.type,'world pos',mouseInfos,'canvas pos',this._canvasMouseInfos);
         },
         stop: function(e,mouseInfos){
             //no more need for the render callback
             this._world.unbindOnRender(drawTargetting);
-            this._mouseInfos = null;
+            this._canvasMouseInfos = null;
             this.color('darkred');
             this.applyImpulse(30,-(this.position().x-mouseInfos.position.x),-(this.position().y-mouseInfos.position.y));
             console.info('stopdrag callback','event',e.type,'world pos',mouseInfos);
@@ -159,6 +159,9 @@ function init(){
             }                
         }
     });
+    
+    myWorld.mousePan();
+    myWorld.mousewheelZoom({step:0.5});
 
 }
 
