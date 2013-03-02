@@ -48,7 +48,7 @@ function init(){
       height: 15,
       type: "static"
     });
-    sky.name('wallLeft');
+    wallLeft.name('wallLeft');
 
     wallRight = myWorld.createEntity({
       color: "green",
@@ -58,17 +58,7 @@ function init(){
       height: 15,
       type: "static"
     });
-    sky.name('wallRight');
-
-    sky = myWorld.createEntity({
-      color: "green",
-      x: 10,
-      y: 0,
-      width: 20,
-      height: 0.5,
-      type: "static"
-    });
-    sky.name('sky');
+    wallRight.name('wallRight');
     
     circle = myWorld.createEntity({
       color: "blue",

@@ -164,6 +164,10 @@ See more on the readme file
             multiplier: 1,
             excludeEntityIds: [],
             allowPinch:{}
+        },
+        _mousewheelZoom: {
+            disabled: true,
+            step: 0.1
         }
     };
     
@@ -286,6 +290,45 @@ See more on the readme file
 
                         return result;
                     },
+        
+                    /**
+                     * 
+                     * @_name viewport&#46;getScaledWindowInfos
+                     * @_module world
+                     * @newScale
+                     * @pointerPos {x,y}
+                     * @description Returns the position/size/scale the of the rescaled viewport
+                     * @return viewportInfos
+                     * @viewportInfos
+                     * <ul>
+                     * @x
+                     * @y
+                     * @width
+                     * @height
+                     * @scale
+                     * </ul>
+                     * @added by topheman
+                     */
+                    getScaledWindowInfos: function(newScale, pointerPos){
+                        var result,currentViewport = this.getCurrentWindowInfos(),
+                            newWidth = this._world._canvas.width / newScale,
+                            newHeight = this._world._canvas.height / newScale,
+                            newX, newY;
+                        
+                        //@todo calculate new viewport x and y
+                        newX = currentViewport.x;
+                        newY = currentViewport.y;
+                        
+                        result = {
+                            x : newX,
+                            y : newY,
+                            width : newWidth,
+                            height : newHeight,
+                            scale : newScale
+                        }
+                        
+                        return result;
+                    },
 
                     /**
                      * 
@@ -306,7 +349,7 @@ See more on the readme file
                      * @added by topheman
                      */
                     getMaxWindowInfos : function(forceCurrentRatio){
-                        var top, bottom, left, right,i,tmpPosition,tmpRadius,tmpAngle, hWidth, hHeight,tX,tY,_xpos,_ypos,body,vertices,tmpVertices,j,currentWindowInfos,tmpHeight,tmpWidth,canvasRatio,stageRatio,
+                        var top, bottom, left, right,i,tmpPosition,tmpRadius,tmpAngle, hWidth, hHeight,tX,tY,_xpos,_ypos,body,vertices,tmpVertices,j,currentWindowInfos,tmpHeight,tmpWidth,tmpScale,canvasRatio,stageRatio,
                             x = [],y = [], minX, maxX, minY, maxY, result, currentScale = this._world.scale();
 
                         for (i in this._world._entities){
@@ -318,36 +361,6 @@ See more on the readme file
                                 x.push(tmpPosition.x-tmpRadius);
                                 y.push(tmpPosition.y+tmpRadius);
                                 y.push(tmpPosition.y-tmpRadius);
-                            }
-                            else if(this._world._entities[i]._ops.shape === 'square'){
-                                //http://www.cocos2d-iphone.org/forum/topic/17387
-                                // hWidth, hHeight = half the rectangle's width & height
-                                // _xpos, _ypos = center position of the rectangle
-                                hWidth = this._world._entities[i]._ops.width/2;
-                                hHeight = this._world._entities[i]._ops.height/2;
-                                _xpos = tmpPosition.x;
-                                _ypos = tmpPosition.y;
-
-                                //bottomLeft
-                                tX = -(hWidth * Math.cos(tmpAngle) - hHeight * Math.sin(tmpAngle) ) + _xpos;
-                                tY = -(hWidth * Math.sin(tmpAngle) + hHeight * Math.cos(tmpAngle) ) + _ypos;
-                                x.push(tX);
-                                y.push(tY);
-                                //topLeft
-                                tX = -(hWidth * Math.cos(tmpAngle) + hHeight * Math.sin(tmpAngle) ) + _xpos;
-                                tY = -(hWidth * Math.sin(tmpAngle) - hHeight * Math.cos(tmpAngle) ) + _ypos;
-                                x.push(tX);
-                                y.push(tY);
-                                //topRightS
-                                tX = (hWidth * Math.cos(tmpAngle) - hHeight * Math.sin(tmpAngle) ) + _xpos;
-                                tY = (hWidth * Math.sin(tmpAngle) + hHeight * Math.cos(tmpAngle) ) + _ypos;
-                                x.push(tX);
-                                y.push(tY);
-                                //bottomRight
-                                tX = (hWidth * Math.cos(tmpAngle) + hHeight * Math.sin(tmpAngle) ) + _xpos;
-                                tY = (hWidth * Math.sin(tmpAngle) - hHeight * Math.cos(tmpAngle) ) + _ypos;
-                                x.push(tX);
-                                y.push(tY);
                             }
                             else {
                                 body = this._world._entities[i]._body;
@@ -1054,9 +1067,15 @@ See more on the readme file
                  * @description manages special events on world_mousewheel such as the mousewheelZoom
                  * @added by topheman
                  */
-                var _world_mousewheelHandler = function(e, mousePos, callMousewheelEvent){
-                    if(callMousewheelEvent === true){
+                var _world_mousewheelHandler = function(e, mousewheelInfos, callMousewheelEvent){
+                    var rescaledViewport;
+                    if(callMousewheelEvent === true && self._ops._mousewheelZoom.disabled === false){
+                        rescaledViewport = self.viewport.getScaledWindowInfos();
+                        //check if not out of bound @todo
                         
+                        //when viewport.getScaledWindowInfos() will calculate x and y , uncomment the line below
+//                        self.camera({x: rescaledViewport.x,y : rescaledViewport.y});
+                        self.scale(self.scale()+mousewheelInfos.delta*self._ops._mousewheelZoom.step);
                     }
                 };
                 
@@ -2912,6 +2931,48 @@ See more on the readme file
                 
         isTouchPanEnabled : function(){
             return !this._ops._touchPan.disabled;
+        },
+                
+        mousewheelZoom : function(options){
+            if(this._ops.disableMouseEvents){
+                console.warn('Mouse events are disabled, you tried to call mousewheelZoom');
+                return false;
+            }
+            
+            //simple init without options
+            if(typeof options === 'undefined'){
+                this._ops._mousewheelZoom.disabled = false;
+            }
+            //method call
+            else if(typeof options === 'string'){
+                switch(options){
+                    case 'disable':
+                        this._ops._mousewheelZoom.disabled = true;
+                        break;
+                    case 'enable':
+                        this._ops._mousewheelZoom.disabled = false;
+                        break;
+                }
+            }
+            else if(typeof options === 'object'){
+                if(options.disabled === false || options.disabled === true){
+                    this._ops._mousewheelZoom.disabled = options.disabled;
+                }
+                else{
+                    this._ops._mousewheelZoom.disabled = false;//active by default (if not specified)
+                }
+                
+                if(typeof options.step === 'number'){
+                    this._ops._mousewheelZoom.step = options.step;
+                }
+                else if(typeof options.multiplier !== 'undefined'){
+                    this._ops._mousewheelZoom.step = 0.1;//0.1 by default
+                }
+            }
+        },
+                
+        isMousewheelZoomEnabled : function(){
+            return !this._ops._mousewheelZoom.disabled;
         }
         
     };
