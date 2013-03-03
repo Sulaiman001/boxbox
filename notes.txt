@@ -18,13 +18,7 @@ TODO
 
 
 - special css styles (prevent text select, drag ...)
-- mouseWheelZoom
-    - maxScale
-    - minScale
-    - maxWindow : {x1,y1,x2,y2}
-    - minWindow : {x1,y1,x2,y2}
-- onMouseWheel
-- mousePan : include all non draggable entities
+- mousePan : include all non draggable entities //done
     - excludeEntityIds : [id ...] will exclude the entities listed (possible conflicts on events)
     - start
     - drag
@@ -39,39 +33,19 @@ callback infos : viewportInfos :
 - originalViewport
 - viewport
 
-
 - mouseDraggable/touchDraggable : special joints (not only mouseJoint) - good thing todo ?
 - delete destroyed entity handlers
 - optimize the for loops
-- pass the private attribute inside _ops
 
-- compatibility mouseDraggable -> touchDraggable ?
 - draggable : releaseDrag -> release allMouseJoints
 
 - world._getDebugDraw() -> returns a new b2DebugDraw() with the new scale
-
-- mouseDraggable -> 
-     - enable -> add entityId to world._mouseDraggableEntityIds         //done
-     - disable -> remove entityId from world._mouseDraggableEntityIds   //done
-- touchDraggable -> 
-     - enable -> add entityId to world.touchDraggableEntityIds          //done
-     - disable -> remove entityId from world.touchDraggableEntityIds    //done
-
-world._addMousePanExcludeEnityId(id)        //done
-world._removeMousePanExcludeEnityId(id)     //done
-world._addTouchPanExcludeEnityId(id)        //done
-world._removeTouchPanExcludeEnityId(id)     //done
 
 //specific excludeEntityId for draggable entitys ? -> no, pick in the list of draggables, use :
 _mouseDraggableEntityIds    //done
 _touchDraggableEntityIds    //done
 
--> update these at .mouseDraggable + touchDraggable
-
-world._mousePanStartDrag = true
-world._mousePanDragging = originalWindowInfos
-
-regroup apis in world.viewport namespace//done
+-> update these at .mouseDraggable + touchDraggable @TODO -> check this one 
 
 world.restrictStage({maxWindow,maxScale}) @optional params -> insert it in createWorld
     - top
@@ -82,8 +56,13 @@ world.restrictStage({maxWindow,maxScale}) @optional params -> insert it in creat
 viewport.check(viewport) return boolean
 viewport.resolve(viewport) return viewport
 
-- refactor : use getEntityFromMouse and remove checkPosition from the for loops in the top level handlers//done
 
+- mousewheelZoom documentation
+
+- tell the user mousePan, mousewheelZoom aren't compatible with debugDraw (as any call to .camera()) (what about scale() ?)
+
+world.createEntity :
+    - init a function that is run when the entity is created //already there
 ------------------------------------------------------------------------------------------------------------------------------
 
 DONE
@@ -101,6 +80,22 @@ DONE
 - world.getWorldCurrentWindowInfos() -> x,y,width,height
 
 - world.focusAll() - recadrer sur tous les objets présents dans le world
+- refactor : use getEntityFromMouse and remove checkPosition from the for loops in the top level handlers//done
+
+- mouseDraggable -> 
+     - enable -> add entityId to world._mouseDraggableEntityIds         //done
+     - disable -> remove entityId from world._mouseDraggableEntityIds   //done
+- touchDraggable -> 
+     - enable -> add entityId to world.touchDraggableEntityIds          //done
+     - disable -> remove entityId from world.touchDraggableEntityIds    //done
+
+world._addMousePanExcludeEnityId(id)        //done
+world._removeMousePanExcludeEnityId(id)     //done
+world._addTouchPanExcludeEnityId(id)        //done
+world._removeTouchPanExcludeEnityId(id)     //done
+
+- mouseWheelZoom
+- onMouseWheel
 
 ---- DONE --- touchDraggable :
 

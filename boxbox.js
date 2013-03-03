@@ -168,6 +168,13 @@ See more on the readme file
         _mousewheelZoom: {
             disabled: true,
             step: 0.1
+        },
+        restrictStage:{
+            top: null,
+            right: null,
+            bottom: null,
+            left: null,
+            maxScale: null
         }
     };
     
@@ -247,6 +254,7 @@ See more on the readme file
             var i;
             var world;
             var listener;
+            var initialViewport;//@added by topheman
             this._ops = extend(options, WORLD_DEFAULT_OPTIONS);
             this.checkListenersOptions();
             this._world = new b2World(new b2Vec2(this._ops.gravity.x,
@@ -475,6 +483,18 @@ See more on the readme file
                     debugDraw.SetLineThickness(1.0);
                     debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
                     world.SetDebugDraw(debugDraw);
+                }
+                
+                //@added by topheman
+                //init restrictStage
+                if(this._ops.restrictStage.top || this._ops.restrictStage.right || this._ops.restrictStage.bottom || this._ops.restrictStage.left || this._ops.restrictStage.maxScale){
+                    initialViewport = this.viewport.getCurrentWindowInfos();
+                    //check if the initial viewport fits the retriction
+                    //this.viewport.check(viewport)
+                    //resolve if needed
+                    //  initialViewport = this.viewport.resolve(viewport)
+                    //  update camera
+                    //  update scale
                 }
 
                 // game loop (onTick events)
