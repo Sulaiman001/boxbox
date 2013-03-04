@@ -317,35 +317,17 @@ See more on the readme file
                      * @added by topheman
                      * todo take account of the pointerPos or the event (for the moment scaling on the center of the viewport)
                      */
-                    getScaledWindowInfos: function(newScale, pointerPos,e){
+                    getScaledWindowInfos: function(newScale){
                         var result,currentViewport = this.getCurrentWindowInfos(),
                             canvasWidth = this._world._canvas.width,
                             canvasHeight = this._world._canvas.height,
                             newWidth = canvasWidth / newScale,
                             newHeight = canvasHeight / newScale,
-                            newX, newY, currentCenterX, currentCenterY, newCenterX, newCenterY, mouseX, mouseY,
-                            restrictX = newWidth/8, restrictY = newHeight/8;
-                    
-                        //restrict mousePos
-//                        mouseX = Math.max(currentViewport.width/2 - restrictX, Math.min(currentViewport.width/2 + restrictX, pointerPos.x));
-//                        mouseY = Math.max(currentViewport.height/2 - restrictY, Math.min(currentViewport.height/2 + restrictY, pointerPos.y));
-//                                            
-//                        newX = -newWidth / 2 + mouseX * Math.abs(newScale/currentViewport.scale);
-//                        newY = -newHeight / 2 + mouseY * Math.abs(newScale/currentViewport.scale);
-                        
-//                        mouseX = e.offsetX + currentViewport.x*currentViewport.scale;
-//                        mouseY = e.offsetY + currentViewport.y*currentViewport.scale;
-//                        
-//                        newX = -newWidth / 2 + mouseX / newScale;
-//                        newY = -newHeight / 2 + mouseY / newScale;
+                            newX, newY;
 
                         //process newX and newY zooming on center of the viewport
                         newX = (currentViewport.width - newWidth)/2 + currentViewport.x;
                         newY = (currentViewport.height - newHeight)/2 + currentViewport.y;
-                        
-                        //adjus newX and newY with the pointerPosition (mouse or touch)
-//                        newX =  newX + ((e.offsetX - canvasWidth/2)/newScale)/2;
-//                        newY =  newY + ((e.offsetY - canvasHeight/2)/newScale)/2;
                         
                         result = {
                             x : newX,
@@ -501,6 +483,7 @@ See more on the readme file
                             outOfBounds = false,
                             preserveScaleX = 0,
                             preserveScaleY = 0;
+                    
                         if(restrictStage.left !== null && viewport.x < restrictStage.left){
                             result.x = this._world._ops.restrictStage.left;
                             outOfBounds = true;
@@ -521,25 +504,18 @@ See more on the readme file
                             outOfBounds = true;
                             preserveScaleY++;
                         }
-                        //@todo check this one ?
-//                        if(this._world._ops.restrictStage.maxScale !== null && viewport.scale > this._world._ops.restrictStage.maxScale){
-//                            result.maxScale = this._world._ops.restrictStage.maxScale;
-//                            outOfBounds = true;
-//                        }
                         
                         if(preserveScaleX > 1){
                             //dont scale out
                             result.width =  restrictStage.right - restrictStage.left;
                             result.x = restrictStage.left;
                             result.scale = this._world._canvas.width / result.width;
-                            console.info("preserveScaleX",preserveScaleX,result);
                         }
-                        if(preserveScaleY > 1){
+                        else if(preserveScaleY > 1){
                             //dont scale out
                             result.height = restrictStage.bottom - restrictStage.top;
                             result.y = restrictStage.top;
                             result.scale = this._world._canvas.height / result.height;
-                            console.info("preserveScaleY",preserveScaleY,result);
                         }
                         
                         result.outOfBounds = outOfBounds;
@@ -564,16 +540,13 @@ See more on the readme file
                 }
                 
                 //@added by topheman
-                //init restrictStage
-                if(this._ops.restrictStage.top || this._ops.restrictStage.right || this._ops.restrictStage.bottom || this._ops.restrictStage.left || this._ops.restrictStage.maxScale){
-                    initialViewport = this.viewport.getCurrentWindowInfos();
-                    //check if the initial viewport fits the retriction
-                    //this.viewport.check(viewport)
-                    //resolve if needed
-                    //  initialViewport = this.viewport.resolve(viewport)
-                    //  update camera
-                    //  update scale
-                }
+//                initialViewport = this.viewport.checkRestrictStage(this.viewport.getCurrentWindowInfos());
+//                    console.info(initialViewport);
+//                if(initialViewport.outOfBounds){
+//                    this.camera({x:initialViewport.x,y:initialViewport.y});
+//                    this.scale(initialViewport.scale);
+//                }
+                
 
                 // game loop (onTick events)
                 window.setInterval(function() {
@@ -1187,14 +1160,22 @@ See more on the readme file
                  * @added by topheman
                  */
                 var _world_mousewheelHandler = function(e, mousewheelInfos, callMousewheelEvent){
-                    var rescaledViewport;
+                    var rescaledViewport, newScale;
                     if(callMousewheelEvent === true && self._ops._mousewheelZoom.disabled === false){
-                        rescaledViewport = self.viewport.getScaledWindowInfos(self.scale()+mousewheelInfos.delta*self._ops._mousewheelZoom.step,mousewheelInfos,e);
+                        newScale = self.scale()+mousewheelInfos.delta*self._ops._mousewheelZoom.step;
+                        
+                        //prevent maxScale
+                        if(self._ops.restrictStage.maxScale !== null && newScale > self._ops.restrictStage.maxScale){
+                            newScale = self._ops.restrictStage.maxScale;
+                        }
+                        
+                        //rescale
+                        rescaledViewport = self.viewport.getScaledWindowInfos(newScale);
                         
                         //prevent 0 or negative scale
                         if(rescaledViewport.scale > 0){
                             
-                            //check viewport constraint @todo correct resolve with rescaling
+                            //check viewport constraint
                             rescaledViewport = self.viewport.checkRestrictStage(rescaledViewport);
                             
                             //update viewport

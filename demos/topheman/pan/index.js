@@ -15,7 +15,8 @@ function init(){
             top : -2,
             left : -2,
             right: 34,
-            bottom: 18
+            bottom: 18,
+            maxScale: 40
         }
     });
     
