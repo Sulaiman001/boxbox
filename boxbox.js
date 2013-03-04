@@ -467,7 +467,81 @@ See more on the readme file
                         this._world.camera({x:windowInfos.x,y:windowInfos.y});
                         this._world.scale(windowInfos.scale);
                         return windowInfos;
+                    },
+                            
+
+                    /**
+                     * 
+                     * @_name viewport&#46;checkRestrictStage
+                     * @_module world
+                     * @_params viewport
+                     * @description Returns the viewport parameters to fit the restrictStage
+                     * @return boundsInfos
+                     * @viewportInfos
+                     * <ul>
+                     * @x
+                     * @y
+                     * @width
+                     * @height
+                     * @scale
+                     * @outOfBounds true if the viewport needs any changes (so if it needs to apply world.camera() and world.scale())
+                     * </ul>
+                     * @added by topheman
+                     */
+                    checkRestrictStage: function(viewport){
+                        var result = {
+                            x: viewport.x,
+                            y: viewport.y,
+                            width: viewport.width,
+                            height: viewport.height,
+                            scale: viewport.scale,
+                            outOfBounds: false
+                        },
+                            restrictStage = this._world._ops.restrictStage,
+                            outOfBounds = false,
+                            preserveScaleX = 0,
+                            preserveScaleY = 0;
+                        if(restrictStage.left !== null && viewport.x < restrictStage.left){
+                            result.x = this._world._ops.restrictStage.left;
+                            outOfBounds = true;
+                            preserveScaleX++;
+                        }
+                        if(restrictStage.top !== null && viewport.y < restrictStage.top){
+                            result.y = this._world._ops.restrictStage.top;
+                            outOfBounds = true;
+                            preserveScaleY++;
+                        }
+                        if(restrictStage.right !== null && (viewport.x + viewport.width) > restrictStage.right){
+                            result.x = restrictStage.right - viewport.width;
+                            outOfBounds = true;
+                            preserveScaleX++;
+                        }
+                        if(restrictStage.bottom !== null && (viewport.y + viewport.height) > restrictStage.bottom){
+                            result.y = restrictStage.bottom - viewport.height;
+                            outOfBounds = true;
+                            preserveScaleY++;
+                        }
+                        //@todo check this one ?
+//                        if(this._world._ops.restrictStage.maxScale !== null && viewport.scale > this._world._ops.restrictStage.maxScale){
+//                            result.maxScale = this._world._ops.restrictStage.maxScale;
+//                            outOfBounds = true;
+//                        }
+                        
+                        if(preserveScaleX > 1){
+                            //dont scale out
+                            result.width =  restrictStage.right - restrictStage.left;
+                            result.scale = this._world._canvas.width / result.width;
+                        }
+                        if(preserveScaleY > 1){
+                            //dont scale out
+                            result.height = restrictStage.bottom - restrictStage.top;
+                            result.scale = this._world._canvas.height / result.height;
+                        }
+                        
+                        result.outOfBounds = outOfBounds;
+                        return result;
                     }
+ 
                 };
             })(this);
             
@@ -1112,8 +1186,14 @@ See more on the readme file
                     var rescaledViewport;
                     if(callMousewheelEvent === true && self._ops._mousewheelZoom.disabled === false){
                         rescaledViewport = self.viewport.getScaledWindowInfos(self.scale()+mousewheelInfos.delta*self._ops._mousewheelZoom.step,mousewheelInfos,e);
-                        //check if not out of bound @todo
+                        
+                        //prevent 0 or negative scale
                         if(rescaledViewport.scale > 0){
+                            
+                            //check viewport constraint @todo correct resolve with rescaling
+                            rescaledViewport = self.viewport.checkRestrictStage(rescaledViewport);
+                            
+                            //update viewport
                             self.camera({x: rescaledViewport.x,y : rescaledViewport.y});
                             self.scale(rescaledViewport.scale);
                         }
@@ -1485,6 +1565,7 @@ See more on the readme file
                     else if(this._mousePanDragging){
                         viewportInfos = mergeMousePanInfos.call(this,this._mousePanDragging, e, 'move');
                         //check viewport constraint
+                        viewportInfos.viewport = this.viewport.checkRestrictStage(viewportInfos.viewport);
                         
                         //update viewport
                         this.camera({x:viewportInfos.viewport.x,y:viewportInfos.viewport.y});
@@ -1521,6 +1602,9 @@ See more on the readme file
                         if(this._mousePanStartDrag === false && this._mousePanStopdragHandler){
                             this._mousePanStopdragHandler.call(this,e,viewportInfos,'stop');
                         }
+                        
+                        //check viewport constraint
+                        viewportInfos.viewport = this.viewport.checkRestrictStage(viewportInfos.viewport);
                         
                         //update viewport
                         this.camera({x:viewportInfos.viewport.x,y:viewportInfos.viewport.y});
@@ -2345,6 +2429,34 @@ See more on the readme file
             else{
                 return null;
             }
+        },
+
+        /**
+         * @_name getEntityById
+         * @_module world
+         * @_params entityId
+         * @return Entity
+         * @description returns the Entity of the id entityId
+         * @added by topheman
+         */
+        getEntityById: function(id){
+            return this._entities[id] ? this._entities[id] : null;
+        },
+
+        /**
+         * @_name getEntityByName
+         * @_module world
+         * @_params entityName
+         * @return Entity
+         * @description returns the Entity of the name entityName
+         * @added by topheman
+         */   
+        getEntityByName: function(name){
+            for(var i in this._entities){
+                if(this._entities[i]._name === name)
+                    return this._entities[i];
+            }
+            return null;
         },
         
         /**

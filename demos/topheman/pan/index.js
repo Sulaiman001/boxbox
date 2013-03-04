@@ -4,7 +4,20 @@ function init(){
     
     //init canvas and world
     canvas = document.getElementById("canvas");
-    myWorld = boxbox.createWorld(canvas,{scale:30, preventScroll:false, disableTouchEvents : false, disableKeyEvents : true, disableMouseEvents : false, debugDraw:false});
+    myWorld = boxbox.createWorld(canvas,{
+        scale:30,
+        preventScroll:false,
+        disableTouchEvents : false,
+        disableKeyEvents : true,
+        disableMouseEvents : false,
+        debugDraw:false,
+        restrictStage : {
+            top : -2,
+            left : -2,
+            right: 34,
+            bottom: 18
+        }
+    });
     
     //create entities
     left = myWorld.createEntity({
@@ -97,6 +110,8 @@ function init(){
             1
         ]
     });
+    
+    myWorld.mousewheelZoom({step:0.5});
 
 }   
 
