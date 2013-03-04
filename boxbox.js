@@ -530,12 +530,16 @@ See more on the readme file
                         if(preserveScaleX > 1){
                             //dont scale out
                             result.width =  restrictStage.right - restrictStage.left;
+                            result.x = restrictStage.left;
                             result.scale = this._world._canvas.width / result.width;
+                            console.info("preserveScaleX",preserveScaleX,result);
                         }
                         if(preserveScaleY > 1){
                             //dont scale out
                             result.height = restrictStage.bottom - restrictStage.top;
+                            result.y = restrictStage.top;
                             result.scale = this._world._canvas.height / result.height;
+                            console.info("preserveScaleY",preserveScaleY,result);
                         }
                         
                         result.outOfBounds = outOfBounds;
