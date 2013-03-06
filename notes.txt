@@ -1,5 +1,31 @@
 DOING
 
+world.viewport.getWindowInfosCenterTo(x,y)
+world.viewport.getWindowInfosScaleTo(scale)
+world.viewport.centerTo(x,y,callback) -> animationQueue
+world.viewport.scaleTo(scale,callback) -> animationQueue
+
+3 top
+2 top+right
+1 top+right+bottom
+0 top+right+bottom+left
+
+3 right
+2 right+bottom
+1 right+bottom+left
+
+3 bottom
+2 bottom+left
+1 bottom+left+top
+
+3 left
+2 left+top
+1 left+top+right
+
+0 position+scale
+1 position+scale
+2 position
+3 position
 ------------------------------------------------------------------------------------------------------------------------------
 
 TODO
