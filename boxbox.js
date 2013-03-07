@@ -520,6 +520,55 @@ See more on the readme file
                         
                         result.outOfBounds = outOfBounds;
                         return result;
+                    },
+                            
+                    getWindowInfosCenterTo : function(x,y){
+                        
+                        var requiredTop, requiredBottom, requiredLeft, requiredRight, requiredWidth, requiredHeight, requiredScale, //required parameters, non rescaled if x,y are center of viewport
+                            restrictStage = this._world._ops.restrictStage,
+                            currentViewport = this.getCurrentWindowInfos(),
+                            rescaledViewport = this.getCurrentWindowInfos();
+                        //non rescaled viewportInfos from center coordinated x,y
+                        requiredScale       = currentViewport.scale;
+                        requiredWidth       = currentViewport.width;
+                        requiredHeight      = currentViewport.height;
+                        requiredTop         = y - requiredHeight/2;
+                        requiredBottom      = y + requiredHeight/2;
+                        requiredLeft        = x - requiredWidth/2;
+                        requiredRight       = x + requiredWidth/2;
+                        //now, reposition / rescale by the restrictStage
+                        //4 borders limits -> position+scale
+                        if(restrictStage.top && restrictStage.bottom && restrictStage.left && restrictStage.right){
+                            
+                        }
+                        //3 borders limits -> position+scale
+                        else if( (restrictStage.top && restrictStage.right && restrictStage.bottom) || (restrictStage.right && restrictStage.bottom && restrictStage.left) || (restrictStage.bottom && restrictStage.left && restrictStage.top) || (restrictStage.left && restrictStage.top && restrictStage.right) ){
+                            
+                        }
+                        //2 borders limits in 1 corner -> position
+                        else if( (restrictStage.top && restrictStage.right) || (restrictStage.right && restrictStage.bottom) || (restrictStage.bottom && restrictStage.left) || (restrictStage.left && restrictStage.top) ){
+                            
+                        }
+                        //2 borders limits opposits -> scale
+                        else if( (restrictStage.top && restrictStage.bottom) || (restrictStage.right && restrictStage.left) ){
+                            
+                        }
+                        //1 border limit -> position
+                        else if( restrictStage.top || restrictStage.right || restrictStage.bottom || restrictStage.left){
+                            if(rescaledViewport.y < restrictStage.top){
+                                rescaledViewport.y = restrictStage.top;
+                            }
+                            else if(rescaledViewport.y > (restrictStage.bottom - requiredHeight)){
+                                rescaledViewport.y = restrictStage.bottom - requiredHeight;
+                            }
+                            else if(rescaledViewport.x < restrictStage.left){
+                                rescaledViewport.x = restrictStage.left;
+                            }
+                            else if(rescaledViewport.x > (restrictStage.right - requiredWidth)){
+                                rescaledViewport.x = restrictStage.right - requiredWidth;
+                            }
+                        }
+                        
                     }
  
                 };

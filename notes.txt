@@ -5,6 +5,8 @@ world.viewport.getWindowInfosScaleTo(scale)
 world.viewport.centerTo(x,y,callback) -> animationQueue
 world.viewport.scaleTo(scale,callback) -> animationQueue
 
+world.viewport.limitsFitToCanvas()//really usefull ?
+
 3 top
 2 top+right
 1 top+right+bottom
