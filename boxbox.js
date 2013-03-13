@@ -527,7 +527,9 @@ See more on the readme file
                         var requiredTop, requiredBottom, requiredLeft, requiredRight, requiredWidth, requiredHeight, requiredScale, //required parameters, non rescaled if x,y are center of viewport
                             restrictStage = this._world._ops.restrictStage,
                             currentViewport = this.getCurrentWindowInfos(),
-                            rescaledViewport = this.getCurrentWindowInfos();
+                            rescaledViewport = this.getCurrentWindowInfos(),
+                            restrictStageParametersNumber = 0,
+                            i;
                         //non rescaled viewportInfos from center coordinated x,y
                         requiredScale       = currentViewport.scale;
                         requiredWidth       = currentViewport.width;
@@ -536,25 +538,14 @@ See more on the readme file
                         requiredBottom      = y + requiredHeight/2;
                         requiredLeft        = x - requiredWidth/2;
                         requiredRight       = x + requiredWidth/2;
-                        //now, reposition / rescale by the restrictStage
-                        //4 borders limits -> position+scale
-                        if(restrictStage.top && restrictStage.bottom && restrictStage.left && restrictStage.right){
-                            
+                        
+                        for(i in restrictStage){
+                            if(i === 'top' || i === 'bottom' || i === 'left' || i === 'right'){
+                                restrictStageParametersNumber++;
+                            }
                         }
-                        //3 borders limits -> position+scale
-                        else if( (restrictStage.top && restrictStage.right && restrictStage.bottom) || (restrictStage.right && restrictStage.bottom && restrictStage.left) || (restrictStage.bottom && restrictStage.left && restrictStage.top) || (restrictStage.left && restrictStage.top && restrictStage.right) ){
-                            
-                        }
-                        //2 borders limits in 1 corner -> position
-                        else if( (restrictStage.top && restrictStage.right) || (restrictStage.right && restrictStage.bottom) || (restrictStage.bottom && restrictStage.left) || (restrictStage.left && restrictStage.top) ){
-                            
-                        }
-                        //2 borders limits opposits -> scale
-                        else if( (restrictStage.top && restrictStage.bottom) || (restrictStage.right && restrictStage.left) ){
-                            
-                        }
-                        //1 border limit -> position
-                        else if( restrictStage.top || restrictStage.right || restrictStage.bottom || restrictStage.left){
+                        
+                        var rescaleWithOneLimit = function(){
                             if(requiredTop < restrictStage.top){
                                 rescaledViewport.y = restrictStage.top;
                                 rescaledViewport.x = requiredLeft;
@@ -575,7 +566,42 @@ See more on the readme file
                                 rescaledViewport.x = requiredLeft;
                                 rescaledViewport.y = requiredTop;
                             }
+                        };
+                        
+                        //now, reposition / rescale by the restrictStage
+                        
+                        //4 borders limits -> position+scale
+                        if(restrictStageParametersNumber === 4){
+                            
                         }
+                        //3 borders limits -> position+scale
+                        else if(restrictStageParametersNumber === 3){
+                            
+                        }
+                        //2 borders limits
+                        else if(restrictStageParametersNumber === 2){
+                            //2 borders limits in 1 corner -> position
+                            if( (restrictStage.top && restrictStage.right) || (restrictStage.right && restrictStage.bottom) || (restrictStage.bottom && restrictStage.left) || (restrictStage.left && restrictStage.top) ){
+                            
+                            }
+                            //2 borders limits opposits -> scale
+                            else if( (restrictStage.top && restrictStage.bottom) || (restrictStage.right && restrictStage.left) ){
+                                if(requiredTop < restrictStage.top && requiredBottom > restrictStage.bottom){
+
+                                }
+                                else if(requiredLeft < restrictStage.left && requiredRight > restrictStage.right){
+
+                                }
+                                else{
+                                    rescaleWithOneLimit();//it's only a matter of position with one limit
+                                }
+                            }
+                        }
+                        //1 border limit -> position
+                        else if(restrictStageParametersNumber === 1){
+                            rescaleWithOneLimit();
+                        }
+                        //no border limit
                         else{
                             rescaledViewport.x = requiredLeft;
                             rescaledViewport.y = requiredTop;
@@ -585,7 +611,7 @@ See more on the readme file
                     },
                             
                     /*
-                     * @todo make it an animation to animaionQueue
+                     * @todo make it an animation to animationQueue
                      */
                     centerTo : function(x,y){
                 
