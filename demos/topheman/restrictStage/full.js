@@ -14,12 +14,16 @@ function init(){
         disableMouseEvents : false,
         debugDraw:false,
         restrictStage : {
-            top : -2,
-            left : -2,
-            right: 34,
+//            top : -2,
+//            left : -2,
+//            right: 34,
             bottom: 18
         }
     });
+    
+    logClick = function(e,mouseInfos){
+        console.info(e,mouseInfos);
+    };
     
     //create entities
     left = myWorld.createEntity({
@@ -30,6 +34,8 @@ function init(){
       height: 6
     });
     left.name('left');
+    
+    left.onMousedown(logClick);
 
     right = myWorld.createEntity({
         x: 20,

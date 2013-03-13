@@ -555,20 +555,45 @@ See more on the readme file
                         }
                         //1 border limit -> position
                         else if( restrictStage.top || restrictStage.right || restrictStage.bottom || restrictStage.left){
-                            if(rescaledViewport.y < restrictStage.top){
+                            if(requiredTop < restrictStage.top){
                                 rescaledViewport.y = restrictStage.top;
+                                rescaledViewport.x = requiredLeft;
                             }
-                            else if(rescaledViewport.y > (restrictStage.bottom - requiredHeight)){
+                            else if(requiredBottom > restrictStage.bottom){
                                 rescaledViewport.y = restrictStage.bottom - requiredHeight;
+                                rescaledViewport.x = requiredLeft;
                             }
-                            else if(rescaledViewport.x < restrictStage.left){
+                            else if(requiredLeft < restrictStage.left){
                                 rescaledViewport.x = restrictStage.left;
+                                rescaledViewport.y = requiredTop;
                             }
-                            else if(rescaledViewport.x > (restrictStage.right - requiredWidth)){
+                            else if(requiredRight > restrictStage.right){
                                 rescaledViewport.x = restrictStage.right - requiredWidth;
+                                rescaledViewport.y = requiredTop;
+                            }
+                            else{
+                                rescaledViewport.x = requiredLeft;
+                                rescaledViewport.y = requiredTop;
                             }
                         }
+                        else{
+                            rescaledViewport.x = requiredLeft;
+                            rescaledViewport.y = requiredTop;
+                        }
+                        return rescaledViewport;
                         
+                    },
+                            
+                    /*
+                     * @todo make it an animation to animaionQueue
+                     */
+                    centerTo : function(x,y){
+                
+                        var newViewport = this.getWindowInfosCenterTo(x,y);
+                        this._world.camera({x:newViewport.x, y:newViewport.y});
+                        this._world.scale(newViewport.scale);
+                        return newViewport;
+                
                     }
  
                 };
