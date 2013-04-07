@@ -488,21 +488,25 @@ See more on the readme file
                             result.x = this._world._ops.restrictStage.left;
                             outOfBounds = true;
                             preserveScaleX++;
+                            console.info('left');
                         }
                         if(restrictStage.top !== null && viewport.y < restrictStage.top){
                             result.y = this._world._ops.restrictStage.top;
                             outOfBounds = true;
                             preserveScaleY++;
+                            console.info('top');
                         }
                         if(restrictStage.right !== null && (viewport.x + viewport.width) > restrictStage.right){
                             result.x = restrictStage.right - viewport.width;
                             outOfBounds = true;
                             preserveScaleX++;
+                            console.info('right');
                         }
                         if(restrictStage.bottom !== null && (viewport.y + viewport.height) > restrictStage.bottom){
                             result.y = restrictStage.bottom - viewport.height;
                             outOfBounds = true;
                             preserveScaleY++;
+                            console.info('bottom');
                         }
                         
                         if(preserveScaleX > 1){
@@ -522,6 +526,9 @@ See more on the readme file
                         return result;
                     },
                             
+                    /**
+                     * This method returns a viewport rescaled and repositionned, accordind to the restrictstage (use centerTo)
+                     */
                     getWindowInfosCenterTo : function(x,y){
                         
                         var requiredTop, requiredBottom, requiredLeft, requiredRight, requiredWidth, requiredHeight, requiredScale, //required parameters, non rescaled if x,y are center of viewport
@@ -536,39 +543,68 @@ See more on the readme file
                         requiredBottom      = y + requiredHeight/2;
                         requiredLeft        = x - requiredWidth/2;
                         requiredRight       = x + requiredWidth/2;
-                        //now, reposition / rescale by the restrictStage
-                        //4 borders limits -> position+scale
-                        if(restrictStage.top && restrictStage.bottom && restrictStage.left && restrictStage.right){
-                            
-                        }
-                        //3 borders limits -> position+scale
-                        else if( (restrictStage.top && restrictStage.right && restrictStage.bottom) || (restrictStage.right && restrictStage.bottom && restrictStage.left) || (restrictStage.bottom && restrictStage.left && restrictStage.top) || (restrictStage.left && restrictStage.top && restrictStage.right) ){
-                            
-                        }
-                        //2 borders limits in 1 corner -> position
-                        else if( (restrictStage.top && restrictStage.right) || (restrictStage.right && restrictStage.bottom) || (restrictStage.bottom && restrictStage.left) || (restrictStage.left && restrictStage.top) ){
-                            
-                        }
-                        //2 borders limits opposits -> scale
-                        else if( (restrictStage.top && restrictStage.bottom) || (restrictStage.right && restrictStage.left) ){
-                            
-                        }
-                        //1 border limit -> position
-                        else if( restrictStage.top || restrictStage.right || restrictStage.bottom || restrictStage.left){
-                            if(rescaledViewport.y < restrictStage.top){
-                                rescaledViewport.y = restrictStage.top;
+                        
+                        //check for rescale in/out necessity to stick with the opposit borders of the restrict stage
+                        if(restrictStage.top && restrictStage.bottom){
+                            //check for scale out need
+                            if(requiredScale > restrictStage.maxscale){
+                                
                             }
-                            else if(rescaledViewport.y > (restrictStage.bottom - requiredHeight)){
-                                rescaledViewport.y = restrictStage.bottom - requiredHeight;
+                            //check for scale in need
+                            if(requiredHeight > (restrictStage.bottom - restrictStage.top) ){
+                                requiredWidth = (requiredWidth * (restrictStage.bottom - restrictStage.top))/requiredHeight;
+                                requiredHeight = restrictStage.bottom - restrictStage.top;
+                                requiredScale = this._world._canvas.height / requiredHeight;
                             }
-                            else if(rescaledViewport.x < restrictStage.left){
-                                rescaledViewport.x = restrictStage.left;
+                        }
+                        if(restrictStage.right && restrictStage.left){
+                            //check for scale out need
+                            if(requiredScale > restrictStage.maxscale){
+                                
                             }
-                            else if(rescaledViewport.x > (restrictStage.right - requiredWidth)){
-                                rescaledViewport.x = restrictStage.right - requiredWidth;
+                            //check for scale in need
+                            if(requiredWidth > (restrictStage.right - restrictStage.left) ){
+                                requiredHeight = (requiredHeight * (restrictStage.right - restrictStage.left))/requiredWidth;
+                                requiredWidth = restrictStage.right - restrictStage.left;
+                                requiredScale = this._world._canvas.width / requiredWidth;
                             }
                         }
                         
+                        //apply them to the rescaledViewport
+                        rescaledViewport.x = requiredLeft;
+                        rescaledViewport.y = requiredTop;
+                        rescaledViewport.width = requiredWidth;
+                        rescaledViewport.height = requiredHeight;
+                        rescaledViewport.scale = requiredScale;
+                        
+                        //then, after the rescaling (if necessary), apply checkRestrictStage to reposition the viewport according to the restrictions
+                        return this.checkRestrictStage(rescaledViewport);
+                        
+                    },
+                            
+
+                    /**
+                     * 
+                     * @_name viewport&#46;centerTo
+                     * @_module world
+                     * @_params x,y
+                     * @description Centers the viewport to x,y according to the restrictions passed via restrictStage options
+                     * @return viewport
+                     * @viewportInfos
+                     * <ul>
+                     * @x
+                     * @y
+                     * @width
+                     * @height
+                     * @scale
+                     * </ul>
+                     * @added by topheman
+                     */
+                    centerTo: function(x,y){
+                        var windowInfos = this.getWindowInfosCenterTo(x,y);
+                        this._world.camera({x:windowInfos.x,y:windowInfos.y});
+                        this._world.scale(windowInfos.scale);
+                        return windowInfos;
                     }
  
                 };

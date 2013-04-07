@@ -15,9 +15,9 @@ function init(){
         debugDraw:false,
         restrictStage : {
             top : -2,
-            left : -2,
-            right: 34,
-            bottom: 18
+            left : -2
+//            right: 34,
+//            bottom: 18
         }
     });
     
