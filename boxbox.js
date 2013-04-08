@@ -535,6 +535,9 @@ See more on the readme file
                             restrictStage = this._world._ops.restrictStage,
                             currentViewport = this.getCurrentWindowInfos(),
                             rescaledViewport = this.getCurrentWindowInfos();
+
+
+
                         //non rescaled viewportInfos from center coordinated x,y
                         requiredScale       = currentViewport.scale;
                         requiredWidth       = currentViewport.width;
@@ -569,6 +572,16 @@ See more on the readme file
                                 requiredScale = this._world._canvas.width / requiredWidth;
                             }
                         }
+
+
+
+
+
+
+
+
+
+
                         
                         //apply them to the rescaledViewport
                         rescaledViewport.x = requiredLeft;
