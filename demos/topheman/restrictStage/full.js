@@ -14,7 +14,11 @@ function init(){
         disableMouseEvents : false,
         debugDraw:false,
         restrictStage : {
-            bottom: 18
+            top: 5,
+            left: -2,
+            right: 30,
+            bottom: 14
+//            bottom: 12
         }
     });
     
@@ -91,7 +95,11 @@ function init(){
     polygon.mouseDraggable();
     right.mouseDraggable();
     
-    myWorld.mousePan();
+    myWorld.mousePan({
+        drag: function(e, viewportInfos){
+            console.info('pan - viewport x/y',viewportInfos.viewport.x,viewportInfos.viewport.y);
+        }
+    });
     myWorld.mousewheelZoom({step:0.5});
 
 }   

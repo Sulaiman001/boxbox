@@ -484,29 +484,30 @@ See more on the readme file
                             preserveScaleX = 0,
                             preserveScaleY = 0;
                     
-                        if(restrictStage.left !== null && viewport.x < restrictStage.left){
+                        if(restrictStage.left !== null && viewport.x > restrictStage.left){
                             result.x = this._world._ops.restrictStage.left;
                             outOfBounds = true;
                             preserveScaleX++;
-                            console.info('left');
+                            console.warn('left','x',result.x);
                         }
-                        if(restrictStage.top !== null && viewport.y < restrictStage.top){
+                        if(restrictStage.top !== null && viewport.y > restrictStage.top){
                             result.y = this._world._ops.restrictStage.top;
                             outOfBounds = true;
                             preserveScaleY++;
-                            console.info('top');
+                            console.warn('top','y',result.y);
                         }
-                        if(restrictStage.right !== null && (viewport.x + viewport.width) > restrictStage.right){
+                        if(restrictStage.right !== null && (viewport.x + viewport.width) < restrictStage.right){
                             result.x = restrictStage.right - viewport.width;
                             outOfBounds = true;
                             preserveScaleX++;
-                            console.info('right');
+                            console.warn('right','x',result.x,'x+width',result.x+viewport.width,'viewport.width',viewport.width);
                         }
-                        if(restrictStage.bottom !== null && (viewport.y + viewport.height) > restrictStage.bottom){
+                        console.info(viewport.y + viewport.height,restrictStage.bottom,(viewport.y + viewport.height) < restrictStage.bottom);
+                        if(restrictStage.bottom !== null && (viewport.y + viewport.height) < restrictStage.bottom){
                             result.y = restrictStage.bottom - viewport.height;
                             outOfBounds = true;
                             preserveScaleY++;
-                            console.info('bottom');
+                            console.warn('bottom','y',result.y,'y+height',result.y+viewport.height,'viewport.height',viewport.height);
                         }
                         
                         if(preserveScaleX > 1){
@@ -536,8 +537,6 @@ See more on the readme file
                             currentViewport = this.getCurrentWindowInfos(),
                             rescaledViewport = this.getCurrentWindowInfos();
 
-
-
                         //non rescaled viewportInfos from center coordinated x,y
                         requiredScale       = currentViewport.scale;
                         requiredWidth       = currentViewport.width;
@@ -554,7 +553,8 @@ See more on the readme file
                                 
                             }
                             //check for scale in need
-                            if(requiredHeight > (restrictStage.bottom - restrictStage.top) ){
+                            if(requiredHeight < (restrictStage.bottom - restrictStage.top) ){
+                                console.info('requiredHeight',requiredHeight);
                                 requiredWidth = (requiredWidth * (restrictStage.bottom - restrictStage.top))/requiredHeight;
                                 requiredHeight = restrictStage.bottom - restrictStage.top;
                                 requiredScale = this._world._canvas.height / requiredHeight;
@@ -566,22 +566,13 @@ See more on the readme file
                                 
                             }
                             //check for scale in need
-                            if(requiredWidth > (restrictStage.right - restrictStage.left) ){
+                            if(requiredWidth < (restrictStage.right - restrictStage.left) ){
+                                console.info('requiredWidth',requiredWidth);
                                 requiredHeight = (requiredHeight * (restrictStage.right - restrictStage.left))/requiredWidth;
                                 requiredWidth = restrictStage.right - restrictStage.left;
                                 requiredScale = this._world._canvas.width / requiredWidth;
                             }
                         }
-
-
-
-
-
-
-
-
-
-
                         
                         //apply them to the rescaledViewport
                         rescaledViewport.x = requiredLeft;
