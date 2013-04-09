@@ -488,26 +488,21 @@ See more on the readme file
                             result.x = this._world._ops.restrictStage.left;
                             outOfBounds = true;
                             preserveScaleX++;
-                            console.warn('left','x',result.x);
                         }
                         if(restrictStage.top !== null && viewport.y < restrictStage.top){
                             result.y = this._world._ops.restrictStage.top;
                             outOfBounds = true;
                             preserveScaleY++;
-                            console.warn('top','y',result.y);
                         }
                         if(restrictStage.right !== null && (viewport.x + viewport.width) > restrictStage.right){
                             result.x = restrictStage.right - viewport.width;
                             outOfBounds = true;
                             preserveScaleX++;
-                            console.warn('right','x',result.x,'x+width',result.x+viewport.width,'viewport.width',viewport.width);
                         }
-                        console.info(viewport.y + viewport.height,restrictStage.bottom,(viewport.y + viewport.height) < restrictStage.bottom);
                         if(restrictStage.bottom !== null && (viewport.y + viewport.height) > restrictStage.bottom){
                             result.y = restrictStage.bottom - viewport.height;
                             outOfBounds = true;
                             preserveScaleY++;
-                            console.warn('bottom','y',result.y,'y+height',result.y+viewport.height,'viewport.height',viewport.height);
                         }
                         
                         if(preserveScaleX > 1){
@@ -528,23 +523,26 @@ See more on the readme file
                     },
                             
                     /**
+                     * param position {x,y}
+                     * param preventLoop : rescaledViewport
                      * This method returns a viewport rescaled and repositionned, accordind to the restrictstage (use centerTo)
                      */
-                    getWindowInfosCenterTo : function(x,y){
+                    getWindowInfosCenterTo : function(position, preventLoop){
                         
                         var requiredTop, requiredBottom, requiredLeft, requiredRight, requiredWidth, requiredHeight, requiredScale, //required parameters, non rescaled if x,y are center of viewport
                             restrictStage = this._world._ops.restrictStage,
-                            currentViewport = this.getCurrentWindowInfos(),
-                            rescaledViewport = this.getCurrentWindowInfos();
+                            currentViewport = preventLoop ? preventLoop : this.getCurrentWindowInfos(),
+                            rescaledViewport = preventLoop ? preventLoop : this.getCurrentWindowInfos(),
+                            rescaledFlag = false;
 
                         //non rescaled viewportInfos from center coordinated x,y
                         requiredScale       = currentViewport.scale;
                         requiredWidth       = currentViewport.width;
                         requiredHeight      = currentViewport.height;
-                        requiredTop         = y - requiredHeight/2;
-                        requiredBottom      = y + requiredHeight/2;
-                        requiredLeft        = x - requiredWidth/2;
-                        requiredRight       = x + requiredWidth/2;
+                        requiredTop         = position.y - requiredHeight/2;
+                        requiredBottom      = position.y + requiredHeight/2;
+                        requiredLeft        = position.x - requiredWidth/2;
+                        requiredRight       = position.x + requiredWidth/2;
                         
                         //check for rescale in/out necessity to stick with the opposit borders of the restrict stage
                         if(restrictStage.top && restrictStage.bottom){
@@ -553,11 +551,11 @@ See more on the readme file
                                 
                             }
                             //check for scale in need
-                            if(requiredHeight < (restrictStage.bottom - restrictStage.top) ){
-                                console.info('requiredHeight',requiredHeight);
+                            if(requiredHeight > (restrictStage.bottom - restrictStage.top) ){
                                 requiredWidth = (requiredWidth * (restrictStage.bottom - restrictStage.top))/requiredHeight;
                                 requiredHeight = restrictStage.bottom - restrictStage.top;
                                 requiredScale = this._world._canvas.height / requiredHeight;
+                                rescaledFlag = true;
                             }
                         }
                         if(restrictStage.right && restrictStage.left){
@@ -566,11 +564,11 @@ See more on the readme file
                                 
                             }
                             //check for scale in need
-                            if(requiredWidth < (restrictStage.right - restrictStage.left) ){
-                                console.info('requiredWidth',requiredWidth);
+                            if(requiredWidth > (restrictStage.right - restrictStage.left) ){
                                 requiredHeight = (requiredHeight * (restrictStage.right - restrictStage.left))/requiredWidth;
                                 requiredWidth = restrictStage.right - restrictStage.left;
                                 requiredScale = this._world._canvas.width / requiredWidth;
+                                rescaledFlag = true;
                             }
                         }
                         
@@ -580,6 +578,11 @@ See more on the readme file
                         rescaledViewport.width = requiredWidth;
                         rescaledViewport.height = requiredHeight;
                         rescaledViewport.scale = requiredScale;
+                        
+                        //if need for rescale, reexecute getWindowInfosCenterTo with rescaledViewport as the "currentViewport"
+                        if(rescaledFlag && typeof preventLoop === 'undefined'){
+                            rescaledViewport = this.getWindowInfosCenterTo(position, rescaledViewport);
+                        }
                         
                         //then, after the rescaling (if necessary), apply checkRestrictStage to reposition the viewport according to the restrictions
                         return this.checkRestrictStage(rescaledViewport);
@@ -591,7 +594,7 @@ See more on the readme file
                      * 
                      * @_name viewport&#46;centerTo
                      * @_module world
-                     * @_params x,y
+                     * @_params {x,y} or Entity
                      * @description Centers the viewport to x,y according to the restrictions passed via restrictStage options
                      * @return viewport
                      * @viewportInfos
@@ -604,8 +607,9 @@ See more on the readme file
                      * </ul>
                      * @added by topheman
                      */
-                    centerTo: function(x,y){
-                        var windowInfos = this.getWindowInfosCenterTo(x,y);
+                    centerTo: function(position){
+                        position = position.position ? position.position() : position;
+                        var windowInfos = this.getWindowInfosCenterTo(position);
                         this._world.camera({x:windowInfos.x,y:windowInfos.y});
                         this._world.scale(windowInfos.scale);
                         return windowInfos;
