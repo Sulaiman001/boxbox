@@ -484,26 +484,26 @@ See more on the readme file
                             preserveScaleX = 0,
                             preserveScaleY = 0;
                     
-                        if(restrictStage.left !== null && viewport.x > restrictStage.left){
+                        if(restrictStage.left !== null && viewport.x < restrictStage.left){
                             result.x = this._world._ops.restrictStage.left;
                             outOfBounds = true;
                             preserveScaleX++;
                             console.warn('left','x',result.x);
                         }
-                        if(restrictStage.top !== null && viewport.y > restrictStage.top){
+                        if(restrictStage.top !== null && viewport.y < restrictStage.top){
                             result.y = this._world._ops.restrictStage.top;
                             outOfBounds = true;
                             preserveScaleY++;
                             console.warn('top','y',result.y);
                         }
-                        if(restrictStage.right !== null && (viewport.x + viewport.width) < restrictStage.right){
+                        if(restrictStage.right !== null && (viewport.x + viewport.width) > restrictStage.right){
                             result.x = restrictStage.right - viewport.width;
                             outOfBounds = true;
                             preserveScaleX++;
                             console.warn('right','x',result.x,'x+width',result.x+viewport.width,'viewport.width',viewport.width);
                         }
                         console.info(viewport.y + viewport.height,restrictStage.bottom,(viewport.y + viewport.height) < restrictStage.bottom);
-                        if(restrictStage.bottom !== null && (viewport.y + viewport.height) < restrictStage.bottom){
+                        if(restrictStage.bottom !== null && (viewport.y + viewport.height) > restrictStage.bottom){
                             result.y = restrictStage.bottom - viewport.height;
                             outOfBounds = true;
                             preserveScaleY++;
