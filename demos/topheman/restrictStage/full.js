@@ -4,22 +4,22 @@ function init(){
     
     initViewport();
     
-//    var borders = {
-//        left : -2,
-//        right : 45,
-//        top : -2,
-//        bottom : 40
-//    };
-    
     var borders = {
-        left : 2,
-        right : 30,
-        top : 2,
-        bottom : 25
+        left : -2,
+        right : 45,
+        top : -2,
+        bottom : 40
     };
     
+//    var borders = {
+//        left : 2,
+//        right : 30,
+//        top : 2,
+//        bottom : 25
+//    };
+    
     var restrict = {};
-//    restrict.left = borders.left;
+    restrict.left = borders.left;
     restrict.right = borders.right;
     restrict.top = borders.top;
     restrict.bottom = borders.bottom;

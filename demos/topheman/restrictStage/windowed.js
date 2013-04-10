@@ -2,6 +2,31 @@
 
 function init(){
     
+//    var borders = {
+//        left : -2,
+//        right : 45,
+//        top : -2,
+//        bottom : 40
+//    };
+    
+    var borders = {
+        left : 2,
+        right : 30,
+        top : 2,
+        bottom : 25
+    };
+    
+    var restrict = {};
+    restrict.left = borders.left;
+    restrict.right = borders.right;
+    restrict.top = borders.top;
+    restrict.bottom = borders.bottom;
+    
+    centerOfBorders = {
+        x : (borders.right - borders.left) /2 + borders.left,
+        y : (borders.bottom - borders.top) /2 + borders.top
+    };
+    
     //init canvas and world
     canvas = document.getElementById("canvas");
     myWorld = boxbox.createWorld(canvas,{
@@ -11,12 +36,7 @@ function init(){
         disableKeyEvents : true,
         disableMouseEvents : false,
         debugDraw:false,
-        restrictStage : {
-//            top : -2,
-//            left : -2,
-//            right: 34,
-            bottom: 18
-        }
+        restrictStage : restrict
     });
     
     logClick = function(e,mouseInfos){
@@ -118,6 +138,64 @@ function init(){
     });
     
     myWorld.mousewheelZoom({step:0.5});
+    
+    wallLeft = myWorld.createEntity({
+      color: "blue",
+      x: borders.left,
+      y: 16,
+      width: 1,
+      height: 16,
+      type: "static",
+      active: false
+    });
+    wallLeft.name('wallLeft');
+    
+    wallRight = myWorld.createEntity({
+      color: "blue",
+      x: borders.right,
+      y: 16,
+      width: 1,
+      height: 16,
+      type: "static",
+      active: false
+    });
+    wallRight.name('wallRight');
+    
+    wallTop = myWorld.createEntity({
+      color: "blue",
+      x: 18,
+      y: borders.top,
+      width: 16,
+      height: 1,
+      type: "static",
+      active: false
+    });
+    wallRight.name('wallTop');
+    
+    wallBottom = myWorld.createEntity({
+      color: "blue",
+      x: 18,
+      y: borders.bottom,
+      width: 16,
+      height: 1,
+      type: "static",
+      active: false
+    });
+    wallBottom.name('wallBottom');
+    
+    point = myWorld.createEntity({
+        shape : 'circle',
+        radius : 1,
+        color : 'black',
+        x: centerOfBorders.x,
+        y: centerOfBorders.y,
+        width: 5,
+        density: 10,
+        height: 7,
+        type: "static",
+        active: false
+    });
+    point.name('point');
 
 }   
 

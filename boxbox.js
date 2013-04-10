@@ -174,7 +174,7 @@ See more on the readme file
             right: null,
             bottom: null,
             left: null,
-            maxScale: null
+            maxScale: null //@for the moment, not released
         }
     };
     
@@ -341,7 +341,7 @@ See more on the readme file
                     },
 
                     /**
-                     * 
+                     * @deprecated not sure to rely on
                      * @_name viewport&#46;getMaxWindowInfos
                      * @_module world
                      * @_params forceCurrentRatio
@@ -429,7 +429,7 @@ See more on the readme file
                     },
 
                     /**
-                     * 
+                     * @deprecated not sure to rely on
                      * @_name viewport&#46;focusAll
                      * @_module world
                      * @description Adjust the camera to see all the objects present in the world and centers the camera
@@ -450,7 +450,6 @@ See more on the readme file
                         this._world.scale(windowInfos.scale);
                         return windowInfos;
                     },
-                            
 
                     /**
                      * 
@@ -458,7 +457,7 @@ See more on the readme file
                      * @_module world
                      * @_params viewport
                      * @description Returns the viewport parameters to fit the restrictStage
-                     * @return boundsInfos
+                     * @return viewportInfos
                      * @viewportInfos
                      * <ul>
                      * @x
@@ -520,14 +519,30 @@ See more on the readme file
                         
                         result.outOfBounds = outOfBounds;
                         return result;
-                    },
-                            
+                    },                            
+
                     /**
-                     * param position {x,y}
-                     * param preventLoop : rescaledViewport
-                     * This method returns a viewport rescaled and repositionned, accordind to the restrictstage (use centerTo)
+                     * 
+                     * @_name viewport&#46;getWindowInfosCenterTo
+                     * @_module world
+                     * @_params {x,y}
+                     * @description Returns a viewport rescaled and repositionned, centered on {x,y}, according to the restrictstage boundaries (used by centerTo)
+                     * @return viewportInfos
+                     * @viewportInfos
+                     * <ul>
+                     * @x
+                     * @y
+                     * @width
+                     * @height
+                     * @scale
+                     * </ul>
+                     * @added by topheman
                      */
                     getWindowInfosCenterTo : function(position, preventLoop){
+                        
+                        if(typeof position.x === 'undefined' || typeof position.y === 'undefined'){
+                            throw new Error("x and y must be specified in position");
+                        }
                         
                         var requiredTop, requiredBottom, requiredLeft, requiredRight, requiredWidth, requiredHeight, requiredScale, //required parameters, non rescaled if x,y are center of viewport
                             restrictStage = this._world._ops.restrictStage,
@@ -589,13 +604,75 @@ See more on the readme file
                         
                     },
                             
+                    /**
+                     * 
+                     * @_name viewport&#46;isRestricted
+                     * @_module world
+                     * @description Returns true if the stage is restricted with boundaries set on world with restrictStage options
+                     * @return Boolean
+                     * @added by topheman
+                     */
+                    isRestricted: function(){
+                        var boundariesToLookFor = ['top','bottom','left','right'],
+                            boundaries = Object.keys(this._world._ops.restrictStage);
+                        for(var i in boundaries){
+                            if(boundariesToLookFor.indexOf(boundaries[i]) > -1){
+                                return true;
+                            }
+                        }
+                        return false;
+                    }, 
+                            
+                    /**
+                     * 
+                     * @_name viewport&#46;centerToStage
+                     * @_module world
+                     * @description Centers the viewport to the center of the boundaries of the stage (set on world via restrictStage options) - and adjust scale if necessary<br>Does nothing if no boundaries<br>Called on init if there are boundaries
+                     * @return Boolean
+                     * @added by topheman
+                     */
+                    centerToStage: function(){
+                        var restrictStage = this._world._ops.restrictStage,
+                            currentViewport = null,
+                            center = {};
+                        if(this.isRestricted()){
+                            if(restrictStage.right && restrictStage.left){
+                                center.x = (restrictStage.right - restrictStage.left) /2 + restrictStage.left;
+                            }
+                            else if(restrictStage.right){
+                                center.x = restrictStage.right;
+                            }
+                            else if(restrictStage.left){
+                                center.x = restrictStage.left;
+                            }
+                            else{
+                                currentViewport = currentViewport === null ? this.getCurrentWindowInfos() : currentViewport;
+                                center.x = currentViewport.x + currentViewport.width/2;
+                            }
+                            if(restrictStage.top && restrictStage.bottom){
+                                center.y = (restrictStage.bottom - restrictStage.top) /2 + restrictStage.top;
+                            }
+                            else if(restrictStage.top){
+                                center.y = restrictStage.top;
+                            }
+                            else if(restrictStage.bottom){
+                                center.y = restrictStage.bottom;
+                            }
+                            else{
+                                currentViewport = currentViewport === null ? this.getCurrentWindowInfos() : currentViewport;
+                                center.y = currentViewport.y + currentViewport.height/2;
+                            }
+                            this.centerTo(center);
+                        }
+                            
+                    },
 
                     /**
                      * 
                      * @_name viewport&#46;centerTo
                      * @_module world
                      * @_params {x,y} or Entity
-                     * @description Centers the viewport to x,y according to the restrictions passed via restrictStage options
+                     * @description Centers the viewport to {x,y} - and adjust scale if necessary, according to the restrictions passed via restrictStage options
                      * @return viewport
                      * @viewportInfos
                      * <ul>
@@ -617,6 +694,9 @@ See more on the readme file
  
                 };
             })(this);
+            
+            //repositions / rescales the viewport according to restrictStage (if any) @added by topheman
+            this.viewport.centerToStage();
             
             // Set up rendering on the provided canvas
             if (this._canvas !== undefined) {
