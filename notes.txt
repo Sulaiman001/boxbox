@@ -1,9 +1,19 @@
 DOING
 
+touch pan / pinch
+- one finger : pan
+- 2 fingers : pinch
+- 2+ fingers : ignored
+- any 2nd finger trying to pinch on a binded element doesn't trigger the event
+- 1st finger on a dragging element
+    -> 2nd finger pinching (if not on a binded element)
+-> 1st finger is always the reference for pan
+-> distance between 1st and 2nd finger is the reference for pinch
+
 restrictStage -> rename to boundaries - DONE
 cache _hasBoundaries -> DONE
-world.viewport.getWindowInfosCenterTo(x,y) -> add checkRestrictStage
-world.viewport.getWindowInfosScaleTo(scale) -> add checkRestrictStage
+world.viewport.getWindowInfosCenterTo(x,y) -> DONE
+world.viewport.getWindowInfosScaleTo(scale) -> same as centerTo with preventLoop and a new viewport
 world.viewport.centerTo(x,y,) -> DONE
 world.viewport.scaleTo(scale) -> TODO
 ------------------------------------------------------------------------------------------------------------------------------

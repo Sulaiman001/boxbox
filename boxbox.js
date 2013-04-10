@@ -622,6 +622,7 @@ See more on the readme file
                         for(var i in Object.keys(this._world._ops.boundaries)){
                             if(['top','bottom','left','right'].indexOf(Object.keys(this._world._ops.boundaries)[i]) > -1){
                                 this._world._ops._hasBoundaries = true;
+                                return true;
                             }
                         }
                         this._world._ops._hasBoundaries = false;
@@ -695,6 +696,45 @@ See more on the readme file
                         this._world.camera({x:windowInfos.x,y:windowInfos.y});
                         this._world.scale(windowInfos.scale);
                         return windowInfos;
+                    },
+
+                    /**
+                     * 
+                     * @_name viewport&#46;scaleTo
+                     * @_module world
+                     * @_params scale
+                     * @description Rescales the viewport, according to the boundaries of the world
+                     * @return viewport
+                     * @viewportInfos
+                     * <ul>
+                     * @x
+                     * @y
+                     * @width
+                     * @height
+                     * @scale
+                     * </ul>
+                     * @warning buggy
+                     * @todo not finished
+                     * @added by topheman
+                     */   
+                    scaleTo: function(scale){
+                        var rescaledViewport;
+                
+                        //rescale
+                        rescaledViewport = this.getScaledWindowInfos(scale);
+                        
+                        //prevent 0 or negative scale
+                        if(rescaledViewport.scale > 0){
+                            
+                            //check viewport boundarie
+                            console.info('>rescaledViewport',rescaledViewport);
+                            rescaledViewport = this.checkBoundaries(rescaledViewport);
+                            console.info('<rescaledViewport',rescaledViewport);
+                            
+                            //update viewport
+                            this._world.camera({x: rescaledViewport.x,y : rescaledViewport.y});
+                            this._world.scale(rescaledViewport.scale);
+                        }
                     }
  
                 };
