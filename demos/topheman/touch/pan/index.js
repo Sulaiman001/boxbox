@@ -13,7 +13,7 @@ function init(){
         disableKeyEvents : true,
         disableMouseEvents : false,
         debugDraw:false,
-        restrictStage : {
+        boundaries : {
             top : -2,
             left : -2,
             right: 34,

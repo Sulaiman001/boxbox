@@ -169,13 +169,14 @@ See more on the readme file
             disabled: true,
             step: 0.1
         },
-        restrictStage:{
+        boundaries:{
             top: null,
             right: null,
             bottom: null,
             left: null,
             maxScale: null //@for the moment, not released
-        }
+        },
+        _hasBoundaries: null //initialize on world init
     };
     
     var JOINT_DEFAULT_OPTIONS = {
@@ -453,10 +454,10 @@ See more on the readme file
 
                     /**
                      * 
-                     * @_name viewport&#46;checkRestrictStage
+                     * @_name viewport&#46;checkBoundaries
                      * @_module world
                      * @_params viewport
-                     * @description Returns the viewport parameters to fit the restrictStage
+                     * @description Returns a viewport that fits inside the boundaries of the world
                      * @return viewportInfos
                      * @viewportInfos
                      * <ul>
@@ -469,7 +470,7 @@ See more on the readme file
                      * </ul>
                      * @added by topheman
                      */
-                    checkRestrictStage: function(viewport){
+                    checkBoundaries: function(viewport){
                         var result = {
                             x: viewport.x,
                             y: viewport.y,
@@ -478,42 +479,42 @@ See more on the readme file
                             scale: viewport.scale,
                             outOfBounds: false
                         },
-                            restrictStage = this._world._ops.restrictStage,
+                            boundaries = this._world._ops.boundaries,
                             outOfBounds = false,
                             preserveScaleX = 0,
                             preserveScaleY = 0;
                     
-                        if(restrictStage.left !== null && viewport.x < restrictStage.left){
-                            result.x = this._world._ops.restrictStage.left;
+                        if(boundaries.left !== null && viewport.x < boundaries.left){
+                            result.x = boundaries.left;
                             outOfBounds = true;
                             preserveScaleX++;
                         }
-                        if(restrictStage.top !== null && viewport.y < restrictStage.top){
-                            result.y = this._world._ops.restrictStage.top;
+                        if(boundaries.top !== null && viewport.y < boundaries.top){
+                            result.y = boundaries.top;
                             outOfBounds = true;
                             preserveScaleY++;
                         }
-                        if(restrictStage.right !== null && (viewport.x + viewport.width) > restrictStage.right){
-                            result.x = restrictStage.right - viewport.width;
+                        if(boundaries.right !== null && (viewport.x + viewport.width) > boundaries.right){
+                            result.x = boundaries.right - viewport.width;
                             outOfBounds = true;
                             preserveScaleX++;
                         }
-                        if(restrictStage.bottom !== null && (viewport.y + viewport.height) > restrictStage.bottom){
-                            result.y = restrictStage.bottom - viewport.height;
+                        if(boundaries.bottom !== null && (viewport.y + viewport.height) > boundaries.bottom){
+                            result.y = boundaries.bottom - viewport.height;
                             outOfBounds = true;
                             preserveScaleY++;
                         }
                         
                         if(preserveScaleX > 1){
                             //dont scale out
-                            result.width =  restrictStage.right - restrictStage.left;
-                            result.x = restrictStage.left;
+                            result.width =  boundaries.right - boundaries.left;
+                            result.x = boundaries.left;
                             result.scale = this._world._canvas.width / result.width;
                         }
                         else if(preserveScaleY > 1){
                             //dont scale out
-                            result.height = restrictStage.bottom - restrictStage.top;
-                            result.y = restrictStage.top;
+                            result.height = boundaries.bottom - boundaries.top;
+                            result.y = boundaries.top;
                             result.scale = this._world._canvas.height / result.height;
                         }
                         
@@ -526,7 +527,7 @@ See more on the readme file
                      * @_name viewport&#46;getWindowInfosCenterTo
                      * @_module world
                      * @_params {x,y}
-                     * @description Returns a viewport rescaled and repositionned, centered on {x,y}, according to the restrictstage boundaries (used by centerTo)
+                     * @description Returns a viewport rescaled and repositionned, centered on {x,y}, according to the boundaries (used by centerTo)
                      * @return viewportInfos
                      * @viewportInfos
                      * <ul>
@@ -545,7 +546,7 @@ See more on the readme file
                         }
                         
                         var requiredTop, requiredBottom, requiredLeft, requiredRight, requiredWidth, requiredHeight, requiredScale, //required parameters, non rescaled if x,y are center of viewport
-                            restrictStage = this._world._ops.restrictStage,
+                            boundaries = this._world._ops.boundaries,
                             currentViewport = preventLoop ? preventLoop : this.getCurrentWindowInfos(),
                             rescaledViewport = preventLoop ? preventLoop : this.getCurrentWindowInfos(),
                             rescaledFlag = false;
@@ -560,28 +561,28 @@ See more on the readme file
                         requiredRight       = position.x + requiredWidth/2;
                         
                         //check for rescale in/out necessity to stick with the opposit borders of the restrict stage
-                        if(restrictStage.top && restrictStage.bottom){
+                        if(boundaries.top && boundaries.bottom){
                             //check for scale out need
-                            if(requiredScale > restrictStage.maxscale){
+                            if(requiredScale > boundaries.maxscale){
                                 
                             }
                             //check for scale in need
-                            if(requiredHeight > (restrictStage.bottom - restrictStage.top) ){
-                                requiredWidth = (requiredWidth * (restrictStage.bottom - restrictStage.top))/requiredHeight;
-                                requiredHeight = restrictStage.bottom - restrictStage.top;
+                            if(requiredHeight > (boundaries.bottom - boundaries.top) ){
+                                requiredWidth = (requiredWidth * (boundaries.bottom - boundaries.top))/requiredHeight;
+                                requiredHeight = boundaries.bottom - boundaries.top;
                                 requiredScale = this._world._canvas.height / requiredHeight;
                                 rescaledFlag = true;
                             }
                         }
-                        if(restrictStage.right && restrictStage.left){
+                        if(boundaries.right && boundaries.left){
                             //check for scale out need
-                            if(requiredScale > restrictStage.maxscale){
+                            if(requiredScale > boundaries.maxscale){
                                 
                             }
                             //check for scale in need
-                            if(requiredWidth > (restrictStage.right - restrictStage.left) ){
-                                requiredHeight = (requiredHeight * (restrictStage.right - restrictStage.left))/requiredWidth;
-                                requiredWidth = restrictStage.right - restrictStage.left;
+                            if(requiredWidth > (boundaries.right - boundaries.left) ){
+                                requiredHeight = (requiredHeight * (boundaries.right - boundaries.left))/requiredWidth;
+                                requiredWidth = boundaries.right - boundaries.left;
                                 requiredScale = this._world._canvas.width / requiredWidth;
                                 rescaledFlag = true;
                             }
@@ -599,8 +600,8 @@ See more on the readme file
                             rescaledViewport = this.getWindowInfosCenterTo(position, rescaledViewport);
                         }
                         
-                        //then, after the rescaling (if necessary), apply checkRestrictStage to reposition the viewport according to the restrictions
-                        return this.checkRestrictStage(rescaledViewport);
+                        //then, after the rescaling (if necessary), apply checkBoundaries to reposition the viewport according to the boundaries of the world
+                        return this.checkBoundaries(rescaledViewport);
                         
                     },
                             
@@ -608,55 +609,59 @@ See more on the readme file
                      * 
                      * @_name viewport&#46;isRestricted
                      * @_module world
-                     * @description Returns true if the stage is restricted with boundaries set on world with restrictStage options
+                     * @description Returns true if the world is restricted with boundaries
                      * @return Boolean
                      * @added by topheman
                      */
                     isRestricted: function(){
-                        var boundariesToLookFor = ['top','bottom','left','right'],
-                            boundaries = Object.keys(this._world._ops.restrictStage);
-                        for(var i in boundaries){
-                            if(boundariesToLookFor.indexOf(boundaries[i]) > -1){
-                                return true;
+                        //use cache the times after
+                        if(this._world._ops._hasBoundaries !== null){
+                            return this._world._ops._hasBoundaries;
+                        }
+                        //first time cache the var this._world._ops._hasBoundaries (no local variable used, this is the reason of the writting bellow)
+                        for(var i in Object.keys(this._world._ops.boundaries)){
+                            if(['top','bottom','left','right'].indexOf(Object.keys(this._world._ops.boundaries)[i]) > -1){
+                                this._world._ops._hasBoundaries = true;
                             }
                         }
-                        return false;
+                        this._world._ops._hasBoundaries = false;
+                        return this._world._ops._hasBoundaries;
                     }, 
                             
                     /**
                      * 
                      * @_name viewport&#46;centerToStage
                      * @_module world
-                     * @description Centers the viewport to the center of the boundaries of the stage (set on world via restrictStage options) - and adjust scale if necessary<br>Does nothing if no boundaries<br>Called on init if there are boundaries
+                     * @description Centers the viewport to the center of the boundaries of the world - and adjust scale if necessary<br>Does nothing if no boundaries<br>Called on init if there are boundaries
                      * @return Boolean
                      * @added by topheman
                      */
                     centerToStage: function(){
-                        var restrictStage = this._world._ops.restrictStage,
+                        var boundaries = this._world._ops.boundaries,
                             currentViewport = null,
                             center = {};
                         if(this.isRestricted()){
-                            if(restrictStage.right && restrictStage.left){
-                                center.x = (restrictStage.right - restrictStage.left) /2 + restrictStage.left;
+                            if(boundaries.right && boundaries.left){
+                                center.x = (boundaries.right - boundaries.left) /2 + boundaries.left;
                             }
-                            else if(restrictStage.right){
-                                center.x = restrictStage.right;
+                            else if(boundaries.right){
+                                center.x = boundaries.right;
                             }
-                            else if(restrictStage.left){
-                                center.x = restrictStage.left;
+                            else if(boundaries.left){
+                                center.x = boundaries.left;
                             }
                             else{
                                 currentViewport = currentViewport === null ? this.getCurrentWindowInfos() : currentViewport;
                                 center.x = currentViewport.x + currentViewport.width/2;
                             }
-                            if(restrictStage.top && restrictStage.bottom){
-                                center.y = (restrictStage.bottom - restrictStage.top) /2 + restrictStage.top;
+                            if(boundaries.top && boundaries.bottom){
+                                center.y = (boundaries.bottom - boundaries.top) /2 + boundaries.top;
                             }
-                            else if(restrictStage.top){
-                                center.y = restrictStage.top;
+                            else if(boundaries.top){
+                                center.y = boundaries.top;
                             }
-                            else if(restrictStage.bottom){
-                                center.y = restrictStage.bottom;
+                            else if(boundaries.bottom){
+                                center.y = boundaries.bottom;
                             }
                             else{
                                 currentViewport = currentViewport === null ? this.getCurrentWindowInfos() : currentViewport;
@@ -672,7 +677,7 @@ See more on the readme file
                      * @_name viewport&#46;centerTo
                      * @_module world
                      * @_params {x,y} or Entity
-                     * @description Centers the viewport to {x,y} - and adjust scale if necessary, according to the restrictions passed via restrictStage options
+                     * @description Centers the viewport to {x,y} - and adjust scale if necessary, according to the boundaries of the world
                      * @return viewport
                      * @viewportInfos
                      * <ul>
@@ -695,7 +700,7 @@ See more on the readme file
                 };
             })(this);
             
-            //repositions / rescales the viewport according to restrictStage (if any) @added by topheman
+            //repositions / rescales the viewport according to the boundaries (if any) of the world @added by topheman
             this.viewport.centerToStage();
             
             // Set up rendering on the provided canvas
@@ -710,16 +715,7 @@ See more on the readme file
                     debugDraw.SetLineThickness(1.0);
                     debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
                     world.SetDebugDraw(debugDraw);
-                }
-                
-                //@added by topheman
-//                initialViewport = this.viewport.checkRestrictStage(this.viewport.getCurrentWindowInfos());
-//                    console.info(initialViewport);
-//                if(initialViewport.outOfBounds){
-//                    this.camera({x:initialViewport.x,y:initialViewport.y});
-//                    this.scale(initialViewport.scale);
-//                }
-                
+                }                
 
                 // game loop (onTick events)
                 window.setInterval(function() {
@@ -1338,8 +1334,8 @@ See more on the readme file
                         newScale = self.scale()+mousewheelInfos.delta*self._ops._mousewheelZoom.step;
                         
                         //prevent maxScale
-                        if(self._ops.restrictStage.maxScale !== null && newScale > self._ops.restrictStage.maxScale){
-                            newScale = self._ops.restrictStage.maxScale;
+                        if(self._ops.boundaries.maxScale !== null && newScale > self._ops.boundaries.maxScale){
+                            newScale = self._ops.boundaries.maxScale;
                         }
                         
                         //rescale
@@ -1348,8 +1344,8 @@ See more on the readme file
                         //prevent 0 or negative scale
                         if(rescaledViewport.scale > 0){
                             
-                            //check viewport constraint
-                            rescaledViewport = self.viewport.checkRestrictStage(rescaledViewport);
+                            //check viewport boundarie
+                            rescaledViewport = self.viewport.checkBoundaries(rescaledViewport);
                             
                             //update viewport
                             self.camera({x: rescaledViewport.x,y : rescaledViewport.y});
@@ -1722,8 +1718,8 @@ See more on the readme file
                     }
                     else if(this._mousePanDragging){
                         viewportInfos = mergeMousePanInfos.call(this,this._mousePanDragging, e, 'move');
-                        //check viewport constraint
-                        viewportInfos.viewport = this.viewport.checkRestrictStage(viewportInfos.viewport);
+                        //check viewport boundaries
+                        viewportInfos.viewport = this.viewport.checkBoundaries(viewportInfos.viewport);
                         
                         //update viewport
                         this.camera({x:viewportInfos.viewport.x,y:viewportInfos.viewport.y});
@@ -1761,8 +1757,8 @@ See more on the readme file
                             this._mousePanStopdragHandler.call(this,e,viewportInfos,'stop');
                         }
                         
-                        //check viewport constraint
-                        viewportInfos.viewport = this.viewport.checkRestrictStage(viewportInfos.viewport);
+                        //check viewport boundaries
+                        viewportInfos.viewport = this.viewport.checkBoundaries(viewportInfos.viewport);
                         
                         //update viewport
                         this.camera({x:viewportInfos.viewport.x,y:viewportInfos.viewport.y});

@@ -4,25 +4,25 @@ function init(){
     
     initViewport();
     
-    var borders = {
-        left : -2,
-        right : 45,
-        top : -2,
-        bottom : 40
-    };
-    
 //    var borders = {
-//        left : 2,
-//        right : 30,
-//        top : 2,
-//        bottom : 25
+//        left : -2,
+//        right : 45,
+//        top : -2,
+//        bottom : 40
 //    };
     
-    var restrict = {};
-    restrict.left = borders.left;
-    restrict.right = borders.right;
-    restrict.top = borders.top;
-    restrict.bottom = borders.bottom;
+    var borders = {
+        left : 2,
+        right : 30,
+        top : 2,
+        bottom : 25
+    };
+    
+    var boundaries = {};
+    boundaries.left = borders.left;
+    boundaries.right = borders.right;
+    boundaries.top = borders.top;
+    boundaries.bottom = borders.bottom;
     
     centerOfBorders = {
         x : (borders.right - borders.left) /2 + borders.left,
@@ -40,7 +40,7 @@ function init(){
         disableKeyEvents : true,
         disableMouseEvents : false,
         debugDraw:false,
-        restrictStage : restrict
+        boundaries : boundaries
     });
     
     logClick = function(e,mouseInfos){
