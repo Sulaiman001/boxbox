@@ -10,6 +10,14 @@ touch pan / pinch
 -> 1st finger is always the reference for pan
 -> distance between 1st and 2nd finger is the reference for pinch
 
+- touch start/move/end
+- every function like _touchstartHandler, _world_touchstartHandler will return true if an entity (not the world) triggered an event, false if it didn't
+
+- touchstart that doesn't trigger any entity event handler WILL
+    - trigger the pan
+    - set the world as panning
+- if the world is panning, don't trigger any event in the entity event loops (but do trigger the events set on the world)
+
 restrictStage -> rename to boundaries - DONE
 cache _hasBoundaries -> DONE
 world.viewport.getWindowInfosCenterTo(x,y) -> DONE
