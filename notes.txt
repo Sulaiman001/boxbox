@@ -17,6 +17,7 @@ touch pan / pinch
     - trigger the pan
     - set the world as panning
 - if the world is panning, don't trigger any event in the entity event loops (but do trigger the events set on the world)
+-
 
 restrictStage -> rename to boundaries - DONE
 cache _hasBoundaries -> DONE
