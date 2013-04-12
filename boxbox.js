@@ -125,6 +125,17 @@ See more on the readme file
      * @scale (default 30) scale for rendering in pixels / meter
      * @tickFrequency (default 50) onTick events happen every tickFrequency milliseconds
      * @collisionOutlines (default false) render outlines over everything for debugging collisions
+     * @disableTouchEvents (default false) doesn't add the touch listeners you'll declare if true
+     * @disableMouseEvents (default false) doesn't add the mouse listeners you'll declare if true
+     * @disableKeyEvents (default false) doesn't add the touch listeners you'll declare if true
+     * @preventScroll (default false) prevents scrolling on touch devices if true
+     * @boundaries will restrict your world to this boundaries when you pan, pinch, scale, etc (please use the viewport api for those purposes)
+     * <ul>
+     * @left
+     * @right
+     * @top
+     * @bottom
+     * </ul>
      * </ul>
      * @return a new <a href="#name-World-World">World</a>
      * @description
@@ -304,6 +315,7 @@ See more on the readme file
                      * 
                      * @_name viewport&#46;getScaledWindowInfos
                      * @_module world
+                     * @_params newScale
                      * @newScale
                      * @description Returns the position/size/scale the of the rescaled viewport, according to the boundaries (used by scaleTo)
                      * @newScale New scale to apply
@@ -565,7 +577,7 @@ See more on the readme file
                      * 
                      * @_name viewport&#46;getWindowInfosCenterTo
                      * @_module world
-                     * @_params {x,y}
+                     * @_params position
                      * @description Returns a viewport rescaled and repositionned, centered on {x,y}, according to the boundaries (used by centerTo)
                      * @position {x,y}
                      * @overrideCurrentViewport Object typeof viewportInfos, to override the currentViewport (to apply this method to this "overrideCurrentViewport")
@@ -753,8 +765,6 @@ See more on the readme file
                      * @height
                      * @scale
                      * </ul>
-                     * @warning buggy
-                     * @todo not finished
                      * @added by topheman
                      */   
                     scaleTo: function(scale){
@@ -2687,8 +2697,9 @@ See more on the readme file
          */   
         getEntityByName: function(name){
             for(var i in this._entities){
-                if(this._entities[i]._name === name)
+                if(this._entities[i]._name === name){
                     return this._entities[i];
+                }
             }
             return null;
         },

@@ -893,6 +893,26 @@ ul.properties li {
                 
                 
                 
+                  <a href="#name-world.getEntityById-getEntityById" class="inlineIndexItem">getEntityById</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#name-world.getEntityByName-getEntityByName" class="inlineIndexItem">getEntityByName</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
                   <a href="#name-world.getEntityByPosition-getEntityByPosition" class="inlineIndexItem">getEntityByPosition</a>
                 
               
@@ -1163,6 +1183,36 @@ ul.properties li {
                 
                 
                 
+                  <a href="#name-world.viewport&#46;centerTo-viewport&#46;centerTo" class="inlineIndexItem">viewport&#46;centerTo</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#name-world.viewport&#46;centerToStage-viewport&#46;centerToStage" class="inlineIndexItem">viewport&#46;centerToStage</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#name-world.viewport&#46;checkBoundaries-viewport&#46;checkBoundaries" class="inlineIndexItem">viewport&#46;checkBoundaries</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
                   <a href="#name-world.viewport&#46;focusAll-viewport&#46;focusAll" class="inlineIndexItem">viewport&#46;focusAll</a>
                 
               
@@ -1184,6 +1234,46 @@ ul.properties li {
                 
                 
                   <a href="#name-world.viewport&#46;getMaxWindowInfos-viewport&#46;getMaxWindowInfos" class="inlineIndexItem">viewport&#46;getMaxWindowInfos</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#name-world.viewport&#46;getScaledWindowInfos-viewport&#46;getScaledWindowInfos" class="inlineIndexItem">viewport&#46;getScaledWindowInfos</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#name-world.viewport&#46;getWindowInfosCenterTo-viewport&#46;getWindowInfosCenterTo" class="inlineIndexItem">viewport&#46;getWindowInfosCenterTo</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#name-world.viewport&#46;isRestricted-viewport&#46;isRestricted" class="inlineIndexItem">viewport&#46;isRestricted</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#name-world.viewport&#46;scaleTo-viewport&#46;scaleTo" class="inlineIndexItem">viewport&#46;scaleTo</a>
                 
               
             
@@ -1323,7 +1413,89 @@ improve performance.</span>
                   <li>
                   
                     <span class="property">collisionOutlines</span>
-                    <span>(default false) render outlines over everything for debugging collisions
+                    <span>(default false) render outlines over everything for debugging collisions</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">disableTouchEvents</span>
+                    <span>(default false) doesn't add the touch listeners you'll declare if true</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">disableMouseEvents</span>
+                    <span>(default false) doesn't add the mouse listeners you'll declare if true</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">disableKeyEvents</span>
+                    <span>(default false) doesn't add the touch listeners you'll declare if true</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">preventScroll</span>
+                    <span>(default false) prevents scrolling on touch devices if true</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">boundaries</span>
+                    <span>will restrict your world to this boundaries when you pan, pinch, scale, etc (please use the viewport api for those purposes)
+<ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">left</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">right</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">top</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">bottom</span>
+                    <span></ul>
 </ul></span>
                   
                   </li>
@@ -5549,6 +5721,102 @@ info.</div>
           </section>
         
         
+          <section class="depth2 header" data-module="world.getEntityById">
+          
+            
+            
+            
+              <h2 id="name-world.getEntityById-getEntityById">
+                .getEntityById( entityId )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">return</span>
+                    <span>Entity</span>
+                  
+                  </li>
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">returns the Entity of the id entityId</div>
+            
+          </section>
+        
+        
+          <section class="depth2 header" data-module="world.getEntityByName">
+          
+            
+            
+            
+              <h2 id="name-world.getEntityByName-getEntityByName">
+                .getEntityByName( entityName )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">return</span>
+                    <span>Entity</span>
+                  
+                  </li>
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">returns the Entity of the name entityName</div>
+            
+          </section>
+        
+        
           <section class="depth2 header" data-module="world.getEntityByPosition">
           
             
@@ -7204,6 +7472,266 @@ World, it is removed.</div>
           </section>
         
         
+          <section class="depth2 header" data-module="world.viewport&#46;centerTo">
+          
+            
+            
+            
+              <h2 id="name-world.viewport&#46;centerTo-viewport&#46;centerTo">
+                .viewport&#46;centerTo( {x,y} or Entity )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">return</span>
+                    <span>viewport</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">viewportInfos</span>
+                    <span><ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">x</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">y</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">width</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">height</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">scale</span>
+                    <span></ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Centers the viewport to {x,y} - and adjust scale if necessary, according to the boundaries of the world</div>
+            
+          </section>
+        
+        
+          <section class="depth2 header" data-module="world.viewport&#46;centerToStage">
+          
+            
+            
+            
+              <h2 id="name-world.viewport&#46;centerToStage-viewport&#46;centerToStage">
+                .viewport&#46;centerToStage(  )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">return</span>
+                    <span>Boolean</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Centers the viewport to the center of the boundaries of the world - and adjust scale if necessary<br>Does nothing if no boundaries<br>Called on init if there are boundaries</div>
+            
+          </section>
+        
+        
+          <section class="depth2 header" data-module="world.viewport&#46;checkBoundaries">
+          
+            
+            
+            
+              <h2 id="name-world.viewport&#46;checkBoundaries-viewport&#46;checkBoundaries">
+                .viewport&#46;checkBoundaries( viewport )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">return</span>
+                    <span>viewportInfos</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">viewportInfos</span>
+                    <span><ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">x</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">y</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">width</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">height</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">scale</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">outOfBounds</span>
+                    <span>true if the viewport needs any changes (so if it needs to apply world.camera() and world.scale())
+</ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Returns a viewport that fits inside the boundaries of the world</div>
+            
+          </section>
+        
+        
           <section class="depth2 header" data-module="world.viewport&#46;focusAll">
           
             
@@ -7216,6 +7744,15 @@ World, it is removed.</div>
             
             <ul class="properties">
               
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">deprecated</span>
+                    <span>not sure to rely on</span>
+                  
+                  </li>
                 
               
                 
@@ -7419,6 +7956,15 @@ World, it is removed.</div>
                 
               
                 
+                  <li>
+                  
+                    <span class="property">deprecated</span>
+                    <span>not sure to rely on</span>
+                  
+                  </li>
+                
+              
+                
               
                 
               
@@ -7501,7 +8047,9 @@ World, it is removed.</div>
                 
                   <li>
                   
-                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                    <span class="property">added</span>
+                    <span>by topheman
+todo adjust process for stageRatio < 1</span>
                   
                   </li>
                 
@@ -7511,6 +8059,414 @@ World, it is removed.</div>
             </ul>
             
             <div class="description">Returns the position/size/scale of the map that would cover all the objects present in the world</div>
+            
+          </section>
+        
+        
+          <section class="depth2 header" data-module="world.viewport&#46;getScaledWindowInfos">
+          
+            
+            
+            
+              <h2 id="name-world.viewport&#46;getScaledWindowInfos-viewport&#46;getScaledWindowInfos">
+                .viewport&#46;getScaledWindowInfos( newScale )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">newScale</span>
+                    <span>New scale to apply</span>
+                  
+                  </li>
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">overrideCurrentViewport</span>
+                    <span>Object typeof viewportInfos, to override the currentViewport (to apply this method to this "overrideCurrentViewport")</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">preventLoop</span>
+                    <span>Boolean prevent infinite loops</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">return</span>
+                    <span>viewportInfos</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">viewportInfos</span>
+                    <span><ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">x</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">y</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">width</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">height</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">scale</span>
+                    <span></ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">added</span>
+                    <span>by topheman
+todo take account of the pointerPos or the event (for the moment scaling on the center of the viewport)</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Returns the position/size/scale the of the rescaled viewport, according to the boundaries (used by scaleTo)</div>
+            
+          </section>
+        
+        
+          <section class="depth2 header" data-module="world.viewport&#46;getWindowInfosCenterTo">
+          
+            
+            
+            
+              <h2 id="name-world.viewport&#46;getWindowInfosCenterTo-viewport&#46;getWindowInfosCenterTo">
+                .viewport&#46;getWindowInfosCenterTo( position )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">position</span>
+                    <span>{x,y}</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">overrideCurrentViewport</span>
+                    <span>Object typeof viewportInfos, to override the currentViewport (to apply this method to this "overrideCurrentViewport")</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">preventLoop</span>
+                    <span>Boolean prevent infinite loops</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">return</span>
+                    <span>viewportInfos</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">viewportInfos</span>
+                    <span><ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">x</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">y</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">width</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">height</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">scale</span>
+                    <span></ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Returns a viewport rescaled and repositionned, centered on {x,y}, according to the boundaries (used by centerTo)</div>
+            
+          </section>
+        
+        
+          <section class="depth2 header" data-module="world.viewport&#46;isRestricted">
+          
+            
+            
+            
+              <h2 id="name-world.viewport&#46;isRestricted-viewport&#46;isRestricted">
+                .viewport&#46;isRestricted(  )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">return</span>
+                    <span>Boolean</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Returns true if the world is restricted with boundaries</div>
+            
+          </section>
+        
+        
+          <section class="depth2 header" data-module="world.viewport&#46;scaleTo">
+          
+            
+            
+            
+              <h2 id="name-world.viewport&#46;scaleTo-viewport&#46;scaleTo">
+                .viewport&#46;scaleTo( scale )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">return</span>
+                    <span>viewport</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">viewportInfos</span>
+                    <span><ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">x</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">y</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">width</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">height</span>
+                    <span></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">scale</span>
+                    <span></ul></span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Rescales the viewport, according to the boundaries of the world</div>
             
           </section>
         
