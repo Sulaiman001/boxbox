@@ -305,7 +305,10 @@ See more on the readme file
                      * @_name viewport&#46;getScaledWindowInfos
                      * @_module world
                      * @newScale
-                     * @description Returns the position/size/scale the of the rescaled viewport
+                     * @description Returns the position/size/scale the of the rescaled viewport, according to the boundaries (used by scaleTo)
+                     * @newScale New scale to apply
+                     * @overrideCurrentViewport Object typeof viewportInfos, to override the currentViewport (to apply this method to this "overrideCurrentViewport")
+                     * @preventLoop Boolean prevent infinite loops
                      * @return viewportInfos
                      * @viewportInfos
                      * <ul>
@@ -318,27 +321,63 @@ See more on the readme file
                      * @added by topheman
                      * todo take account of the pointerPos or the event (for the moment scaling on the center of the viewport)
                      */
-                    getScaledWindowInfos: function(newScale){
-                        var result,currentViewport = this.getCurrentWindowInfos(),
+                    getScaledWindowInfos: function(newScale, overrideCurrentViewport, preventLoop){
+                        var rescaledViewport = {},
+                            currentViewport = overrideCurrentViewport ? overrideCurrentViewport : this.getCurrentWindowInfos(),
+                            boundaries = this._world._ops.boundaries,
                             canvasWidth = this._world._canvas.width,
                             canvasHeight = this._world._canvas.height,
-                            newWidth = canvasWidth / newScale,
-                            newHeight = canvasHeight / newScale,
-                            newX, newY;
+                            requiredWidth = canvasWidth / newScale,
+                            requiredHeight = canvasHeight / newScale,
+                            requiredLeft, requiredTop, requiredScale,
+                            rescaledFlag = false;
 
-                        //process newX and newY zooming on center of the viewport
-                        newX = (currentViewport.width - newWidth)/2 + currentViewport.x;
-                        newY = (currentViewport.height - newHeight)/2 + currentViewport.y;
+                        //process requiredLeft and requiredTop from center of the viewport
+                        requiredLeft = (currentViewport.width - requiredWidth)/2 + currentViewport.x;
+                        requiredTop = (currentViewport.height - requiredHeight)/2 + currentViewport.y;
+                        requiredScale = newScale;
                         
-                        result = {
-                            x : newX,
-                            y : newY,
-                            width : newWidth,
-                            height : newHeight,
-                            scale : newScale
+                        //check for rescale in/out necessity to stick with the opposit borders of the restrict stage
+                        if(boundaries.top && boundaries.bottom){
+                            //check for scale out need
+                            if(requiredScale > boundaries.maxscale){
+                                
+                            }
+                            //check for scale in need
+                            if(requiredHeight > (boundaries.bottom - boundaries.top) ){
+                                requiredWidth = (requiredWidth * (boundaries.bottom - boundaries.top))/requiredHeight;
+                                requiredHeight = boundaries.bottom - boundaries.top;
+                                requiredScale = this._world._canvas.height / requiredHeight;
+                                rescaledFlag = true;
+                            }
+                        }
+                        if(boundaries.right && boundaries.left){
+                            //check for scale out need
+                            if(requiredScale > boundaries.maxscale){
+                                
+                            }
+                            //check for scale in need
+                            if(requiredWidth > (boundaries.right - boundaries.left) ){
+                                requiredHeight = (requiredHeight * (boundaries.right - boundaries.left))/requiredWidth;
+                                requiredWidth = boundaries.right - boundaries.left;
+                                requiredScale = this._world._canvas.width / requiredWidth;
+                                rescaledFlag = true;
+                            }
                         }
                         
-                        return result;
+                        //apply them to the rescaledViewport
+                        rescaledViewport.x = requiredLeft;
+                        rescaledViewport.y = requiredTop;
+                        rescaledViewport.width = requiredWidth;
+                        rescaledViewport.height = requiredHeight;
+                        rescaledViewport.scale = requiredScale;
+                        
+                        //if need for rescale, reexecute getWindowInfosCenterTo with rescaledViewport as the "currentViewport"
+                        if(rescaledFlag && typeof preventLoop === 'undefined'){
+                            rescaledViewport = this.getScaledWindowInfos(newScale, rescaledViewport, true);
+                        }
+                        
+                        return rescaledViewport;
                     },
 
                     /**
@@ -528,6 +567,9 @@ See more on the readme file
                      * @_module world
                      * @_params {x,y}
                      * @description Returns a viewport rescaled and repositionned, centered on {x,y}, according to the boundaries (used by centerTo)
+                     * @position {x,y}
+                     * @overrideCurrentViewport Object typeof viewportInfos, to override the currentViewport (to apply this method to this "overrideCurrentViewport")
+                     * @preventLoop Boolean prevent infinite loops
                      * @return viewportInfos
                      * @viewportInfos
                      * <ul>
@@ -539,16 +581,16 @@ See more on the readme file
                      * </ul>
                      * @added by topheman
                      */
-                    getWindowInfosCenterTo : function(position, preventLoop){
+                    getWindowInfosCenterTo : function(position, overrideCurrentViewport, preventLoop){
                         
                         if(typeof position.x === 'undefined' || typeof position.y === 'undefined'){
                             throw new Error("x and y must be specified in position");
                         }
                         
-                        var requiredTop, requiredBottom, requiredLeft, requiredRight, requiredWidth, requiredHeight, requiredScale, //required parameters, non rescaled if x,y are center of viewport
+                        var requiredTop, requiredLeft, requiredWidth, requiredHeight, requiredScale, //required parameters, non rescaled if x,y are center of viewport
                             boundaries = this._world._ops.boundaries,
-                            currentViewport = preventLoop ? preventLoop : this.getCurrentWindowInfos(),
-                            rescaledViewport = preventLoop ? preventLoop : this.getCurrentWindowInfos(),
+                            currentViewport = overrideCurrentViewport ? overrideCurrentViewport : this.getCurrentWindowInfos(),
+                            rescaledViewport = {},
                             rescaledFlag = false;
 
                         //non rescaled viewportInfos from center coordinated x,y
@@ -556,9 +598,7 @@ See more on the readme file
                         requiredWidth       = currentViewport.width;
                         requiredHeight      = currentViewport.height;
                         requiredTop         = position.y - requiredHeight/2;
-                        requiredBottom      = position.y + requiredHeight/2;
                         requiredLeft        = position.x - requiredWidth/2;
-                        requiredRight       = position.x + requiredWidth/2;
                         
                         //check for rescale in/out necessity to stick with the opposit borders of the restrict stage
                         if(boundaries.top && boundaries.bottom){
@@ -597,7 +637,7 @@ See more on the readme file
                         
                         //if need for rescale, reexecute getWindowInfosCenterTo with rescaledViewport as the "currentViewport"
                         if(rescaledFlag && typeof preventLoop === 'undefined'){
-                            rescaledViewport = this.getWindowInfosCenterTo(position, rescaledViewport);
+                            rescaledViewport = this.getWindowInfosCenterTo(position, rescaledViewport, true);
                         }
                         
                         //then, after the rescaling (if necessary), apply checkBoundaries to reposition the viewport according to the boundaries of the world

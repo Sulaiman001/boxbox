@@ -13,25 +13,25 @@ touch pan / pinch
 -> distance between 1st and 2nd finger is the reference for pinch
 
 - touch start/move/end
-- every function like _touchstartHandler, _world_touchstartHandler will return true if an entity (not the world) triggered an event, false if it didn't (to be sure that the touch received didn't trigger anything, so can trigger the pan or pinch)
+- every function like _touchstartHandler, _world_touchstartHandler will return true if an entity (if not in in _touchPan.excludeEntityIds) or the world (if not _touchPan.triggerWorldEvents === true) triggered an event, false if it didn't (to be sure that the touch received didn't trigger anything, so can trigger the pan or pinch)
 
-- any of that doesn't apply if touchPan is disabled
-- touchstart that doesn't trigger any entity event handler OR that isn't made on any of the excludeEntityIds (world events don't count) WILL
+- any of the things explained bellow don't apply if touchPan is disabled
+- touchstart that didn't triggered any event handler (see before for the test) WILL
     - trigger the pan
     - set the world as panning
-- if the world is panning, don't trigger any event in the entity event loops (but do trigger the events set on the world)
+- if the world is panning, don't trigger any event in the entity event loops (but do trigger the events set on the world, except if _touchPan.triggerWorldEvents === false)
 - if the world is panning, and touchstart is triggered AND allowPinch === true
-    - don't trigger any event in the entity event loops (but do trigger the events set on the world) (same as before)
+    - don't trigger any event in the entity event loops (but do trigger the events set on the world, except if _touchPan.triggerWorldEvents === false) (same as before)
     - trigger the pinch
     - set the world as pinching
 - if the world is panning and no more touches -> set world free
 - if the world is pinching
-    - don't trigger any event in the entity event loops (but do trigger the events set on the world) (same as before)
+    - don't trigger any event in the entity event loops (but do trigger the events set on the world, except if _touchPan.triggerWorldEvents === false) (same as before)
     - any new touchstart will be disregarded :
         - first touch = panning
         - distance between 1rst and 2nd touch = pinching
 - if the world is pinching and only one touch remaining -> set world as panning
-- if a ONE touch (and ONLY ONE) is already active (example one finger dragging for taggetting like angry birds) and a second touch is on the world
+- if a ONE touch (and ONLY ONE) is already active (example one finger dragging for targgetting like angry birds) and a second touch is on the world
     = if there are ONLY 2 touches on the screen, the first one being triggering an entity event touchmove (initiated by onTouchmove or touchDraggable)
         - the original touchmove event of the 1rst touch must keep going
         - set the world to noPanPinching -> register the original touchmove event to keep track (to know which one not to disallow)
@@ -51,6 +51,7 @@ world.touchPan({
     disabled : false,
     multiplier : 1,
     excludeEntityIds : [],
+    triggerWorldEvents: true,
     start: function(e,viewportInfos){},
     drag: function(e,viewportInfos){},
     stop: function(e,viewportInfos){},
