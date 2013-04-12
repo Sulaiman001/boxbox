@@ -58,6 +58,17 @@ world.touchPan({
     allowPinch: true
 })
 
+WORLD_PAN_NONE_STATE
+WORLD_PAN_PANNING_STATE
+WORLD_PAN_PINCHING_STATE
+WORLD_PAN_NOPANPINCHING_STATE
+
+world._touchPanState = false / "panning" / "pinching" / "noPanPinching"
+world.isTouchPanning()
+world.isTouchPinching()
+world.isTouchNoPanPinching()
+world.setTouchPanState(state)
+
 restrictStage -> rename to boundaries - DONE
 cache _hasBoundaries -> DONE
 world.viewport.getWindowInfosCenterTo(x,y) -> DONE

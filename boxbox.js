@@ -340,7 +340,7 @@ See more on the readme file
                         //check for rescale in/out necessity to stick with the opposit borders of the restrict stage
                         if(boundaries.top && boundaries.bottom){
                             //check for scale out need
-                            if(requiredScale > boundaries.maxscale){
+                            if(requiredScale > boundaries.maxScale){
                                 
                             }
                             //check for scale in need
@@ -353,7 +353,7 @@ See more on the readme file
                         }
                         if(boundaries.right && boundaries.left){
                             //check for scale out need
-                            if(requiredScale > boundaries.maxscale){
+                            if(requiredScale > boundaries.maxScale){
                                 
                             }
                             //check for scale in need
@@ -603,7 +603,7 @@ See more on the readme file
                         //check for rescale in/out necessity to stick with the opposit borders of the restrict stage
                         if(boundaries.top && boundaries.bottom){
                             //check for scale out need
-                            if(requiredScale > boundaries.maxscale){
+                            if(requiredScale > boundaries.maxScale){
                                 
                             }
                             //check for scale in need
@@ -616,7 +616,7 @@ See more on the readme file
                         }
                         if(boundaries.right && boundaries.left){
                             //check for scale out need
-                            if(requiredScale > boundaries.maxscale){
+                            if(requiredScale > boundaries.maxScale){
                                 
                             }
                             //check for scale in need
