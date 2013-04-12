@@ -48,19 +48,19 @@ function init(){
     
     center.touchDraggable({
         start : function(e, touchDraggableInfos){
-            console.info('start callback',e, touchDraggableInfos);
+            console.info('red start callback',e, touchDraggableInfos);
         },
         drag : function(e, touchDraggableInfos){
-//            console.info('drag callback',e, touchDraggableInfos);
+//            console.info('red drag callback',e, touchDraggableInfos);
         },
         stop : function(e, touchDraggableInfos){
-            console.info('stop callback',e, touchDraggableInfos);
+            console.info('red stop callback',e, touchDraggableInfos);
         },
         touchadd : function(e, touchDraggableInfos,touchesCount){
-            console.info('touchadd callback',e, touchDraggableInfos,touchesCount);
+            console.info('red touchadd callback',e, touchDraggableInfos,touchesCount);
         },
         touchremove : function(e, touchDraggableInfos,touchesCount){
-            console.info('touchremove callback',e, touchDraggableInfos,touchesCount);
+            console.info('red touchremove callback',e, touchDraggableInfos,touchesCount);
         }
     });
     left.touchDraggable({
@@ -82,7 +82,21 @@ function init(){
         }
     });
     right.touchDraggable({
-        maxTouches : 2
+        start : function(e, touchDraggableInfos){
+            console.info('gray start callback',e, touchDraggableInfos);
+        },
+        drag : function(e, touchDraggableInfos){
+//            console.info('gray drag callback',e, touchDraggableInfos);
+        },
+        stop : function(e, touchDraggableInfos){
+            console.info('gray stop callback',e, touchDraggableInfos);
+        },
+        touchadd : function(e, touchDraggableInfos,touchesCount){
+            console.info('gray touchadd callback',e, touchDraggableInfos,touchesCount);
+        },
+        touchremove : function(e, touchDraggableInfos,touchesCount){
+            console.info('gray touchremove callback',e, touchDraggableInfos,touchesCount);
+        }
     });
 
     myWorld.viewport.focusAll();

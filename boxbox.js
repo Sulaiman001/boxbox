@@ -944,6 +944,13 @@ See more on the readme file
                     }, false);
                 }
                 
+                
+                /**
+                 * To prevent trigger twice the same touchstart event (bug on touchstart inside touchmove events)
+                 * @added by topheman
+                 */
+                var previousTouchStartIdentifier = null;
+                
                 /*
                  * Mouse events
                  * @added by topheman
@@ -1106,6 +1113,16 @@ See more on the readme file
                  * @added by topheman
                  */
                 var touchstartHandler = function (e) {
+                    
+                    //prevent triggering twice the same event on the same touch identifier
+                    if(previousTouchStartIdentifier === e.changedTouches[0].identifier){
+                        previousTouchStartIdentifier = null;
+                        return false;
+                    }
+                    else{
+                        previousTouchStartIdentifier = e.changedTouches[0].identifier;
+                    }
+                    
                     var touchInfos = getTouchInfos(e),i,key;
                     _world_touchstartHandler(e, touchInfos);
                     for(key in self._touchstartHandlers) {
@@ -1153,7 +1170,7 @@ See more on the readme file
                  * @param {TouchEvent} e
                  * @added by topheman
                  */
-                var touchendHandler = function(e) {
+                var touchendHandler = function(e) {                    
                     var touchInfos = getTouchInfos(e),i,key;
                     _world_touchendHandler(e, touchInfos);
                     for(key in self._touchendHandlers) {
@@ -1271,7 +1288,7 @@ See more on the readme file
                  * @description manages special events on world_start such as dragEvent
                  * @added by topheman
                  */
-                var _world_touchstartHandler = function(e, touchInfos){
+                var _world_touchstartHandler = function(e, touchInfos){                    
                     //if a touch on the world is on an entity, trigger the _world_touchmoveHandlerForDragEvent
                     var touchInfoIndex;
                     if(touchInfos.length > 0){
@@ -1343,7 +1360,7 @@ See more on the readme file
                  * @description manages special events on world_touchend such as dragEvent
                  * @added by topheman
                  */
-                var _world_touchendHandler = function(e, touchInfos){                  
+                var _world_touchendHandler = function(e, touchInfos){                      
                     //-> check if the touches in the event correspond to the touches referenced in the touchDraggable entities
                     //if so, trigger the _world_touchendHandlerForDragEvent
                     var i,entityId,touchId,touchInfoIndex;
@@ -1687,7 +1704,6 @@ See more on the readme file
                  * The drag callback is triggered in _world_touchmoveHandler
                  */
                 var _world_touchmoveHandlerForDragEvent = function(e, touchInfos, touchIndex) {
-                    var touchId;
                     //tag as dragging when passing for the first time
                     if(e.type === 'touchstart' && this._world._touchDraggingEntityIds.indexOf(this._id) === -1 && !this._touchDragging && !this._touchStartDrag){
                         //force the entity not to sleep for all the time it will be dragged
@@ -1722,7 +1738,7 @@ See more on the readme file
                         
                     }
                     //update the move joint if regularDrag
-                    if(this._touchMoveJoints){
+                    if(this._touchMoveJoints && this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier]){
                         if(this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint){
                             this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint.SetTarget(new Box2D.Common.Math.b2Vec2(touchInfos[touchIndex].x, touchInfos[touchIndex].y));
                         }
@@ -1741,7 +1757,7 @@ See more on the readme file
                  * It there are still touches on the entity, removes the joint and triggers the touchremove callback
                  */
                 var _world_touchendHandlerForDragEvent = function(e, touchInfos, touchIndex) {
-                    var touchDraggableInfos = mergeTouchDraggableInfos(touchInfos, this)[0];
+                    var touchDraggableInfos = mergeTouchDraggableInfos(touchInfos, this)[0];                            
                     _world_touchRemovetouchHandlerForDragEvent.call(this,e,touchInfos, touchIndex);
                     if(Object.keys(this._touchMoveJoints).length === 0){
                         //let the entity go back sleeping eventually, only when the dragging is finished

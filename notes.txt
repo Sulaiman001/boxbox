@@ -1,5 +1,3 @@
-world.viewport.scaleTo(scale) -> TODO (still buggy)
-
 touchPan specs
 
 touch pan / pinch
