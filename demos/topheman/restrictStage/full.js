@@ -29,7 +29,7 @@ function init(){
         y : (borders.bottom - borders.top) /2 + borders.top
     };
     
-    console.info('centerOfBorders',centerOfBorders);
+//    console.info('centerOfBorders',centerOfBorders);
     
     //init canvas and world
     canvas = document.getElementById("canvas");
@@ -177,6 +177,12 @@ function init(){
     point.name('point');
     
     myWorld.mousePan({
+        start: function(e, viewportInfos){
+            point.color('pink');
+        },
+        stop: function(e, viewportInfos){
+            point.color('black');
+        }
 //        drag: function(e, viewportInfos){
 //            console.info('pan - viewport x/y',viewportInfos.viewport.x,viewportInfos.viewport.y,viewportInfos.viewport.y+viewportInfos.viewport.height);
 //        }

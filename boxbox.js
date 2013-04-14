@@ -1959,7 +1959,7 @@ See more on the readme file
                     if(!this._touchPanDragging && !this._touchPanStartDrag){
                         originalRelativePointerPos = {
                             x : (e.touches[0].offsetX || e.touches[0].layerX || e.touches[0].pageX) / this.scale(),
-                            y : (e.touches[0].offsetY || e.touches[0].layerY || e.touches[0].pageY) / this.scale(),
+                            y : (e.touches[0].offsetY || e.touches[0].layerY || e.touches[0].pageY) / this.scale()
                         };
                         //tag as dragging (all along the drag), with the original viewport + switch to panning mode
                         this._touchPanDragging = {

@@ -193,18 +193,22 @@ function init(){
     myWorld.touchPan({
         allowPinch : true,
         start: function(e, viewportInfos){
+            point.color('pink');
             console.info('touchPan start callback',e,viewportInfos);
         },
         drag: function(e, viewportInfos){
             console.info('touchPan drag callback');
         },
         stop: function(e, viewportInfos){
+            point.color('black');
             console.info('touchPan stop callback',e,viewportInfos);
         },
         startPinching: function(e, viewportInfos){
+            point.color('red');
             console.info('touchPan startPinching callback',e,viewportInfos);
         },
         stopPinching: function(e, viewportInfos){
+            point.color('pink');
             console.info('touchPan stopPinching callback',e,viewportInfos);
         }
     });

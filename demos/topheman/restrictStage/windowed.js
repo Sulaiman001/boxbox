@@ -124,12 +124,14 @@ function init(){
     
     myWorld.mousePan({
         start:function(e,viewportInfos){
+            point.color('pink');
             console.info('pan-start',viewportInfos);
         },
         drag:function(e,viewportInfos){
             console.info('pan-drag',e,viewportInfos);
         },
         stop:function(e,viewportInfos){
+            point.color('black');
             console.info('pan-stop',e,viewportInfos);
         },
         excludeEntityIds:[
