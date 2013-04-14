@@ -109,7 +109,7 @@ function init(){
     });
     polygon.name('polygon');
     
-    left.mouseDraggable({
+    polygon.mouseDraggable({
         start:function(e,mouseInfos){
             console.info('draggable-start',e,mouseInfos);
         },
@@ -120,7 +120,7 @@ function init(){
             console.info('draggable-stop',e,mouseInfos);
         }
     });
-    center.mouseDraggable();
+    right.mouseDraggable();
     
     myWorld.mousePan({
         start:function(e,viewportInfos){
