@@ -67,6 +67,12 @@ world.isTouchPinching()
 world.isTouchNoPanPinching()
 world.setTouchPanState(state)
 
+world._touchPanStartDrag
+world._touchPanDragging : {
+    originalViewport
+    
+}
+
 restrictStage -> rename to boundaries - DONE
 cache _hasBoundaries -> DONE
 world.viewport.getWindowInfosCenterTo(x,y) -> DONE
