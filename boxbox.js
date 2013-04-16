@@ -571,7 +571,6 @@ See more on the readme file
                             result.y = boundaries.top;
                             result.scale = this._world._canvas.height / result.height;
                         }
-                        
                         result.outOfBounds = outOfBounds;
                         return result;
                     },                            
@@ -1828,7 +1827,7 @@ See more on the readme file
                     var x2 = touch2.offsetX || touch2.layerX || touch2.pageX;
                     var y2 = touch2.offsetY || touch2.layerY || touch2.pageY;
                     return Math.sqrt(Math.pow(x1-x2,2) + Math.pow(y1-y2,2));
-                }
+                };
                 
                 /*
                  * @function mergePointerPanInfos
@@ -1954,7 +1953,7 @@ See more on the readme file
                  * @added by topheman
                  */
                 var _world_touchmoveHandlerForPanEvent = function(e, touchInfos, options){
-                    var viewportInfos,originalRelativePointerPos;
+                    var viewportInfos,originalRelativePointerPos, newScale;
                     //tag as dragging when passing for the first time
                     if(!this._touchPanDragging && !this._touchPanStartDrag){
                         originalRelativePointerPos = {
@@ -1971,17 +1970,22 @@ See more on the readme file
                         this._touchPanStartDrag = true;
                     }
                     else if(this._touchPanDragging){
-                        //if we are pinching, adjust the scale here, before checking the viewport boundaries (only if this isn't the beginning of the pinching)
-                        if(this._touchPanDragging.pinchingInfos && !this._touchPanDragging.pinchingInfos.startPinching){
-                            
-                        }
-                        
                         //updating viewport process - missing the scale adjust
                         viewportInfos = mergePointerPanInfos.call(this,this._touchPanDragging, e.touches[0], 'touch');
+
+                        //if we are pinching, adjust the scale here, before checking the viewport boundaries (only if this isn't the beginning of the pinching)
+                        if(this._touchPanDragging.pinchingInfos && !this._touchPanDragging.pinchingInfos.startPinching){
+                            newScale = Math.round(100*(getRangeBetweenTwoTouches(e.touches[0],e.touches[1])*(this._touchPanDragging.pinchingInfos.baseScale))/(this._touchPanDragging.pinchingInfos.baseRange))/100;
+                            viewportInfos.viewport = this.viewport.getScaledWindowInfos(newScale,viewportInfos.viewport,true);
+                        }
                         //check viewport boundaries
                         viewportInfos.viewport = this.viewport.checkBoundaries(viewportInfos.viewport);
-                        //update viewport
+                        //update viewport position
                         this.camera({x:viewportInfos.viewport.x,y:viewportInfos.viewport.y});
+                        //if scale changed, update viewport scale
+                        if(newScale){
+                            this.scale(viewportInfos.viewport.scale);
+                        }
                         
                         //trigger startdrag event on the first move of the first touch (the panning one) or on the touchstart of the second touch (the pinching one) - if the first touch hasn't moved (to keep being transactional)
                         if(this._touchPanStartDrag && ((e.type === 'touchmove' && e.changedTouches[0].identifier === this._touchPanDragging.identifier) || (e.type === 'touchstart' && e.changedTouches[0].identifier !== this._touchPanDragging.identifier))){
@@ -2009,12 +2013,12 @@ See more on the readme file
                         this._touchPanDragging.pinchingInfos = {};
                         //process the range (px) between the two touches that will be used as base to calculate the scaling modifications after
                         this._touchPanDragging.pinchingInfos.baseRange = getRangeBetweenTwoTouches(e.touches[0],e.touches[1]);
-                        this._touchPanDragging.pinchingInfos.baseScale = viewportInfos.viewport.scale;
+                        this._touchPanDragging.pinchingInfos.baseScale = this.scale();
                         //tag as start pinching
                         this._touchPanDragging.pinchingInfos.startPinching = true;
                         this._touchPanDragging.pinchingInfos.identifier = e.touches[1].identifier;
                     }
-                }
+                };
                 
                 /*
                  * @function _world_mouseupdHandlerForPanEvent
@@ -2024,7 +2028,7 @@ See more on the readme file
                  * @added by topheman
                  */
                 var _world_touchendHandlerForPanEvent = function(e, touchInfos){
-                    var viewportInfos;
+                    var viewportInfos, newScale;
                     //if world is currently panning and has received a touchend from the correct identifier (the one that initiated the panning) then we stop panning 
                     if(this._touchPanDragging && this._touchPanDragging.identifier === e.changedTouches[0].identifier){
                         

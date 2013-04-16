@@ -4,6 +4,10 @@ function init(){
     
     initViewport();
     
+    //init canvas and world
+    canvas = document.getElementById("canvas");
+    logging = SimpleConsole.getInstance({fitToCanvas: canvas});
+    
 //    var borders = {
 //        left : -2,
 //        right : 45,
@@ -29,8 +33,6 @@ function init(){
         y : (borders.bottom - borders.top) /2 + borders.top
     };
     
-    //init canvas and world
-    canvas = document.getElementById("canvas");
     myWorld = boxbox.createWorld(canvas,{
         scale:30, 
         preventScroll:true, 
@@ -40,8 +42,6 @@ function init(){
         debugDraw:false,
         boundaries : boundaries
     });
-    
-    logging = SimpleConsole.getInstance({fitToCanvas: canvas});
     
     myWorld.onRender(function(){
         logging.draw(this._ctx);
