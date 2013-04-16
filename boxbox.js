@@ -2063,7 +2063,7 @@ See more on the readme file
 
                             //if we are pinching, adjust the scale here, before checking the viewport boundaries (only if this isn't the beginning of the pinching)
                             if(this._touchPanDragging.pinchingInfos && !this._touchPanDragging.pinchingInfos.startPinching){
-                                newScale = Math.round(100*(getRangeBetweenTwoTouches(e.touches[0],e.touches[1])*(this._touchPanDragging.pinchingInfos.baseScale))/(this._touchPanDragging.pinchingInfos.baseRange))/100;
+                                newScale = Math.round(100*(getRangeBetweenTwoTouches(e.touches[0],e.changedTouches[0])*(this._touchPanDragging.pinchingInfos.baseScale))/(this._touchPanDragging.pinchingInfos.baseRange))/100;
                                 viewportInfos.viewport = this.viewport.getScaledWindowInfos(newScale,viewportInfos.viewport,true);
                             }
                             //check viewport boundaries

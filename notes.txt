@@ -1,7 +1,55 @@
 viewport.originalViewports[]
 viewport.originalViewport = this.originalViewports[0]
 viewport.lastViewport = this.originalViewports[this.originalViewports.length-1]
+
 prepareTouchPanDraggingInfos()
+    originalViewport
+    viewports[]
+
+    originalViewport
+    lastViewport
+
+private
+
+originalViewport = {
+    viewport,
+    pointerPos
+}
+viewports = [
+    {
+        viewport, //when created
+        pointerPos //when created
+    }
+}
+
+exposed
+{
+    originalViewport : originalViewport.viewport,
+    viewport : viewports[viewports.length-1]
+}
+preciselly
+{
+    originalViewport : originalViewport.viewport,
+    viewport : {
+        x : viewports[viewports.length-1].viewport.x - (pointerPos.x - viewports[viewports.length-1].pointerPos.x)*multiplier ),
+        y : viewports[viewports.length-1].viewport.y - (pointerPos.y - viewports[viewports.length-1].pointerPos.y)*multiplier ),
+        width : viewports[viewports.length-1].viewport.width,
+        height : viewports[viewports.length-1].viewport.height,
+        scale : viewports[viewports.length-1].viewport.scale
+    }
+}
+
+viewport = world.getCurrentViewport()
+PanDraggingObject(e, overrideViewport)
+- viewports = []
+    - viewport
+    - pointerPos
+- getViewportInfos(e,mode) don't bother about scaling (made after)  == mergePointerPanInfos
+- addViewport(e, overrideViewport)
+- getLastViewport
+- getOriginalViewport
+
+============
 
 touchPan specs
 
