@@ -73,7 +73,7 @@ function SimpleConsole(options){
             if(i > 0){
                 result += ', ';
             }
-            result += arguments[i].toString();
+            result += arguments[i] !== null ? typeof arguments[i] !== 'undefined' ? arguments[i].toString() : 'undefined' : 'null';
         }
         //compare to the last log and add it to the logs
         if(lastLog === result){

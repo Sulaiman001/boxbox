@@ -1970,7 +1970,7 @@ See more on the readme file
                         this._touchPanStartDrag = true;
                     }
                     else if(this._touchPanDragging){
-                        //updating viewport process - missing the scale adjust
+                        //updating viewportInfos with panning pointer infos
                         viewportInfos = mergePointerPanInfos.call(this,this._touchPanDragging, e.touches[0], 'touch');
 
                         //if we are pinching, adjust the scale here, before checking the viewport boundaries (only if this isn't the beginning of the pinching)
@@ -2028,11 +2028,12 @@ See more on the readme file
                  * @added by topheman
                  */
                 var _world_touchendHandlerForPanEvent = function(e, touchInfos){
+                    console.log('touchend','changed touch',e.changedTouches && e.changedTouches.length > 0 ? e.changedTouches[0].identifier : null,'pinching touch',this._touchPanDragging && this._touchPanDragging.pinchingInfos && this._touchPanDragging.pinchingInfos.identifier ? this._touchPanDragging.pinchingInfos.identifier : null);
                     var viewportInfos, newScale;
                     //if world is currently panning and has received a touchend from the correct identifier (the one that initiated the panning) then we stop panning 
                     if(this._touchPanDragging && this._touchPanDragging.identifier === e.changedTouches[0].identifier){
                         
-                        //updating viewport process - missing the scale adjust
+                        //updating viewportInfos with panning pointer infos
                         viewportInfos = mergePointerPanInfos.call(this,this._touchPanDragging, e.changedTouches[0], 'touch');
                         //check viewport boundaries
                         viewportInfos.viewport = this.viewport.checkBoundaries(viewportInfos.viewport);
@@ -2054,24 +2055,34 @@ See more on the readme file
                     }
                     //however if the world is pinching and has received a touchend from the identifier that initiated the pinching, we switch back to panning
                     else if(this._touchPanDragging && this._touchPanDragging.pinchingInfos && this._touchPanDragging.pinchingInfos.identifier === e.changedTouches[0].identifier){
-                        
+                        console.log('trying stop pinching');
                         if(this._touchPanDragging.pinchingInfos.startPinching !== true){
                         
-                            //updating viewport process - missing the scale adjust
+                            //updating viewportInfos with panning pointer infos
                             viewportInfos = mergePointerPanInfos.call(this,this._touchPanDragging, e.touches[0], 'touch');
+
+                            //if we are pinching, adjust the scale here, before checking the viewport boundaries (only if this isn't the beginning of the pinching)
+                            if(this._touchPanDragging.pinchingInfos && !this._touchPanDragging.pinchingInfos.startPinching){
+                                newScale = Math.round(100*(getRangeBetweenTwoTouches(e.touches[0],e.touches[1])*(this._touchPanDragging.pinchingInfos.baseScale))/(this._touchPanDragging.pinchingInfos.baseRange))/100;
+                                viewportInfos.viewport = this.viewport.getScaledWindowInfos(newScale,viewportInfos.viewport,true);
+                            }
                             //check viewport boundaries
                             viewportInfos.viewport = this.viewport.checkBoundaries(viewportInfos.viewport);
                             //update viewport
                             this.camera({x:viewportInfos.viewport.x,y:viewportInfos.viewport.y});
+                            //if scale changed, update viewport scale
+                            if(newScale){
+                                this.scale(viewportInfos.viewport.scale);
+                            }
                         
                             //trigger the stopPinchingEvent event
                             if(this._touchPanStopPinchingHandler){
                                 this._touchPanStopPinchingHandler.call(this,e,viewportInfos,'stop');
                             }
-
-                            this._touchPanDragging.pinchingInfos = false;//reset pinching state
                             
                         }
+
+                        this._touchPanDragging.pinchingInfos = false;//reset pinching state
                     }
                 };
                 
