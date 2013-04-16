@@ -41,6 +41,12 @@ function init(){
         boundaries : boundaries
     });
     
+    logging = SimpleConsole.getInstance({fitToCanvas: canvas});
+    
+    myWorld.onRender(function(){
+        logging.draw(this._ctx);
+    });
+    
     //create entities
     left = myWorld.createEntity({
       color: "orange",
@@ -140,53 +146,68 @@ function init(){
     center.touchDraggable({
         start : function(e, touchDraggableInfos){
             console.info('red start callback',e, touchDraggableInfos);
+            console.log('red start callback');
         },
         drag : function(e, touchDraggableInfos){
 //            console.info('red drag callback',e, touchDraggableInfos);
+            console.log('red drag callback');
         },
         stop : function(e, touchDraggableInfos){
             console.info('red stop callback',e, touchDraggableInfos);
+            console.log('red stop');
         },
         touchadd : function(e, touchDraggableInfos,touchesCount){
             console.info('red touchadd callback',e, touchDraggableInfos,touchesCount);
+            console.log('red touchadd');
         },
         touchremove : function(e, touchDraggableInfos,touchesCount){
             console.info('red touchremove callback',e, touchDraggableInfos,touchesCount);
+            console.log('red touchremove');
         }
     });
     left.touchDraggable({
         type: 'eventDrag',
         start : function(e, touchDraggableInfos){
-            console.info('eventdrag start callback',e,touchDraggableInfos);
+            console.info('yellow eventdrag start callback',e,touchDraggableInfos);
+            console.log('yellow eventdrag start');
         },
         drag : function(e, touchDraggableInfos){
-//            console.info('eventdrag drag callback',e, touchDraggableInfos);
+//            console.info('yellow eventdrag drag callback',e, touchDraggableInfos);
+            console.log('yellow eventdrag drag');
         },
         stop : function(e, touchDraggableInfos){
-            console.info('eventdrag stop callback',e, touchDraggableInfos);
+            console.info('yellow eventdrag stop callback',e, touchDraggableInfos);
+            console.log('yellow eventdrag stop');
         },
         touchadd : function(e, touchDraggableInfos,touchesCount){
-            console.info('eventdrag touchadd callback',e,touchDraggableInfos,touchesCount);
+            console.info('yellow eventdrag touchadd callback',e,touchDraggableInfos,touchesCount);
+            console.log('yellow eventdrag touchadd');
         },
         touchremove : function(e, touchDraggableInfos,touchesCount){
-            console.info('eventdrag touchremove callback',e,touchDraggableInfos,touchesCount);
+            console.info('yellow eventdrag touchremove callback',e,touchDraggableInfos,touchesCount);
+            console.log('yellow eventdrag touchremove');
         }
     });
     right.touchDraggable({
         start : function(e, touchDraggableInfos){
             console.info('gray start callback',e, touchDraggableInfos);
+            console.log('gray start');
         },
         drag : function(e, touchDraggableInfos){
 //            console.info('gray drag callback',e, touchDraggableInfos);
+            console.log('gray drag');
         },
         stop : function(e, touchDraggableInfos){
             console.info('gray stop callback',e, touchDraggableInfos);
+            console.log('gray stop');
         },
         touchadd : function(e, touchDraggableInfos,touchesCount){
             console.info('gray touchadd callback',e, touchDraggableInfos,touchesCount);
+            console.log('gray touchadd');
         },
         touchremove : function(e, touchDraggableInfos,touchesCount){
             console.info('gray touchremove callback',e, touchDraggableInfos,touchesCount);
+            console.log('gray touchremove');
         }
     });
     
@@ -195,21 +216,26 @@ function init(){
         start: function(e, viewportInfos){
             point.color('pink');
             console.info('touchPan start callback',e,viewportInfos);
+            console.log('touchPan start');
         },
         drag: function(e, viewportInfos){
             console.info('touchPan drag callback');
+            console.log('touchPan drag');
         },
         stop: function(e, viewportInfos){
             point.color('black');
             console.info('touchPan stop callback',e,viewportInfos);
+            console.log('touchPan stop');
         },
         startPinching: function(e, viewportInfos){
             point.color('red');
             console.info('touchPan startPinching callback',e,viewportInfos);
+            console.log('touchPan startPinching');
         },
         stopPinching: function(e, viewportInfos){
             point.color('pink');
             console.info('touchPan stopPinching callback',e,viewportInfos);
+            console.log('touchPan stopPinching');
         }
     });
 }   

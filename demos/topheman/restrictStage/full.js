@@ -43,6 +43,12 @@ function init(){
         boundaries : boundaries
     });
     
+    logging = SimpleConsole.getInstance({fitToCanvas: canvas});
+    
+    myWorld.onRender(function(){
+        logging.draw(this._ctx);
+    });
+    
     logClick = function(e,mouseInfos){
         console.info(e,mouseInfos);
     };
@@ -114,9 +120,27 @@ function init(){
     polygon.name('polygon');
     
     polygon.mouseDraggable({
-//        drag: function(e,i){console.info(i);}
+        start: function(e, mouseDraggableInfos){
+            console.log('polygon drag start');
+        },
+        stop: function(e, mouseDraggableInfos){
+            console.log('polygon drag stop');
+        },
+        drag: function(e, mouseDraggableInfos){
+            console.log('polygon drag');
+        }
     });
-    right.mouseDraggable();
+    right.mouseDraggable({
+        start: function(e, mouseDraggableInfos){
+            console.log('gray drag start');
+        },
+        stop: function(e, mouseDraggableInfos){
+            console.log('gray drag stop');
+        },
+        drag: function(e, mouseDraggableInfos){
+            console.log('gray drag');
+        }
+    });
     
     wallLeft = myWorld.createEntity({
       color: "blue",
@@ -179,13 +203,16 @@ function init(){
     myWorld.mousePan({
         start: function(e, viewportInfos){
             point.color('pink');
+            console.log('world mousePan start');
         },
         stop: function(e, viewportInfos){
             point.color('black');
-        }
-//        drag: function(e, viewportInfos){
+            console.log('world mousePan stop');
+        },
+        drag: function(e, viewportInfos){
 //            console.info('pan - viewport x/y',viewportInfos.viewport.x,viewportInfos.viewport.y,viewportInfos.viewport.y+viewportInfos.viewport.height);
-//        }
+            console.log('world mousePan drag');
+        }
     });
     myWorld.mousewheelZoom({step:0.5});
 

@@ -39,6 +39,12 @@ function init(){
         boundaries : boundaries
     });
     
+    logging = SimpleConsole.getInstance({fitToCanvas: canvas});
+    
+    myWorld.onRender(function(){
+        logging.draw(this._ctx);
+    });
+    
     logClick = function(e,mouseInfos){
         console.info(e,mouseInfos);
     };
@@ -110,29 +116,39 @@ function init(){
     polygon.name('polygon');
     
     polygon.mouseDraggable({
-        start:function(e,mouseInfos){
-            console.info('draggable-start',e,mouseInfos);
+        start: function(e, mouseDraggableInfos){
+            console.log('polygon drag start');
         },
-        drag:function(e,mouseInfos){
-            console.info('draggable-drag',e,mouseInfos);
+        stop: function(e, mouseDraggableInfos){
+            console.log('polygon drag stop');
         },
-        stop:function(e,mouseInfos){
-            console.info('draggable-stop',e,mouseInfos);
+        drag: function(e, mouseDraggableInfos){
+            console.log('polygon drag');
         }
     });
-    right.mouseDraggable();
+    right.mouseDraggable({
+        start: function(e, mouseDraggableInfos){
+            console.log('gray drag start');
+        },
+        stop: function(e, mouseDraggableInfos){
+            console.log('gray drag stop');
+        },
+        drag: function(e, mouseDraggableInfos){
+            console.log('gray drag');
+        }
+    });
     
     myWorld.mousePan({
         start:function(e,viewportInfos){
             point.color('pink');
-            console.info('pan-start',viewportInfos);
+            console.log('world mousePan start');
         },
         drag:function(e,viewportInfos){
-            console.info('pan-drag',e,viewportInfos);
+            console.log('world mousePan drag');
         },
         stop:function(e,viewportInfos){
             point.color('black');
-            console.info('pan-stop',e,viewportInfos);
+            console.log('world mousePan stop');
         },
         excludeEntityIds:[
             1

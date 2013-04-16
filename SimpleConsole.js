@@ -8,7 +8,6 @@ Copyright (C) 2013 Christophe Rosset <tophe@topheman.com>
  * {
  *   logMaxNumber,
  *   fitToCanvas,
- *   canvas,
  *   ctxOptions : {
  *     x,
  *     y,
@@ -32,25 +31,39 @@ function SimpleConsole(options){
         lastLog = null,
         lastLogIteration = 1,
         log,
-        oldConsoleInfo, oldConsoleLog,
+        oldConsoleLog,
         logging = false,
-        canvas, ctx, ctxOptions;
-
-    logMaxNumber = options.logMaxNumber > 0 ? options.logMaxNumber : 10;
+        tmpLogMaxNumber,
+        canvas, ctxOptions;
     
     //init options
-    canvas  = options.canvas;
-    ctx     = canvas.getContext('2d');
+    if(options.fitToCanvas){
+        if(options.fitToCanvas.nodeName !== 'CANVAS'){
+            throw new Error('Please pass canvas node via fitToCanvas attribute');
+        }
+        else{
+            canvas = options.fitToCanvas;
+        }
+    }
+    ctxOptions = options.ctxOptions ? options.ctxOptions : {};
+    ctxOptions.x = typeof ctxOptions.x !== 'undefined' ? ctxOptions.x : 10;
+    ctxOptions.y = typeof ctxOptions.y !== 'undefined' ? ctxOptions.y : 10;
+    ctxOptions.lineHeight = typeof ctxOptions.lineHeight !== 'undefined' ? ctxOptions.lineHeight : 14;
+    ctxOptions.fillStyle = typeof ctxOptions.fillStyle !== 'undefined' ? ctxOptions.fillStyle : "black";
+    ctxOptions.font = typeof ctxOptions.font !== 'undefined' ? ctxOptions.font : "Arial 12px";
+    
     
     //init logMaxNumber
-    if(ctx && options.fitToCanvas){
-        
+    if(canvas){
+        tmpLogMaxNumber = ((canvas.height - ctxOptions.y) - (canvas.height - ctxOptions.y)%ctxOptions.lineHeight)/ctxOptions.lineHeight;
+        if(!options.logMaxNumber || (options.logMaxNumber && options.logMaxNumber > tmpLogMaxNumber)){
+            logMaxNumber = tmpLogMaxNumber;
+        }
     }
     else{
         logMaxNumber = options.logMaxNumber > 0 ? options.logMaxNumber : 10;
     }
     
-    oldConsoleInfo = console.info;
     oldConsoleLog = console.log;
     
     log = function(){
@@ -84,16 +97,14 @@ function SimpleConsole(options){
      */
     this.toggleConsole = function(){
         //only works if console api is present
-        if(oldConsoleInfo && oldConsoleLog){
+        if(oldConsoleLog){
             //catch the console entries, redirect them to SimpleConsole
             if(logging === false){
-                console.info = log;
                 console.log = log;
                 logging = true;
             }
             //switch back to normal consol logging
             else{
-                console.info = oldConsoleInfo;
                 console.log = oldConsoleLog;
                 logging = false;
             }
@@ -110,7 +121,11 @@ function SimpleConsole(options){
     
     this.draw = function(ctx){
         ctx.save();
-        ctx.fillStyle = 
+        ctx.fillStyle   = ctxOptions.fillStyle;
+        ctx.font        = ctxOptions.font;
+        for(var i=0; i< logs.length; i++){
+            ctx.fillText(logs[i], ctxOptions.x, ctxOptions.y+i*ctxOptions.lineHeight);
+        }
         ctx.restore();
     };
     
@@ -154,7 +169,8 @@ lol('test','toto','toto');
 logging.getLogs();
 
 
-logging = SimpleConsole.getInstance(10);
+canvas = document.getElementById('myCanvas');
+logging = SimpleConsole.getInstance({fitToCanvas:true, canvas: canvas});
 console.log('test',(new Date()).getTime());
 console.log('test',(new Date()).getTime());
 console.log('test',(new Date()).getTime());
@@ -176,4 +192,6 @@ console.log('test','toto','tutu');
 console.log('test','toto','tata');
 console.log('test','toto','toto');
 logging.getLogs();
+ctx = canvas.getContext('2d');
+logging.draw(ctx);
 */
