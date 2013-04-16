@@ -146,11 +146,11 @@ function init(){
     center.touchDraggable({
         start : function(e, touchDraggableInfos){
             console.info('red start callback',e, touchDraggableInfos);
-            console.log('red start callback');
+            console.log('red start');
         },
         drag : function(e, touchDraggableInfos){
 //            console.info('red drag callback',e, touchDraggableInfos);
-            console.log('red drag callback');
+            console.log('red drag');
         },
         stop : function(e, touchDraggableInfos){
             console.info('red stop callback',e, touchDraggableInfos);

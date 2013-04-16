@@ -2009,6 +2009,7 @@ See more on the readme file
                         this._touchPanDragging.pinchingInfos = {};
                         //process the range (px) between the two touches that will be used as base to calculate the scaling modifications after
                         this._touchPanDragging.pinchingInfos.baseRange = getRangeBetweenTwoTouches(e.touches[0],e.touches[1]);
+                        this._touchPanDragging.pinchingInfos.baseScale = viewportInfos.viewport.scale;
                         //tag as start pinching
                         this._touchPanDragging.pinchingInfos.startPinching = true;
                         this._touchPanDragging.pinchingInfos.identifier = e.touches[1].identifier;
