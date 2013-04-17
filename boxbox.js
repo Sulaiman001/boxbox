@@ -2139,13 +2139,20 @@ See more on the readme file
                  */
                 var _world_touchendHandlerForPanEvent = function(e, touchInfos){
                     console.log('touchend','changed touch',e.changedTouches && e.changedTouches.length > 0 ? e.changedTouches[0].identifier : null,'pinching touch',this._touchPanDragging && this._touchPanDragging.pinchingInfos && this._touchPanDragging.pinchingInfos.identifier ? this._touchPanDragging.pinchingInfos.identifier : null);
-                    var viewportInfos, newScale, panningTouchIdentifier;
+                    var viewportInfos, newScale, panningTouchIdentifier, rescale;
                     
                     //retrieve the touch identifier of the touch that initiated the pan (at "start" pan) (if panning)
                     panningTouchIdentifier = this._touchPanDragging ? this._touchPanDragging.getOriginalDraggingInfos().relativePointer.identifier : null;
                     
                     //if world is currently panning and has received a touchend from the correct identifier (the one that initiated the panning) then we stop panning 
                     if(this._touchPanDragging && panningTouchIdentifier === e.changedTouches[0].identifier){
+                        
+                        //we need to settle the pinching and stop it before managing the panning
+                        if(this._touchPanDragging.pinchingInfos){
+                            //create a new snapshot of the viewport
+                            this._touchPanDragging.addDraggingInfos(new DraggingInfos(e.changedTouches[0]));
+                            rescale = true;
+                        }
                         
                         //updating viewportInfos with panning pointer infos
 //                        viewportInfos = mergePointerPanInfos.call(this,this._touchPanDragging, e.changedTouches[0], 'touch');
@@ -2154,6 +2161,10 @@ See more on the readme file
                         viewportInfos.viewport = this.viewport.checkBoundaries(viewportInfos.viewport);
                         //update viewport
                         this.camera({x:viewportInfos.viewport.x,y:viewportInfos.viewport.y});
+                        //if scale changed, update viewport scale
+                        if(rescale){
+                            this.scale(viewportInfos.viewport.scale);
+                        }
                         
                         //if pinching, trigger the stopPinching event
                         if(this._touchPanDragging.pinchingInfos && this._touchPanStopPinchingHandler){
