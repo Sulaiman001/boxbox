@@ -55,7 +55,8 @@ function init(){
     
     //create entities
     left = myWorld.createEntity({
-      color: "orange",
+//      color: "orange",
+      color: "white",
       x: 4,
       y: 2,
       width: 5,
@@ -66,6 +67,8 @@ function init(){
     left.onMousedown(logClick);
 
     right = myWorld.createEntity({
+//      color: "gray",
+      color: "white",
         x: 20,
         y: 0,
       width: 5,
@@ -74,7 +77,8 @@ function init(){
     right.name('right');
     
     center = myWorld.createEntity({
-        color : 'red',
+//        color : 'red',
+      color: "white",
         x: 12,
         y: 0,
         width: 5,
@@ -84,7 +88,8 @@ function init(){
     center.name('center');
 
     ground = myWorld.createEntity({
-      color: "green",
+//      color: "green",
+      color: "white",
       x: 17,
       y: 14,
       width: 30,
@@ -94,7 +99,8 @@ function init(){
     ground.name('ground');
 
     ground2 = myWorld.createEntity({
-      color: "green",
+//      color: "green",
+      color: "white",
       x: 12,
       y: 16,
       width: 5,
@@ -112,6 +118,8 @@ function init(){
       ];
     
     polygon = myWorld.createEntity({
+//      color: "gray",
+      color: "white",
       shape : 'polygon',
       x: 24,
       y: 0,
@@ -143,7 +151,8 @@ function init(){
     });
     
     wallLeft = myWorld.createEntity({
-      color: "blue",
+//      color: "blue",
+      color: "white",
       x: borders.left,
       y: 16,
       width: 1,
@@ -154,7 +163,8 @@ function init(){
     wallLeft.name('wallLeft');
     
     wallRight = myWorld.createEntity({
-      color: "blue",
+//      color: "blue",
+      color: "white",
       x: borders.right,
       y: 16,
       width: 1,
@@ -165,7 +175,8 @@ function init(){
     wallRight.name('wallRight');
     
     wallTop = myWorld.createEntity({
-      color: "blue",
+//      color: "blue",
+      color: "white",
       x: 18,
       y: borders.top,
       width: 16,
@@ -176,7 +187,8 @@ function init(){
     wallRight.name('wallTop');
     
     wallBottom = myWorld.createEntity({
-      color: "blue",
+//      color: "blue",
+      color: "white",
       x: 18,
       y: borders.bottom,
       width: 16,
@@ -187,9 +199,10 @@ function init(){
     wallBottom.name('wallBottom');
     
     point = myWorld.createEntity({
+//      color: "black",
+      color: "white",
         shape : 'circle',
         radius : 1,
-        color : 'black',
         x: centerOfBorders.x,
         y: centerOfBorders.y,
         width: 5,
@@ -202,19 +215,22 @@ function init(){
     
     myWorld.mousePan({
         start: function(e, viewportInfos){
-            point.color('pink');
+//            point.color('pink');
             console.log('world mousePan start');
+            console.info('world mousePan start',e,viewportInfos);
         },
         stop: function(e, viewportInfos){
-            point.color('black');
+//            point.color('black');
             console.log('world mousePan stop');
+            console.info('world mousePan stop',e,viewportInfos);
         },
         drag: function(e, viewportInfos){
 //            console.info('pan - viewport x/y',viewportInfos.viewport.x,viewportInfos.viewport.y,viewportInfos.viewport.y+viewportInfos.viewport.height);
             console.log('world mousePan drag');
+            console.info('world mousePan drag',e,viewportInfos);
         }
     });
-    myWorld.mousewheelZoom({step:0.5});
+    myWorld.mousewheelZoom({step:2});
 
 }   
 

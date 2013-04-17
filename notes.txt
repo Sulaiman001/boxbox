@@ -49,6 +49,48 @@ PanDraggingObject(e, overrideViewport)
 - getLastViewport
 - getOriginalViewport
 
+-- old --
+                
+                /*
+                 * @function mergePointerPanInfos
+                 * @param {MouseEvent} | {Touch} (one specific touch)
+                 * @context World
+                 */
+                var mergePointerPanInfos = function(originalInfos, e, mode){
+                    var relativePointerPos = {
+                            x : (e.offsetX || e.layerX || e.pageX) / this.scale(),
+                            y : (e.offsetY || e.layerY || e.pageY) / this.scale()
+                        },
+                        result, multiplier;
+                        switch (mode){
+                            case 'touch' :
+                                multiplier = this._ops._touchPan.panMultiplier;
+                                break;
+                            case 'mouse' :
+                                multiplier = this._ops._mousePan.multiplier;
+                                break;
+                            default :
+                                multiplier = 1;
+                        }
+                    result = {
+                        originalViewport : {
+                            x : originalInfos.originalViewport.x,
+                            y : originalInfos.originalViewport.y,
+                            width : originalInfos.originalViewport.width,
+                            height : originalInfos.originalViewport.height,
+                            scale : originalInfos.originalViewport.scale
+                        },
+                        viewport : {
+                            x : originalInfos.originalViewport.x - (relativePointerPos.x - originalInfos.originalRelativePointerPos.x)*multiplier,
+                            y : originalInfos.originalViewport.y - (relativePointerPos.y - originalInfos.originalRelativePointerPos.y)*multiplier,
+                            width : originalInfos.originalViewport.width,
+                            height : originalInfos.originalViewport.height,
+                            scale : originalInfos.originalViewport.scale
+                        }
+                    };
+                    return result;
+                };
+
 ============
 
 touchPan specs

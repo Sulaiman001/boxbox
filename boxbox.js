@@ -924,6 +924,93 @@ See more on the readme file
                 }());
                 
                 /**
+                 * Objects managing dragging
+                 */
+                
+                /**
+                 * @function PanDraggingObject
+                 * @param {DraggingInfos}
+                 * @added by topheman
+                 */
+                var PanDraggingObject = function(originalDraggingInfos){
+                    this.infos = [];
+                    this.addDraggingInfos = function(draggingInfos){
+                        this.infos.push(draggingInfos);
+                    };
+                    this.getOriginalDraggingInfos = function(){
+                        return this.infos[0];
+                    };
+                    this.getLastDraggingInfos = function(){
+                        return this.infos[this.infos.length-1];
+                    };
+                    this.getViewportInfos = function(e,mode){
+                        var originalDraggingInfos   = this.getOriginalDraggingInfos(),
+                            lastDraggingInfos       = this.getLastDraggingInfos(),
+                            currentRelativePointer  = {
+                                x : (e.offsetX || e.layerX || e.pageX) / lastDraggingInfos.viewport.scale,
+                                y : (e.offsetY || e.layerY || e.pageY) / lastDraggingInfos.viewport.scale
+                            },
+                            result, multiplier;
+                        switch(mode){
+                            case 'touch' :
+                                multiplier = self._ops._touchPan.panMultiplier;
+                                break;
+                            case 'mouse' :
+                                multiplier = self._ops._mousePan.multiplier;
+                                break;
+                            default :
+                                multiplier = 1;
+                        }
+                        console.info('originalDraggingInfos',originalDraggingInfos,'lastDraggingInfos',lastDraggingInfos,'currentRelativePointer',currentRelativePointer);
+                        result = {
+                            originalViewport : {
+                                x       : originalDraggingInfos.viewport.x,
+                                y       : originalDraggingInfos.viewport.y,
+                                width   : originalDraggingInfos.viewport.width,
+                                height  : originalDraggingInfos.viewport.height,
+                                scale   : originalDraggingInfos.viewport.scale
+                            },
+                            viewport : {
+                                x : lastDraggingInfos.viewport.x - (currentRelativePointer.x - lastDraggingInfos.relativePointer.x)*multiplier,
+                                y : lastDraggingInfos.viewport.y - (currentRelativePointer.y - lastDraggingInfos.relativePointer.y)*multiplier,
+                                width : lastDraggingInfos.viewport.width,
+                                height : lastDraggingInfos.viewport.height,
+                                scale : lastDraggingInfos.viewport.scale
+                            }
+                        };
+                        return result;
+                    };
+
+                    //init the object
+                    this.addDraggingInfos(originalDraggingInfos);
+                };
+                
+                /**
+                 * @function DraggingInfos
+                 * @param {MouseEvent} | {TouchEvent} mouse or touch event at the time of the creation of the DraggingInfos
+                 * @param {Object} Viewport @optional
+                 * @added by topheman
+                 */
+                var DraggingInfos = function(e, overrideViewport){
+                    //no overrideViewport specified, take the current one
+                    if(!overrideViewport){
+                        overrideViewport = self.viewport.getCurrentWindowInfos();
+                    }
+                    //this is only a relative position in the world (doesn't takes in account the camera position)
+                    this.relativePointer = {
+                            x : (e.offsetX || e.layerX || e.pageX) / self.scale(),
+                            y : (e.offsetY || e.layerY || e.pageY) / self.scale()
+                    };
+                    this.viewport = {
+                        x : overrideViewport.x,
+                        y : overrideViewport.y,
+                        width : overrideViewport.width,
+                        height : overrideViewport.height,
+                        scale : overrideViewport.scale
+                    };
+                };
+                
+                /**
                  * Key events
                  */
                 if(!self._ops.disableKeyEvents){ //@added by topheman (only the test part)
@@ -1058,6 +1145,7 @@ See more on the readme file
                             callMousewheelzoom = false;//if an entity catches the mousewheel event, don't trigger the mousewheelZoomEvent
                         }
                     }
+                    //update the viewport if mousePanning
                     //at the opposite of the others events (where the special events are called before the user events), here we call it after
                     _world_mousewheelHandler(e, mousePos,callMousewheelzoom);
                     e.preventDefault();
@@ -1491,6 +1579,11 @@ See more on the readme file
                         //rescale
                         rescaledViewport = self.viewport.getScaledWindowInfos(newScale);
                         
+                        //if panning, update the viewports
+                        if(self._mousePanDragging){
+                            self._mousePanDragging.addDraggingInfos(new DraggingInfos(e, rescaledViewport));
+                        }
+                        
                         //prevent 0 or negative scale
                         if(rescaledViewport.scale > 0){
                             
@@ -1881,20 +1974,23 @@ See more on the readme file
                     var viewportInfos,originalRelativePointerPos;
                     //tag as dragging when passing for the first time
                     if(!this._mousePanDragging && !this._mousePanStartDrag){
-                        originalRelativePointerPos = {
-                            x : (e.offsetX || e.layerX || e.pageX) / this.scale(),
-                            y : (e.offsetY || e.layerY || e.pageY) / this.scale()
-                        };
-                        //tag as dragging (all along the drag), with the original viewport
-                        this._mousePanDragging = {
-                            originalViewport            : this.viewport.getCurrentWindowInfos(),
-                            originalRelativePointerPos  : originalRelativePointerPos 
-                        };
+//                        originalRelativePointerPos = {
+//                            x : (e.offsetX || e.layerX || e.pageX) / this.scale(),
+//                            y : (e.offsetY || e.layerY || e.pageY) / this.scale()
+//                        };
+//                        //tag as dragging (all along the drag), with the original viewport
+//                        this._mousePanDragging = {
+//                            originalViewport            : this.viewport.getCurrentWindowInfos(),
+//                            originalRelativePointerPos  : originalRelativePointerPos 
+//                        };
+                        //tag as dragging (all along the drag), with the original viewport and the original pointer infos
+                        this._mousePanDragging = new PanDraggingObject(new DraggingInfos(e));
                         //tag as startDrag to know that startDrag event will have to be triggered next time on mousemove event
                         this._mousePanStartDrag = true;                        
                     }
                     else if(this._mousePanDragging){
-                        viewportInfos = mergePointerPanInfos.call(this,this._mousePanDragging, e, 'mouse');
+//                        viewportInfos = mergePointerPanInfos.call(this,this._mousePanDragging, e, 'mouse');
+                        viewportInfos = this._mousePanDragging.getViewportInfos(e, 'mouse');
                         //check viewport boundaries
                         viewportInfos.viewport = this.viewport.checkBoundaries(viewportInfos.viewport);
                         
@@ -1928,7 +2024,8 @@ See more on the readme file
                 var _world_mouseupdHandlerForPanEvent = function(e, mousePos){
                     var viewportInfos;
                     if(this._mousePanDragging){
-                        viewportInfos = mergePointerPanInfos.call(this,this._mousePanDragging, e, 'mouse');
+//                        viewportInfos = mergePointerPanInfos.call(this,this._mousePanDragging, e, 'mouse');
+                        viewportInfos = this._mousePanDragging.getViewportInfos(e, 'mouse');
                         //trigger the stopdrag event (don't trigger it if the first drag hasn't happened)
                         if(this._mousePanStartDrag === false && this._mousePanStopdragHandler){
                             this._mousePanStopdragHandler.call(this,e,viewportInfos,'stop');
