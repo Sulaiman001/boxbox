@@ -961,7 +961,7 @@ See more on the readme file
                             default :
                                 multiplier = 1;
                         }
-                        console.info('originalDraggingInfos',originalDraggingInfos,'lastDraggingInfos',lastDraggingInfos,'currentRelativePointer',currentRelativePointer);
+//                        console.info('originalDraggingInfos',originalDraggingInfos,'lastDraggingInfos',lastDraggingInfos,'currentRelativePointer',currentRelativePointer);
                         result = {
                             originalViewport : {
                                 x       : originalDraggingInfos.viewport.x,
@@ -987,7 +987,7 @@ See more on the readme file
                 
                 /**
                  * @function DraggingInfos
-                 * @param {MouseEvent} | {TouchEvent} mouse or touch event at the time of the creation of the DraggingInfos
+                 * @param {MouseEvent} | {TouchEvent} mouse or touch event at the time of the creation of the DraggingInfos (the one that manage the pan)
                  * @param {Object} Viewport @optional
                  * @added by topheman
                  */
@@ -999,7 +999,8 @@ See more on the readme file
                     //this is only a relative position in the world (doesn't takes in account the camera position)
                     this.relativePointer = {
                             x : (e.offsetX || e.layerX || e.pageX) / self.scale(),
-                            y : (e.offsetY || e.layerY || e.pageY) / self.scale()
+                            y : (e.offsetY || e.layerY || e.pageY) / self.scale(),
+                            identifier : e.idenfier !== null ? e.identifier : null
                     };
                     this.viewport = {
                         x : overrideViewport.x,
@@ -2050,25 +2051,34 @@ See more on the readme file
                  * @added by topheman
                  */
                 var _world_touchmoveHandlerForPanEvent = function(e, touchInfos, options){
-                    var viewportInfos,originalRelativePointerPos, newScale;
+                    var viewportInfos,originalRelativePointerPos, newScale, panningTouchIdentifier, pinchingInfos;
+                    
                     //tag as dragging when passing for the first time
                     if(!this._touchPanDragging && !this._touchPanStartDrag){
-                        originalRelativePointerPos = {
-                            x : (e.touches[0].offsetX || e.touches[0].layerX || e.touches[0].pageX) / this.scale(),
-                            y : (e.touches[0].offsetY || e.touches[0].layerY || e.touches[0].pageY) / this.scale()
-                        };
-                        //tag as dragging (all along the drag), with the original viewport + switch to panning mode
-                        this._touchPanDragging = {
-                            originalViewport            : this.viewport.getCurrentWindowInfos(),
-                            originalRelativePointerPos  : originalRelativePointerPos,
-                            identifier : e.touches[0].identifier
-                        };
+//                        originalRelativePointerPos = {
+//                            x : (e.touches[0].offsetX || e.touches[0].layerX || e.touches[0].pageX) / this.scale(),
+//                            y : (e.touches[0].offsetY || e.touches[0].layerY || e.touches[0].pageY) / this.scale()
+//                        };
+//                        //tag as dragging (all along the drag), with the original viewport + switch to panning mode
+//                        this._touchPanDragging = {
+//                            originalViewport            : this.viewport.getCurrentWindowInfos(),
+//                            originalRelativePointerPos  : originalRelativePointerPos,
+//                            identifier : e.touches[0].identifier
+//                        };
+                        //tag as dragging (all along the drag), with the original viewport and the original pointer infos
+                        this._touchPanDragging = new PanDraggingObject(new DraggingInfos(e.touches[0]));
                         //tag as startDrag to know that startDrag event will have to be triggered next time on mousemove event
                         this._touchPanStartDrag = true;
                     }
                     else if(this._touchPanDragging){
+                    
+                        //retrieve the touch identifier of the touch that initiated the pan (at "start" pan)
+                        panningTouchIdentifier = this._touchPanDragging.getOriginalDraggingInfos().relativePointer.identifier;
+//                        console.info('panningTouchIdentifier',panningTouchIdentifier,e);
+                    
                         //updating viewportInfos with panning pointer infos
-                        viewportInfos = mergePointerPanInfos.call(this,this._touchPanDragging, e.touches[0], 'touch');
+//                        viewportInfos = mergePointerPanInfos.call(this,this._touchPanDragging, e.touches[0], 'touch');
+                        viewportInfos = this._touchPanDragging.getViewportInfos(e.touches[0], 'touch');
 
                         //if we are pinching, adjust the scale here, before checking the viewport boundaries (only if this isn't the beginning of the pinching)
                         if(this._touchPanDragging.pinchingInfos && !this._touchPanDragging.pinchingInfos.startPinching){
@@ -2085,7 +2095,7 @@ See more on the readme file
                         }
                         
                         //trigger startdrag event on the first move of the first touch (the panning one) or on the touchstart of the second touch (the pinching one) - if the first touch hasn't moved (to keep being transactional)
-                        if(this._touchPanStartDrag && ((e.type === 'touchmove' && e.changedTouches[0].identifier === this._touchPanDragging.identifier) || (e.type === 'touchstart' && e.changedTouches[0].identifier !== this._touchPanDragging.identifier))){
+                        if(this._touchPanStartDrag && ((e.type === 'touchmove' && e.changedTouches[0].identifier === panningTouchIdentifier) || (e.type === 'touchstart' && e.changedTouches[0].identifier !== panningTouchIdentifier))){
                             if(this._touchPanStartdragHandler){
                                 this._touchPanStartdragHandler.call(this,e, viewportInfos);
                             }
@@ -2114,6 +2124,9 @@ See more on the readme file
                         //tag as start pinching
                         this._touchPanDragging.pinchingInfos.startPinching = true;
                         this._touchPanDragging.pinchingInfos.identifier = e.touches[1].identifier;
+                        
+                        //create a new snapshot of the viewport
+                        this._touchPanDragging.addDraggingInfos(new DraggingInfos(e.touches[0]));
                     }
                 };
                 
@@ -2126,12 +2139,17 @@ See more on the readme file
                  */
                 var _world_touchendHandlerForPanEvent = function(e, touchInfos){
                     console.log('touchend','changed touch',e.changedTouches && e.changedTouches.length > 0 ? e.changedTouches[0].identifier : null,'pinching touch',this._touchPanDragging && this._touchPanDragging.pinchingInfos && this._touchPanDragging.pinchingInfos.identifier ? this._touchPanDragging.pinchingInfos.identifier : null);
-                    var viewportInfos, newScale;
+                    var viewportInfos, newScale, panningTouchIdentifier;
+                    
+                    //retrieve the touch identifier of the touch that initiated the pan (at "start" pan) (if panning)
+                    panningTouchIdentifier = this._touchPanDragging ? this._touchPanDragging.getOriginalDraggingInfos().relativePointer.identifier : null;
+                    
                     //if world is currently panning and has received a touchend from the correct identifier (the one that initiated the panning) then we stop panning 
-                    if(this._touchPanDragging && this._touchPanDragging.identifier === e.changedTouches[0].identifier){
+                    if(this._touchPanDragging && panningTouchIdentifier === e.changedTouches[0].identifier){
                         
                         //updating viewportInfos with panning pointer infos
-                        viewportInfos = mergePointerPanInfos.call(this,this._touchPanDragging, e.changedTouches[0], 'touch');
+//                        viewportInfos = mergePointerPanInfos.call(this,this._touchPanDragging, e.changedTouches[0], 'touch');
+                        viewportInfos = this._touchPanDragging.getViewportInfos(e.changedTouches[0], 'touch');
                         //check viewport boundaries
                         viewportInfos.viewport = this.viewport.checkBoundaries(viewportInfos.viewport);
                         //update viewport
@@ -2152,11 +2170,17 @@ See more on the readme file
                     }
                     //however if the world is pinching and has received a touchend from the identifier that initiated the pinching, we switch back to panning
                     else if(this._touchPanDragging && this._touchPanDragging.pinchingInfos && this._touchPanDragging.pinchingInfos.identifier === e.changedTouches[0].identifier){
-                        console.log('trying stop pinching');
+                        
+                        //create a new snapshot of the viewport
+                        this._touchPanDragging.addDraggingInfos(new DraggingInfos(e.touches[0]));
+                        
+                        console.info('stopping pinch', this._touchPanDragging.getViewportInfos(e.touches[0], 'touch'));
+                        
                         if(this._touchPanDragging.pinchingInfos.startPinching !== true){
                         
                             //updating viewportInfos with panning pointer infos
-                            viewportInfos = mergePointerPanInfos.call(this,this._touchPanDragging, e.touches[0], 'touch');
+//                            viewportInfos = mergePointerPanInfos.call(this,this._touchPanDragging, e.touches[0], 'touch');
+                            viewportInfos = this._touchPanDragging.getViewportInfos(e.touches[0], 'touch');
 
                             //if we are pinching, adjust the scale here, before checking the viewport boundaries (only if this isn't the beginning of the pinching)
                             if(this._touchPanDragging.pinchingInfos && !this._touchPanDragging.pinchingInfos.startPinching){

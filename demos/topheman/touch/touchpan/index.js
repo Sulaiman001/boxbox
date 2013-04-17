@@ -215,26 +215,26 @@ function init(){
         allowPinch : true,
         start: function(e, viewportInfos){
             point.color('pink');
-            console.info('touchPan start callback',e,viewportInfos);
+            console.info('touchPan start',e,viewportInfos);
             console.log('touchPan start');
         },
         drag: function(e, viewportInfos){
-            console.info('touchPan drag callback');
+            console.info('touchPan drag',e, viewportInfos);
             console.log('touchPan drag');
         },
         stop: function(e, viewportInfos){
             point.color('black');
-            console.info('touchPan stop callback',e,viewportInfos);
+            console.info('touchPan stop',e,viewportInfos);
             console.log('touchPan stop');
         },
         startPinching: function(e, viewportInfos){
             point.color('red');
-            console.info('touchPan startPinching callback',e,viewportInfos);
+            console.info('touchPan startPinching',e,viewportInfos);
             console.log('touchPan startPinching');
         },
         stopPinching: function(e, viewportInfos){
             point.color('pink');
-            console.info('touchPan stopPinching callback',e,viewportInfos);
+            console.info('touchPan stopPinching',e,viewportInfos);
             console.log('touchPan stopPinching');
         }
     });
