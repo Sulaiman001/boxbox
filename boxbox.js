@@ -6,7 +6,7 @@ Released under the MIT license:
 https://github.com/topheman/boxbox/blob/master/LICENSE
 
 This version of boxbox is a fork of the original version created by Greg Smith. ( http://incompl.github.com/boxbox/ )
-The whole mouse/touch events management layer and some other methods are from Christophe Rosset aka topheman. ( http://topheman.github.com/boxbox/ )
+The whole mouse/touch events management layer and some other features are from Christophe Rosset aka topheman. ( http://topheman.github.com/boxbox/ )
 Changes from the original are tagged @added by topheman for a future merge.
 See more on the readme file
 */
@@ -269,7 +269,6 @@ See more on the readme file
             var i;
             var world;
             var listener;
-            var initialViewport;//@added by topheman
             this._ops = extend(options, WORLD_DEFAULT_OPTIONS);
             this.checkListenersOptions();
             this._world = new b2World(new b2Vec2(this._ops.gravity.x,
@@ -334,8 +333,8 @@ See more on the readme file
                      * @scale
                      * </ul>
                      * @added by topheman
-                     * todo take account of the pointerPos or the event (for the moment scaling on the center of the viewport)
                      */
+                    //todo take account of the pointerPos or the event (for the moment scaling on the center of the viewport)
                     getScaledWindowInfos: function(newScale, overrideCurrentViewport, preventLoop){
                         var rescaledViewport = {},
                             currentViewport = overrideCurrentViewport ? overrideCurrentViewport : this.getCurrentWindowInfos(),
@@ -412,8 +411,8 @@ See more on the readme file
                      * @scale
                      * </ul>
                      * @added by topheman
-                     * todo adjust process for stageRatio < 1
                      */
+                    //todo adjust process for stageRatio < 1
                     getMaxWindowInfos : function(forceCurrentRatio){
                         var i,tmpPosition,tmpRadius,tmpAngle, body,vertices,tmpVertices,j,currentWindowInfos,stageRatio,
                             x = [],y = [], minX, maxX, minY, maxY, result,
@@ -876,6 +875,24 @@ See more on the readme file
                         world.DestroyBody(toDestroy._body);
                         toDestroy._destroyed = true;
                         delete self._keydownHandlers[id];
+                        delete self._keyupHandlers[id];//@added by topheman
+                        delete self._mousedownHandlers[id];//@added by topheman
+                        delete self._mousemoveHandlers[id];//@added by topheman
+                        delete self._mouseupHandlers[id];//@added by topheman
+                        delete self._mouseinHandlers[id];//@added by topheman
+                        delete self._mouseoutHandlers[id];//@added by topheman
+                        delete self._mouseStartdragHandlers[id];//@added by topheman
+                        delete self._mouseDragHandlers[id];//@added by topheman
+                        delete self._mouseStopdragHandlers[id];//@added by topheman
+                        delete self._touchstartHandlers[id];//@added by topheman
+                        delete self._touchmoveHandlers[id];//@added by topheman
+                        delete self._touchendHandlers[id];//@added by topheman
+                        delete self._touchStartdragHandlers[id];//@added by topheman
+                        delete self._touchDragHandlers[id];//@added by topheman
+                        delete self._touchStopdragHandlers[id];//@added by topheman
+                        delete self._touchAddtouchdragHandlers[id];//@added by topheman
+                        delete self._touchRemovetouchdragHandlers[id];//@added by topheman
+                        delete self._mousewheelHandlers[id];//@added by topheman
                         delete self._startContactHandlers[id];
                         delete self._finishContactHandlers[id];
                         delete self._impactHandlers[id];
@@ -934,6 +951,11 @@ See more on the readme file
                  */
                 var PanDraggingObject = function(originalDraggingInfos){
                     this.infos = [];
+                    
+                    /**
+                     * Adds a snapshot of the viewport to the PanDraggingObject
+                     * @param {DraggingInfos} draggingInfos
+                     */
                     this.addDraggingInfos = function(draggingInfos){
                         this.infos.push(draggingInfos);
                     };
@@ -943,6 +965,13 @@ See more on the readme file
                     this.getLastDraggingInfos = function(){
                         return this.infos[this.infos.length-1];
                     };
+                    
+                    /**
+                     * Returns a viewportInfos object (to be used in the viewport modifying methods callbacks such as .mousePan or .touchPan)
+                     * @param {MouseEvent} | {TouchEvent} e
+                     * @param {String} mode
+                     * @return {Object} ViewportInfos
+                     */
                     this.getViewportInfos = function(e,mode){
                         var originalDraggingInfos   = this.getOriginalDraggingInfos(),
                             lastDraggingInfos       = this.getLastDraggingInfos(),
@@ -961,7 +990,6 @@ See more on the readme file
                             default :
                                 multiplier = 1;
                         }
-//                        console.info('originalDraggingInfos',originalDraggingInfos,'lastDraggingInfos',lastDraggingInfos,'currentRelativePointer',currentRelativePointer);
                         result = {
                             originalViewport : {
                                 x       : originalDraggingInfos.viewport.x,
@@ -1413,11 +1441,6 @@ See more on the readme file
                     else if(e.touches.length === 2 && self.isTouchPanning() && self._ops._touchPan.allowPinch === true && self._touchDraggingEntityIds.length === 0){
                         _world_touchmoveHandlerForPanEvent.call(self,e, touchInfos, {pinching : true});
                     }
-//                    //on the other hand, if already 2 touches, not already panning, panning enabled, not currently dragging an entity and pinching is allowed, we can start noPanPinching mode
-//                    //@todo it seems to me that pinching like this is wrong (will see after)
-//                    else if(false && e.touches.length === 2 && self.isTouchPanningNone() && self._ops._touchPan.disabled === false && self._touchDraggingEntityIds.length === 1 && self._ops._touchPan.allowPinch){
-//                        
-//                    }
                 };
                 
                 /*
@@ -1734,6 +1757,7 @@ See more on the readme file
                             }
                         }
                     }
+                    //@todo break the loop ?
                     return result;
                 };
                 
@@ -1924,46 +1948,6 @@ See more on the readme file
                 };
                 
                 /*
-                 * @function mergePointerPanInfos
-                 * @param {MouseEvent} | {Touch} (one specific touch)
-                 * @context World
-                 */
-                var mergePointerPanInfos = function(originalInfos, e, mode){
-                    var relativePointerPos = {
-                            x : (e.offsetX || e.layerX || e.pageX) / this.scale(),
-                            y : (e.offsetY || e.layerY || e.pageY) / this.scale()
-                        },
-                        result, multiplier;
-                        switch (mode){
-                            case 'touch' :
-                                multiplier = this._ops._touchPan.panMultiplier;
-                                break;
-                            case 'mouse' :
-                                multiplier = this._ops._mousePan.multiplier;
-                                break;
-                            default :
-                                multiplier = 1;
-                        }
-                    result = {
-                        originalViewport : {
-                            x : originalInfos.originalViewport.x,
-                            y : originalInfos.originalViewport.y,
-                            width : originalInfos.originalViewport.width,
-                            height : originalInfos.originalViewport.height,
-                            scale : originalInfos.originalViewport.scale
-                        },
-                        viewport : {
-                            x : originalInfos.originalViewport.x - (relativePointerPos.x - originalInfos.originalRelativePointerPos.x)*multiplier,
-                            y : originalInfos.originalViewport.y - (relativePointerPos.y - originalInfos.originalRelativePointerPos.y)*multiplier,
-                            width : originalInfos.originalViewport.width,
-                            height : originalInfos.originalViewport.height,
-                            scale : originalInfos.originalViewport.scale
-                        }
-                    };
-                    return result;
-                };
-                
-                /*
                  * @function _world_mousemoveHandlerForPanEvent
                  * @param {MouseEvent} e
                  * @param {Object} mousePos
@@ -1972,25 +1956,15 @@ See more on the readme file
                  * @triggers the startdrag or the drag event specified in the .mousePan() method
                  */
                 var _world_mousemoveHandlerForPanEvent = function(e){
-                    var viewportInfos,originalRelativePointerPos;
+                    var viewportInfos;
                     //tag as dragging when passing for the first time
                     if(!this._mousePanDragging && !this._mousePanStartDrag){
-//                        originalRelativePointerPos = {
-//                            x : (e.offsetX || e.layerX || e.pageX) / this.scale(),
-//                            y : (e.offsetY || e.layerY || e.pageY) / this.scale()
-//                        };
-//                        //tag as dragging (all along the drag), with the original viewport
-//                        this._mousePanDragging = {
-//                            originalViewport            : this.viewport.getCurrentWindowInfos(),
-//                            originalRelativePointerPos  : originalRelativePointerPos 
-//                        };
                         //tag as dragging (all along the drag), with the original viewport and the original pointer infos
                         this._mousePanDragging = new PanDraggingObject(new DraggingInfos(e));
                         //tag as startDrag to know that startDrag event will have to be triggered next time on mousemove event
                         this._mousePanStartDrag = true;                        
                     }
                     else if(this._mousePanDragging){
-//                        viewportInfos = mergePointerPanInfos.call(this,this._mousePanDragging, e, 'mouse');
                         viewportInfos = this._mousePanDragging.getViewportInfos(e, 'mouse');
                         //check viewport boundaries
                         viewportInfos.viewport = this.viewport.checkBoundaries(viewportInfos.viewport);
@@ -2025,7 +1999,6 @@ See more on the readme file
                 var _world_mouseupdHandlerForPanEvent = function(e, mousePos){
                     var viewportInfos;
                     if(this._mousePanDragging){
-//                        viewportInfos = mergePointerPanInfos.call(this,this._mousePanDragging, e, 'mouse');
                         viewportInfos = this._mousePanDragging.getViewportInfos(e, 'mouse');
                         //trigger the stopdrag event (don't trigger it if the first drag hasn't happened)
                         if(this._mousePanStartDrag === false && this._mousePanStopdragHandler){
@@ -2055,16 +2028,6 @@ See more on the readme file
                     
                     //tag as dragging when passing for the first time
                     if(!this._touchPanDragging && !this._touchPanStartDrag){
-//                        originalRelativePointerPos = {
-//                            x : (e.touches[0].offsetX || e.touches[0].layerX || e.touches[0].pageX) / this.scale(),
-//                            y : (e.touches[0].offsetY || e.touches[0].layerY || e.touches[0].pageY) / this.scale()
-//                        };
-//                        //tag as dragging (all along the drag), with the original viewport + switch to panning mode
-//                        this._touchPanDragging = {
-//                            originalViewport            : this.viewport.getCurrentWindowInfos(),
-//                            originalRelativePointerPos  : originalRelativePointerPos,
-//                            identifier : e.touches[0].identifier
-//                        };
                         //tag as dragging (all along the drag), with the original viewport and the original pointer infos
                         this._touchPanDragging = new PanDraggingObject(new DraggingInfos(e.touches[0]));
                         //tag as startDrag to know that startDrag event will have to be triggered next time on mousemove event
@@ -2074,10 +2037,8 @@ See more on the readme file
                     
                         //retrieve the touch identifier of the touch that initiated the pan (at "start" pan)
                         panningTouchIdentifier = this._touchPanDragging.getOriginalDraggingInfos().relativePointer.identifier;
-//                        console.info('panningTouchIdentifier',panningTouchIdentifier,e);
                     
                         //updating viewportInfos with panning pointer infos
-//                        viewportInfos = mergePointerPanInfos.call(this,this._touchPanDragging, e.touches[0], 'touch');
                         viewportInfos = this._touchPanDragging.getViewportInfos(e.touches[0], 'touch');
 
                         //if we are pinching, adjust the scale here, before checking the viewport boundaries (only if this isn't the beginning of the pinching)
@@ -2138,7 +2099,6 @@ See more on the readme file
                  * @added by topheman
                  */
                 var _world_touchendHandlerForPanEvent = function(e, touchInfos){
-                    console.log('touchend','changed touch',e.changedTouches && e.changedTouches.length > 0 ? e.changedTouches[0].identifier : null,'pinching touch',this._touchPanDragging && this._touchPanDragging.pinchingInfos && this._touchPanDragging.pinchingInfos.identifier ? this._touchPanDragging.pinchingInfos.identifier : null);
                     var viewportInfos, newScale, panningTouchIdentifier, rescale;
                     
                     //retrieve the touch identifier of the touch that initiated the pan (at "start" pan) (if panning)
@@ -2155,7 +2115,6 @@ See more on the readme file
                         }
                         
                         //updating viewportInfos with panning pointer infos
-//                        viewportInfos = mergePointerPanInfos.call(this,this._touchPanDragging, e.changedTouches[0], 'touch');
                         viewportInfos = this._touchPanDragging.getViewportInfos(e.changedTouches[0], 'touch');
                         //check viewport boundaries
                         viewportInfos.viewport = this.viewport.checkBoundaries(viewportInfos.viewport);
@@ -2185,12 +2144,9 @@ See more on the readme file
                         //create a new snapshot of the viewport
                         this._touchPanDragging.addDraggingInfos(new DraggingInfos(e.touches[0]));
                         
-                        console.info('stopping pinch', this._touchPanDragging.getViewportInfos(e.touches[0], 'touch'));
-                        
                         if(this._touchPanDragging.pinchingInfos.startPinching !== true){
                         
                             //updating viewportInfos with panning pointer infos
-//                            viewportInfos = mergePointerPanInfos.call(this,this._touchPanDragging, e.touches[0], 'touch');
                             viewportInfos = this._touchPanDragging.getViewportInfos(e.touches[0], 'touch');
 
                             //if we are pinching, adjust the scale here, before checking the viewport boundaries (only if this isn't the beginning of the pinching)
@@ -3531,7 +3487,6 @@ See more on the readme file
             this._removeMousewheelHandler(worldCallbackEventId);
         },
                 
-                
         /**
          * @_name mousePan
          * @_module world
@@ -3679,7 +3634,73 @@ See more on the readme file
         isMousePanEnabled : function(){
             return !this._ops._mousePan.disabled;
         },
+
                 
+        /**
+         * @_name touchPan
+         * @_module world
+         * @_params [options]
+         * @description 
+         Enables pan and pinch with touch, on the world.
+         <br>The viewportInfos variable passed within the callback function contains the original viewport parameters when the drag started, and the current viewport parameters at the time of your callback.
+         <br>Draggable entities are excluded by default (pan will not trigger if you click on it), you exclude other entities in the "excludeEntityIds" array (if you have special behaviours on them that would mess with the pan for example)
+         <br>You can choose not to trigger the events you added to the world by flagging triggerWorldEvents = false
+         <br>You can choose to disable the pinching by flagging allowPinch = false
+         <h2>Examples</h2>
+         <h3>Without options</h3>
+         <code>world.touchPan();</code>
+         <h3>With options</h3>
+         <code>world.touchPan({
+        &nbsp;&nbsp;start:function(e,viewportInfos){
+        &nbsp;&nbsp;&nbsp;&nbsp;console.info('pan-start',viewportInfos);
+        &nbsp;&nbsp;},
+        &nbsp;&nbsp;drag:function(e,viewportInfos){
+        &nbsp;&nbsp;&nbsp;&nbsp;console.info('pan-drag',e,viewportInfos);
+        &nbsp;&nbsp;},
+        &nbsp;&nbsp;stop:function(e,viewportInfos){
+        &nbsp;&nbsp;&nbsp;&nbsp;console.info('pan-stop',e,viewportInfos);
+        &nbsp;&nbsp;},
+        &nbsp;&nbsp;startPinching:function(e,viewportInfos){
+        &nbsp;&nbsp;&nbsp;&nbsp;console.info('pan+pinching started',e,viewportInfos);
+        &nbsp;&nbsp;},
+        &nbsp;&nbsp;stopPinching:function(e,viewportInfos){
+        &nbsp;&nbsp;&nbsp;&nbsp;console.info('pan+pinching stopped',e,viewportInfos);
+        &nbsp;&nbsp;},
+        &nbsp;&nbsp;excludeEntityIds:[
+        &nbsp;&nbsp;&nbsp;&nbsp;2,5
+        &nbsp;&nbsp;],
+        &nbsp;&nbsp;multiplier:1.2 //(default = 1)
+        });</code>
+         <h3>Enable / disable</h3>
+         <code>world.touchPan('disable');
+         world.touchPan('enable');</code>
+         <h3>Exclude / include entities by their ids</h3>
+         <code>world.touchPan('exclude',2);
+         world.touchPan('include',4);
+         world.touchPan('exclude',[7,8,12]);</code>
+         * @options
+         * <ul>
+         * @disabled {Boolean} true/false to disable/enable the draggable state
+         * @multiplier {Number} 1 by default
+         * @allowPinch {Boolean} true by default
+         * @triggerWorldEvents {Boolean} true by default
+         * @excludeEntityIds [Ids ...] Ids of entities (optional)
+         * @start function(e,viewportInfos)
+         * @drag function(e,viewportInfos)
+         * @stop function(e,viewportInfos)
+         * @startPinching function(e,viewportInfos)
+         * @stopPinching function(e,viewportInfos)
+         * </ul>
+         * @viewportInfos
+         * <ul>
+         * @x
+         * @y
+         * @width
+         * @height
+         * @scale
+         * </ul>
+         * @added by topheman
+         */                
         touchPan : function(options,value){
             var i,tmpValue;
             if(this._ops.disableTouchEvents){
@@ -3755,13 +3776,14 @@ See more on the readme file
                     this._ops._touchPan.allowPinch = true;//enabled by default (if not specified)
                 }
                 
-                if(typeof options.panMultiplier === 'number'){
-                    this._ops._touchPan.panMultiplier = options.panMultiplier;
+                if(typeof options.multiplier === 'number'){
+                    this._ops._touchPan.panMultiplier = options.multiplier;
                 }
-                else if(typeof options.panMultiplier !== 'undefined'){
+                else if(typeof options.multiplier !== 'undefined'){
                     this._ops._touchPan.panMultiplier = 1;//1 by default
                 }
                 
+                //this one isn't implemented yet
                 if(typeof options.pinchMultiplier === 'number'){
                     this._ops._touchPan.pinchMultiplier = options.pinchMultiplier;
                 }
@@ -3805,7 +3827,13 @@ See more on the readme file
                 }
             }
         },
-
+        
+        /**
+         * @_name isTouchPanEnabled
+         * @_module world
+         * @description Returns true if touchPan is enabled
+         * @added by topheman
+         */
         isTouchPanEnabled : function(){
             return !this._ops._touchPan.disabled;
         },
@@ -3865,7 +3893,21 @@ See more on the readme file
             }
             return false;
         },
-                
+
+        
+        /**
+         * @_name mousewheelZoom
+         * @_module world
+         * @_params [options]
+         * @description 
+         * Enables zooming with the mouse wheeling
+         * @options
+         * <ul>
+         * @disabled {Boolean} true/false
+         * @step {Number} 0.1 by default (how much you scale in/out at each wheel event)
+         * </ul>
+         * @added by topheman
+         */
         mousewheelZoom : function(options){
             if(this._ops.disableMouseEvents){
                 console.warn('Mouse events are disabled, you tried to call mousewheelZoom');
@@ -3898,12 +3940,18 @@ See more on the readme file
                 if(typeof options.step === 'number'){
                     this._ops._mousewheelZoom.step = options.step;
                 }
-                else if(typeof options.multiplier !== 'undefined'){
+                else if(typeof options.step !== 'undefined'){
                     this._ops._mousewheelZoom.step = 0.1;//0.1 by default
                 }
             }
         },
-                
+        
+        /**
+         * @_name isMousewheelZoomEnabled
+         * @_module world
+         * @description Returns true if mouseWheelZoom is enabled
+         * @added by topheman
+         */    
         isMousewheelZoomEnabled : function(){
             return !this._ops._mousewheelZoom.disabled;
         }
