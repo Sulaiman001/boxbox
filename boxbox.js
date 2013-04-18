@@ -2291,6 +2291,129 @@ See more on the readme file
             }
         },
         
+        /**
+         * @_name cleanup
+         * @_module world
+         * @description Removes all the entities, all the handlers (even the world handlers such as mouse/touch Pan/wheelZoom) while keeping your boundaries (if any) in options
+         * <br>Usefull when you have multiple levels
+         * @added by topheman
+         */
+        cleanup : function(){
+            
+            var i,j, world = this._world, toDestroy, id, self = this;
+            //destroy the entities
+            for(i in this._entities){
+                toDestroy = this._entities[i];
+                id = toDestroy._id;
+                //destriy the box2d body
+                world.DestroyBody(toDestroy._body);
+                toDestroy._destroyed = true;
+                //destroy the handlers
+                delete self._keydownHandlers[id];
+                delete self._keyupHandlers[id];
+                delete self._mousedownHandlers[id];
+                delete self._mousemoveHandlers[id];
+                delete self._mouseupHandlers[id];
+                delete self._mouseinHandlers[id];
+                delete self._mouseoutHandlers[id];
+                delete self._mouseStartdragHandlers[id];
+                delete self._mouseDragHandlers[id];
+                delete self._mouseStopdragHandlers[id];
+                delete self._touchstartHandlers[id];
+                delete self._touchmoveHandlers[id];
+                delete self._touchendHandlers[id];
+                delete self._touchStartdragHandlers[id];
+                delete self._touchDragHandlers[id];
+                delete self._touchStopdragHandlers[id];
+                delete self._touchAddtouchdragHandlers[id];
+                delete self._touchRemovetouchdragHandlers[id];
+                delete self._mousewheelHandlers[id];
+                delete self._startContactHandlers[id];
+                delete self._finishContactHandlers[id];
+                delete self._impactHandlers[id];
+                delete self._constantVelocities[id];
+                delete self._constantForces[id];
+                //destroy the entity itself
+                delete self._entities[id];
+            }
+        
+//            self._ops = null;
+//            self._world = null;
+//            self._canvas = null;
+//          //reinit some of the ops
+            self._ops._mousePan = {
+                disabled: true,
+                excludeEntityIds: [],
+                multiplier: 1
+            };
+            self._ops._touchPan = { //@added by topheman
+                disabled: true,
+                panMultiplier: 1,
+                excludeEntityIds: [],
+                triggerWorldEvents: true,
+                allowPinch: true
+            },
+            self._ops._mousewheelZoom = {
+                disabled: true,
+                step: 0.1
+            };
+            //destroy the references in the world
+            self._destroyQueue = [];
+            self._impulseQueue = [];
+            //reinit the world handlers
+            self._keyupHandlers = {};
+            self._mousedownHandlers = {};
+            self._mouseupHandlers = {};
+            self._mousemoveHandlers = {};
+            self._mouseinHandlers = {};
+            self._mouseoutHandlers = {};
+            self._mouseStartdragHandlers = {};
+            self._mouseDragHandlers = {};
+            self._mouseStopdragHandlers = {};
+            self._mousePanStartdragHandler = null;
+            self._mousePanDragHandler = null;
+            self._mousePanStopdragHandler = null;
+            self._touchstartHandlers = {};
+            self._touchendHandlers = {};
+            self._touchmoveHandlers = {};
+            self._touchStartdragHandlers = {};
+            self._touchDragHandlers = {};
+            self._touchStopdragHandlers = {};
+            self._touchAddtouchdragHandlers = {};
+            self._touchRemovetouchdragHandlers = {};
+            self._touchPanStartdragHandler = null;
+            self._touchPanDragHandler = null;
+            self._touchPanStopdragHandler = null;
+            self._touchPanStartPinchingHandler = null;
+            self._touchPanStopPinchingHandler = null;
+            self._mousewheelHandlers = {};
+            self._startContactHandlers = {};
+            self._finishContactHandlers = {};
+            self._impactHandlers = {};
+            self._destroyQueue = [];
+            self._impulseQueue = [];
+            self._constantVelocities = {};
+            self._constantForces = {};
+            self._entities = {};
+            self._nextEntityId = 0;
+            self._cameraX = 0;
+            self._cameraY = 0;
+            self._onRender = [];
+            self._onTick = [];
+            self._creationQueue = [];
+            self._positionQueue = [];
+            self._pause = false;
+            self._mouseHoverEntityId = null;
+            self._mouseDraggingEntityId = null;
+            self._touchDraggingEntityIds  = [];
+            self._mouseDraggableEntityIds = [];
+            self._touchDraggableEntityIds = [];
+            
+            //repositions / rescales the viewport according to the boundaries (if any) of the world @added by topheman
+            self.viewport.centerToStage();
+            
+        },
+        
         _addKeydownHandler: function(id, f) {
             this._keydownHandlers[id] = f;
         },
