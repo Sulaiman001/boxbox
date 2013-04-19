@@ -59,7 +59,8 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
     function initWalls(){
         var wallConfig = {
             type: "static",
-            borderWidth : 0
+            borderWidth : 0,
+            color : "darkred"
         };
         
 	myWorld.createEntity( wallConfig, {
@@ -107,12 +108,13 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
         console.log("You can move the world too");
         console.log(">with mouse : just click on the stage and move + you can mousewheel to zoom in/out");
         console.log(">with touch : touch the stage with one finger to move it, with two finger to zoom in/out");
+        console.log("The crates are multitouch draggable all at once !");
         
         //drawing callback for the smiley
         var drawTargetting = function(ctx){
             if(this._canvasPointerInfos){
                 ctx.lineWidth = 3;
-                ctx.strokeStyle='gray';
+                ctx.strokeStyle='#900000';
                 ctx.beginPath();
                 ctx.moveTo(this.canvasPosition().x,this.canvasPosition().y);
                 ctx.lineTo(this._canvasPointerInfos.x,this._canvasPointerInfos.y);
@@ -137,7 +139,7 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
                 console.log('world.mousePan - stop');
             }
         });
-        //you could just writ myWorld.touchPan if you don't wan't specific callbacks
+        //you could just write myWorld.touchPan if you don't wan't specific callbacks
         myWorld.touchPan({
             start: function(e, viewportInfos){
                 myWorld.unbindOnRender(trackSmiley);//we stop tracking the smiley
@@ -183,6 +185,7 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
         
         //you don't have to do this (if you have boundaries, it will automatically center to the center of your world - @see documentation)
         myWorld.viewport.centerTo(myWorld.getEntityByName("smiley"));
+        myWorld.viewport.scaleTo(14);//little scale for little devices (to see most of the world)
         
         myWorld.getEntityByName("smiley").mouseDraggable({
             type : 'eventDrag',
@@ -235,7 +238,76 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
             }
         });
         
-        //pigs
+        //crates
+        var crateConfig = {
+            shape: "square",
+            color: "yellow",
+            width: 2,
+            height: 3,
+            image: "./wood-crate.png",	
+            imageStretchToFit: true,  
+            y: 10
+        };
+        
+        var crates = [];
+        
+        crates.push( myWorld.createEntity( crateConfig, { name: "crate1", x: 16 } ) );
+        
+        crates.push( myWorld.createEntity( crateConfig, { name: "crate2",  x: 22 } ) );
+        
+        crates.push( myWorld.createEntity( crateConfig, {
+            name: "crate3",
+            x: 19,
+            y: 5,
+            onImpact: function(entity, force){
+                if(entity.name() === "bottom"){
+                    this._sprite = undefined;
+                    this.color("darkred");
+                    this.life = 5;
+                }
+            }
+        } ) );
+        
+        //maybe use onTick ?
+        myWorld.onRender(function(){
+            if(crates[2] && crates[2].life){
+                crates[2].life--;
+                if(crates[2].life === 1){
+                    crates[2].destroy();
+                }
+            }
+        });
+        
+        for (var i = 0; i<crates.length; i++){
+            crates[i].mouseDraggable({
+                start: function(e,mouseDraggableInfos){
+                    console.log(this.name()+' drag start');
+                },
+                drag: function(e,mouseDraggableInfos){
+                    console.log(this.name()+' drag drag');
+                },
+                stop: function(e,mouseDraggableInfos){
+                    console.log(this.name()+' drag stop');
+                }
+            });
+            crates[i].touchDraggable({
+                start: function(e,touchDraggableInfos){
+                    console.log(this.name()+' drag start');
+                },
+                drag: function(e,touchDraggableInfos){
+                    console.log(this.name()+' drag drag');
+                },
+                stop: function(e,touchDraggableInfos){
+                    console.log(this.name()+' drag stop');
+                },
+                touchadd: function(e,touchDraggableInfos){
+                    console.log(this.name()+' drag touchadd');
+                },
+                touchremove: function(e,touchDraggableInfos){
+                    console.log(this.name()+' drag touchremove');
+                }
+            });
+        }
         
         //blocks
         var blockConfig = {
