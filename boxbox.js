@@ -4145,6 +4145,12 @@ See more on the readme file
                     x -= this._ops.radius / 2 * scale;
                     y -= this._ops.radius / 2 * scale;
                 }
+                else if (this._ops.shape === "square" && this._ops.imageStretchToFit) {
+                    width = this._ops.width;
+                    height = this._ops.height;
+                    x -= this._ops.width / 4 * scale;
+                    y -= this._ops.height / 4 * scale;
+                }
                 else if (this._ops.imageStretchToFit) {
                     width = this._ops.width;
                     height = this._ops.height;
