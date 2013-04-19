@@ -17,7 +17,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 //add console
-var logging = SimpleConsole.getInstance({fitToCanvas: canvas});
+var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 10, y: 100}});
 
 //--- page init (please do it cleaner than that, use things such as Modernizer, or viewporter.js ...) ---
 
@@ -108,7 +108,7 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas});
             console.info('onRender','this',this);
             if(this._canvasPointerInfos){
                 ctx.lineWidth = 3;
-                ctx.strokeStyle='#33a99a';
+                ctx.strokeStyle='gray';
                 ctx.beginPath();
                 ctx.moveTo(this.canvasPosition().x,this.canvasPosition().y);
                 ctx.lineTo(this._canvasPointerInfos.x,this._canvasPointerInfos.y);
@@ -136,17 +136,20 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas});
         myWorld.getEntityByName("smiley").mouseDraggable({
             type : 'eventDrag',
             start: function(e,mouseDraggableInfos){
+                console.log(this.name()+' eventDrag start');
 //                this.color('blue');
                 console.info('startdrag callback','event',e.type,'world pos',mouseDraggableInfos);
                 //binding a render callback
                 this.onRender(drawTargetting);
             },
             drag: function(e,mouseDraggableInfos){
+                console.log(this.name()+' eventDrag drag');
                 //adding infos for the render callback
                 this._canvasPointerInfos = this._world.canvasPositionAt(mouseDraggableInfos.position.x,mouseDraggableInfos.position.y);
                 console.info('drag callback','event',e.type,'world pos',mouseDraggableInfos,'canvas pos',this._canvasPointerInfos);
             },
             stop: function(e,mouseDraggableInfos){
+                console.log(this.name()+' eventDrag stop');
                 //no more need for the render callback
                 this._world.unbindOnRender(drawTargetting);
                 this._canvasPointerInfos = null;
@@ -160,17 +163,20 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas});
             type : 'eventDrag',
             maxTouches : 1,
             start: function(e,touchDraggableInfos){
+                console.log(this.name()+' eventDrag start');
 //                this.color('blue');
                 console.info('startdrag callback','event',e.type,'world pos',touchDraggableInfos);
                 //binding a render callback
                 this.onRender(drawTargetting);
             },
             drag: function(e,touchDraggableInfos){
+                console.log(this.name()+' eventDrag drag');
                 //adding infos for the render callback
-                this._canvasPointerInfos = this._world.canvasPositionAt(touchDraggableInfos.position.x,touchDraggableInfos.position.y);
+                this._canvasPointerInfos = this._world.canvasPositionAt(touchDraggableInfos[0].position.x,touchDraggableInfos[0].position.y);
                 console.info('drag callback','event',e.type,'world pos',touchDraggableInfos,'canvas pos',this._canvasPointerInfos);
             },
             stop: function(e,touchDraggableInfos){
+                console.log(this.name()+' eventDrag stop');
                 //no more need for the render callback
                 this._world.unbindOnRender(drawTargetting);
                 this._canvasPointerInfos = null;
@@ -191,15 +197,47 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas});
             height: 4,
             y: 10,
             onImpact: function( entity, force ) {
-                if ( entity.name() === "bird" ) {
-                    bird._ops.score++;
+                if ( entity.name() === "smiley" ) {
                     this.color( "black" );
                 }
-                if ( force > 100 && entity.name() !== "ground" ) {
+                if ( force > 70 && entity.name() !== "bottom" ) {
                     this.destroy();
                 }
             }
 	};
+        
+        var blocks = []; //keep the reference to blocks in this array to add callbacks to each of them (don't forget to reset the array befor world cleanup)
+
+	blocks.push( myWorld.createEntity( blockConfig, { x: 13 } ) );
+
+	blocks.push( myWorld.createEntity( blockConfig, { x: 19 } ) );
+
+	blocks.push( myWorld.createEntity( blockConfig, { x: 25 } ) );
+
+	blocks.push( myWorld.createEntity( blockConfig, {
+		x: 16,
+		y: 7,
+		width: 6,
+		height: 0.5
+	}) );
+
+	blocks.push( myWorld.createEntity( blockConfig, {
+		x: 22,
+		y: 7,
+		width: 6,
+		height: 0.5
+	}) );
+
+	blocks.push( myWorld.createEntity( blockConfig, { x: 16, y: 4 } ) );
+
+	blocks.push( myWorld.createEntity( blockConfig, { x: 22, y: 4 } ) );
+
+	blocks.push( myWorld.createEntity( blockConfig, {
+		x: 19,
+		y: 1,
+		width: 6,
+		height: 0.5
+	}) );
         
     }
     
