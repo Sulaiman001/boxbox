@@ -24,6 +24,12 @@ function SimpleConsole(options){
         throw new Error("This object cannot be instanciated");
     }
     
+    if(!console){
+        console = {};
+        console.log = function(){};
+        console.info = function(){};
+    }
+    
     options = options ? options : {};
     
     var logMaxNumber,

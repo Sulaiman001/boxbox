@@ -5,13 +5,18 @@ Demos boxbox by topheman
     <head>
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="app-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta name="apple-touch-fullscreen" content="yes" />
+        <meta name=viewport content="width=device-width,user-scalable=no" />
         <style>
             #canvas{
                 position: absolute;
                 top: 0px;
                 left: 0px;
+            }
+            .preloading{
+                display: none;
             }
         </style>
         <script type="text/javascript" src="../../../Box2dWeb-2.1.a.3.min.js"></script>
@@ -19,6 +24,11 @@ Demos boxbox by topheman
         <script type="text/javascript" src="../../../SimpleConsole.js"></script>
     </head>
     <body>
+        <!-- preload images -->
+        <img src="./smiley-iddle.png" class="preloading">
+        <img src="./smiley-impact.png" class="preloading">
+        <img src="./smiley-launched.png" class="preloading">
+        <img src="./smiley-launching.png" class="preloading">
         <canvas id="canvas" width="600" height="400" class="main-canvas"></canvas>
         <script type="text/javascript" src="./game.js"></script>
     </body>

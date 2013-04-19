@@ -17,12 +17,13 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 //add console
-var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 10, y: 100}});
+var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 10, y: 10}});
 
-//--- page init (please do it cleaner than that, use things such as Modernizer, or viewporter.js ...) ---
+//from here this is sample code (most of it is for logging, you could reduce it a lot !)
 
 (function(global){
     
+    //your boxbox world accessible all accross this scope
     var myWorld;
     
     function initWorld(){
@@ -57,7 +58,8 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
     
     function initWalls(){
         var wallConfig = {
-            type: "static"
+            type: "static",
+            borderWidth : 0
         };
         
 	myWorld.createEntity( wallConfig, {
@@ -92,10 +94,6 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
             height : 0.5
 	});
         
-        myWorld.mousePan();
-        myWorld.touchPan();
-        myWorld.mousewheelZoom({step : 1});
-        
     }
 
     function phase1(){
@@ -103,9 +101,15 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
         //walls
         initWalls();
         
-        //smiley
+        //instruction
+        console.log("Use the smiley like angry birds");
+        console.log("It works as well with touch and mouse");
+        console.log("You can move the world too");
+        console.log(">with mouse : just click on the stage and move + you can mousewheel to zoom in/out");
+        console.log(">with touch : touch the stage with one finger to move it, with two finger to zoom in/out");
+        
+        //drawing callback for the smiley
         var drawTargetting = function(ctx){
-            console.info('onRender','this',this);
             if(this._canvasPointerInfos){
                 ctx.lineWidth = 3;
                 ctx.strokeStyle='gray';
@@ -116,16 +120,60 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
             }
         };
         
+        var trackSmiley = function(ctx){
+            myWorld.viewport.centerTo(myWorld.getEntityByName("smiley"));
+        };
+        
+        //you could just writ myWorld.mousePan if you don't wan't specific callbacks
+        myWorld.mousePan({
+            start: function(e, viewportInfos){
+                myWorld.unbindOnRender(trackSmiley);//we stop tracking the smiley
+                console.log('world.mousePan - start');
+            },
+            drag: function(e, viewportInfos){
+                console.log('world.mousePan - drag');
+            },
+            stop: function(e, viewportInfos){
+                console.log('world.mousePan - stop');
+            }
+        });
+        //you could just writ myWorld.touchPan if you don't wan't specific callbacks
+        myWorld.touchPan({
+            start: function(e, viewportInfos){
+                myWorld.unbindOnRender(trackSmiley);//we stop tracking the smiley
+                console.log('world.touchPan - start');
+            },
+            drag: function(e, viewportInfos){
+                console.log('world.touchPan - drag');
+            },
+            stop: function(e, viewportInfos){
+                console.log('world.touchPan - stop');
+            },
+            startPinching: function(e, viewportInfos){
+                console.log('world.touchPan - startPinching');
+            },
+            stopPinching: function(e, viewportInfos){
+                console.log('world.touchPan - stopPinching');
+            }
+        });
+        myWorld.mousewheelZoom({step : 1});
+        
         var smileyConfig = {
             name: "smiley",
             shape: "circle",
-            color : "white",
+            color : "yellow",
+            borderWidth : 0,
             radius: 1,
-//            image: "https://dl.dropbox.com/u/200135/imgs/green-bird.png", 		
-//            imageStretchToFit: true,
+            image: "./smiley-iddle.png", 		
+            imageStretchToFit: true,
             density: 2,
             x: 2, 
-            y: 11
+            y: 11,
+            onStartContact:function(entity){
+                if(entity.name() === "bottom"){
+                    this.image('./smiley-iddle.png');
+                }
+            }
 	};
         
 	myWorld.createEntity( smileyConfig, {
@@ -133,12 +181,15 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
             score: 0
 	});
         
+        //you don't have to do this (if you have boundaries, it will automatically center to the center of your world - @see documentation)
+        myWorld.viewport.centerTo(myWorld.getEntityByName("smiley"));
+        
         myWorld.getEntityByName("smiley").mouseDraggable({
             type : 'eventDrag',
             start: function(e,mouseDraggableInfos){
+                this._world.unbindOnRender(trackSmiley);
                 console.log(this.name()+' eventDrag start');
-//                this.color('blue');
-                console.info('startdrag callback','event',e.type,'world pos',mouseDraggableInfos);
+                this.image('./smiley-launching.png');
                 //binding a render callback
                 this.onRender(drawTargetting);
             },
@@ -146,16 +197,15 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
                 console.log(this.name()+' eventDrag drag');
                 //adding infos for the render callback
                 this._canvasPointerInfos = this._world.canvasPositionAt(mouseDraggableInfos.position.x,mouseDraggableInfos.position.y);
-                console.info('drag callback','event',e.type,'world pos',mouseDraggableInfos,'canvas pos',this._canvasPointerInfos);
             },
             stop: function(e,mouseDraggableInfos){
                 console.log(this.name()+' eventDrag stop');
                 //no more need for the render callback
                 this._world.unbindOnRender(drawTargetting);
                 this._canvasPointerInfos = null;
-//                this.color('darkred');
+                this.image('./smiley-launched.png');
                 this.applyImpulse(30,-(this.position().x-mouseDraggableInfos.position.x),-(this.position().y-mouseDraggableInfos.position.y));
-                console.info('stopdrag callback','event',e.type,'world pos',mouseDraggableInfos);
+                myWorld.onRender(trackSmiley);//from now on, we track the smiley
             }
         });
         
@@ -163,9 +213,9 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
             type : 'eventDrag',
             maxTouches : 1,
             start: function(e,touchDraggableInfos){
+                this._world.unbindOnRender(trackSmiley);
                 console.log(this.name()+' eventDrag start');
-//                this.color('blue');
-                console.info('startdrag callback','event',e.type,'world pos',touchDraggableInfos);
+                this.image('./smiley-launching.png');
                 //binding a render callback
                 this.onRender(drawTargetting);
             },
@@ -173,16 +223,15 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
                 console.log(this.name()+' eventDrag drag');
                 //adding infos for the render callback
                 this._canvasPointerInfos = this._world.canvasPositionAt(touchDraggableInfos[0].position.x,touchDraggableInfos[0].position.y);
-                console.info('drag callback','event',e.type,'world pos',touchDraggableInfos,'canvas pos',this._canvasPointerInfos);
             },
             stop: function(e,touchDraggableInfos){
                 console.log(this.name()+' eventDrag stop');
                 //no more need for the render callback
                 this._world.unbindOnRender(drawTargetting);
                 this._canvasPointerInfos = null;
-//                this.color('darkred');
+                this.image('./smiley-launched.png');
                 this.applyImpulse(30,-(this.position().x-touchDraggableInfos.position.x),-(this.position().y-touchDraggableInfos.position.y));
-                console.info('stopdrag callback','event',e.type,'world pos',touchDraggableInfos);
+                myWorld.onRender(trackSmiley);//from now on, we track the smiley
             }
         });
         
@@ -199,8 +248,11 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
             onImpact: function( entity, force ) {
                 if ( entity.name() === "smiley" ) {
                     this.color( "black" );
+                    if(force > 40){
+                        entity.image('./smiley-impact.png');
+                    }
                 }
-                if ( force > 70 && entity.name() !== "bottom" ) {
+                if ( force > 50 && entity.name() !== "bottom" ) {
                     this.destroy();
                 }
             }
