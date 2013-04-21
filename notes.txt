@@ -1,5 +1,25 @@
+TODO : prevent adding events on a active = false body
+TODO : "touch / mouse events are disabled *******" - refactor to a one method (with the todo before)
+TODO : fix isTouchNotPanningNorPinching - OK (check)
+TODO : fix pause - () - not really the problem (confirm is the problem)
+TODO : release all events OR test if in the middle of a drag or of any event AND add a callback to a queue to be executed at the end of the last transaction
+    api : myWorld.onNoLongerEvents(callback) 
+        - callback called when there is no longer events (such as pan, drag, all those events which have start/stop callbackbacks)
+        - callback called only once (automatically removed when called)
+        - if declared when there is no events alive, will be called immediatly
+        - much like promise/deferred (without having to declare any of the deferred)
+        - check for pan / drag, any
+        -> should be used by myWorld.pause() and myWorld.cleanup(force = false)
 TODO : maxScale
 TODO : world.cleanup()
+
+world.pause : will pause when there will be no more transactionnal events
+-> put it in the animation loop such as the destroy loop if flag pause === true
+
+transactionnal events :
+- pan
+- draggable (draggingEntityIds)
+-> pan and draggable can't coexist
 
 viewport.originalViewports[]
 viewport.originalViewport = this.originalViewports[0]

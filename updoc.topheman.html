@@ -877,6 +877,16 @@ ul.properties li {
                 
                 
                 
+                  <a href="#name-world.cleanup-cleanup" class="inlineIndexItem">cleanup</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
                   <a href="#name-world.createEntity-createEntity" class="inlineIndexItem">createEntity</a>
                 
               
@@ -938,6 +948,16 @@ ul.properties li {
                 
                 
                   <a href="#name-world.gravity-gravity" class="inlineIndexItem">gravity</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#name-world.isMousePanning-isMousePanning" class="inlineIndexItem">isMousePanning</a>
                 
               
             
@@ -1350,6 +1370,34 @@ ul.properties li {
                 
                   <li>
                   
+                    <span class="property">param</span>
+                    <span>{DraggingInfos} draggingInfos</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            
+            
+          </section>
+        
+        
+          <section class="depth0 header" data-module="">
+          
+            
+            
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+                  <li>
+                  
                     <span class="property">function</span>
                     <span>getRangeBetweenTwoTouches</span>
                   
@@ -1534,34 +1582,6 @@ ul.properties li {
                   
                     <span class="property">return</span>
                     <span>{Object} ViewportInfos</span>
-                  
-                  </li>
-                
-              
-                
-              
-            </ul>
-            
-            
-            
-          </section>
-        
-        
-          <section class="depth0 header" data-module="">
-          
-            
-            
-            
-            
-            <ul class="properties">
-              
-                
-              
-                
-                  <li>
-                  
-                    <span class="property">param</span>
-                    <span>{DraggingInfos} draggingInfos</span>
                   
                   </li>
                 
@@ -4845,7 +4865,7 @@ touchDraggableInfos
 &nbsp;&nbsp;&nbsp;&nbsp;console.info('a touch has been made while dragging at this position ',{touchDraggableInfos.position.x, touchDraggableInfos.position.y}, 'there are now '+totalTouches+' touche(s)');
 &nbsp;&nbsp;},
 &nbsp;&nbsp;touchremove : function(e, touchDraggableInfos, totalTouches){
-&nbsp;&nbsp;&nbsp;&nbsp;console.info('a touch has been made while dragging at this position ',{touchDraggableInfos.position.x, touchDraggableInfos.position.y}, 'there are now '+totalTouches+' touche(s) remaining on this entity');
+&nbsp;&nbsp;&nbsp;&nbsp;console.info('a touch has been removed while dragging at this position ',{touchDraggableInfos.position.x, touchDraggableInfos.position.y}, 'there are now '+totalTouches+' touche(s) remaining on this entity');
 &nbsp;&nbsp;}
 });</code>
 <h3>Enable / disable</h3>
@@ -5396,6 +5416,44 @@ touchDraggableInfos
             
             <div class="description">Get a canvas position for a corresponding world position. Useful
 for custom rendering in onRender. Respects world scale and camera position.</div>
+            
+          </section>
+        
+        
+          <section class="depth2 header" data-module="world.cleanup">
+          
+            
+            
+            
+              <h2 id="name-world.cleanup-cleanup">
+                .cleanup(  )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Removes all the entities, all the handlers (even the world handlers such as mouse/touch Pan/wheelZoom) while keeping your boundaries (if any) in options
+<br>Usefull when you have multiple levels</div>
             
           </section>
         
@@ -6265,6 +6323,35 @@ info.</div>
             </ul>
             
             <div class="description">get or set the world's gravity</div>
+            
+          </section>
+        
+        
+          <section class="depth2 header" data-module="world.isMousePanning">
+          
+            
+            
+            
+              <h2 id="name-world.isMousePanning-isMousePanning">
+                .isMousePanning(  )
+              </h2>
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+              
+                
+              
+                
+              
+                
+              
+            </ul>
+            
+            <div class="description">Returns true if the world is panning</div>
             
           </section>
         

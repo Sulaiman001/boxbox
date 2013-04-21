@@ -3757,7 +3757,15 @@ See more on the readme file
         isMousePanEnabled : function(){
             return !this._ops._mousePan.disabled;
         },
-
+                
+        /**
+         * @_name isMousePanning
+         * @_module world
+         * @description Returns true if the world is panning
+         */ 
+        isMousePanning: function(){
+            return !!this._mousePanDragging;
+        },
                 
         /**
          * @_name touchPan
@@ -5465,7 +5473,7 @@ See more on the readme file
          &nbsp;&nbsp;&nbsp;&nbsp;console.info('a touch has been made while dragging at this position ',{touchDraggableInfos.position.x, touchDraggableInfos.position.y}, 'there are now '+totalTouches+' touche(s)');
          &nbsp;&nbsp;},
          &nbsp;&nbsp;touchremove : function(e, touchDraggableInfos, totalTouches){
-         &nbsp;&nbsp;&nbsp;&nbsp;console.info('a touch has been made while dragging at this position ',{touchDraggableInfos.position.x, touchDraggableInfos.position.y}, 'there are now '+totalTouches+' touche(s) remaining on this entity');
+         &nbsp;&nbsp;&nbsp;&nbsp;console.info('a touch has been removed while dragging at this position ',{touchDraggableInfos.position.x, touchDraggableInfos.position.y}, 'there are now '+totalTouches+' touche(s) remaining on this entity');
          &nbsp;&nbsp;}
          });</code>
          <h3>Enable / disable</h3>
@@ -5495,7 +5503,7 @@ See more on the readme file
          */
         touchDraggable: function(options){
             if(this._world._ops.disableTouchEvents){
-                console.warn('Mouse events are disabled, you tried to call mouseDraggable');
+                console.warn('Touch events are disabled, you tried to call touchDraggable');
                 return false;
             }
             //simple init without options

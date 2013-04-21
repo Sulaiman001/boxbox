@@ -43,6 +43,13 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
                 bottom : 12
             }
         });
+        
+        //the world is ready, start to populate it
+        phase1();
+        
+    }
+    
+    function initConsole(){
     
         //this is only the console drawing function
         if(debug){
@@ -50,9 +57,6 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
                 logging.draw(this._ctx);
             });
         }
-        
-        //the world is ready, start to populate it
-        phase1();
         
     }
     
@@ -98,6 +102,8 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
     }
 
     function phase1(){
+        
+        initConsole();
         
         //walls
         initWalls();
@@ -178,10 +184,7 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
             }
 	};
         
-	myWorld.createEntity( smileyConfig, {
-            x: 2,
-            score: 0
-	});
+	myWorld.createEntity( smileyConfig );
         
         //you don't have to do this (if you have boundaries, it will automatically center to the center of your world - @see documentation)
         myWorld.viewport.centerTo(myWorld.getEntityByName("smiley"));
@@ -281,6 +284,7 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
         for (var i = 0; i<crates.length; i++){
             crates[i].mouseDraggable({
                 start: function(e,mouseDraggableInfos){
+                    this._world.unbindOnRender(trackSmiley);
                     console.log(this.name()+' drag start');
                 },
                 drag: function(e,mouseDraggableInfos){
@@ -362,6 +366,89 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
 		width: 6,
 		height: 0.5
 	}) );
+        
+        //refresh
+        var refreshConfig = {
+            name: "home",
+            shape: "square",
+            color: "yellow",
+            width: 1,
+            height: 1,
+            image: "./home-icon.png",	
+            imageStretchToFit: true,
+            x: 29,
+            y: 0,
+            type: "static",
+            active: true
+        };
+        
+        myWorld.createEntity( refreshConfig );
+        
+        var confirmGoHome = function(){
+            myWorld.pause();
+            //using setTimout because of confirm on iPhone (seems to take ahead on events)
+            setTimeout(function(){
+                if(confirm("Are you sure you wan't to go back to boxbox events home page ?")){
+                    window.location.href = "http://topheman.github.com/boxbox";
+                }
+                else{
+                    setTimeout(function(){
+                        myWorld.pause();
+                    },500);
+                }
+            },500);
+        };
+        
+        myWorld.getEntityByName("home").onMouseup(function(e, mouseInfos){
+            confirmGoHome();
+        });
+        
+        myWorld.getEntityByName("home").onTouchstart(function(e, touchInfos){
+            confirmGoHome();
+        });
+        
+        //refresh
+        var restartConfig = {
+            name: "restart",
+            shape: "square",
+            color: "yellow",
+            width: 1,
+            height: 1,
+            image: "./refresh-icon.png",	
+            imageStretchToFit: true,
+            x: 27.5,
+            y: 0,
+            type: "static",
+            active: true
+        };
+        
+        myWorld.createEntity( restartConfig );
+        
+        var confirmRestart = function(){
+            myWorld.pause();
+            //using setTimout because of confirm on iPhone (seems to take ahead on events)
+            setTimeout(function(){
+                if(confirm("Are you sure you wan't restart game ?")){
+                    //restart
+                    myWorld.pause();
+                    myWorld.cleanup();
+                    phase1();
+                }
+                else{
+                    setTimeout(function(){
+                        myWorld.pause();
+                    },500);
+                }
+            },500);
+        };
+        
+        myWorld.getEntityByName("restart").onMouseup(function(e, mouseInfos){
+            confirmRestart();
+        });
+        
+        myWorld.getEntityByName("restart").onTouchstart(function(e, touchInfos){
+            confirmRestart();
+        });
         
     }
     
