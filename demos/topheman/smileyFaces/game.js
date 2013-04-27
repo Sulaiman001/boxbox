@@ -105,8 +105,114 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
         
         initConsole();
         
+        //stage
+	myWorld.createEntity({
+            type : "static",
+            active : false,
+//            color : "blue",
+            borderWidth : 0,
+            color : function(ctx){
+                var g = ctx.createLinearGradient(0,0,0,myWorld._canvas.height*0.7);
+                g.addColorStop(0,"blue");
+                g.addColorStop(1,"white");
+                return g;
+            },
+            name: "sky",
+            shape: "square",
+            width: myWorld._ops.boundaries.right - myWorld._ops.boundaries.left,
+            height: 11.5,
+            x: (myWorld._ops.boundaries.right - myWorld._ops.boundaries.left)/2+myWorld._ops.boundaries.left, 
+            y: 4.5
+	});
+	myWorld.createEntity({
+            type : "static",
+            active : false,
+//            color : "brown",
+            borderWidth : 0,
+            color : function(ctx){
+                var g = ctx.createLinearGradient(0,myWorld._canvas.height*0.7,0,myWorld._canvas.height);
+                g.addColorStop(0,"#E08E1B");
+                g.addColorStop(1,"#FFE985");
+                return g;
+            },
+            name: "ground",
+            shape: "square",
+            width: myWorld._ops.boundaries.right - myWorld._ops.boundaries.left,
+            height: 1.5,
+            x: (myWorld._ops.boundaries.right - myWorld._ops.boundaries.left)/2+myWorld._ops.boundaries.left, 
+            y: 11
+	});
+        var sunnyCloudConfig = {
+            type : "static",
+            active : false,
+            name: "sunny-cloud",
+            shape: "square",
+            width: 4,
+            height: 4,
+            color : "yellow",
+            borderWidth : 0,
+            image: "./sunny-cloud.png", 		
+            imageStretchToFit: true,
+            density: 2,
+            x: 4, 
+            y: 5
+	};
+        var cloudConfig = {
+            type : "static",
+            active : false,
+            name: "cloud",
+            shape: "square",
+            width: 2,
+            height: 2,
+            color : "yellow",
+            borderWidth : 0,
+            image: "./cloud.png", 		
+            imageStretchToFit: true,
+            density: 2,
+            x: 15, 
+            y: 4.5
+	};
+	myWorld.createEntity(sunnyCloudConfig,{
+            name: "sunny-cloud1",
+            width: 4,
+            height: 4,
+            x: 4, 
+            y: 3
+	});
+	myWorld.createEntity(cloudConfig,{
+            name: "cloud1",
+            width: 3,
+            height: 3,
+            x: 13, 
+            y: 4.7
+	});
+	myWorld.createEntity(cloudConfig,{
+            name: "cloud2",
+            width: 2,
+            height: 2,
+            x: 18.5, 
+            y: 1.5
+	});
+        
         //walls
         initWalls();
+        
+        var animateStage = function(){
+            var e = myWorld.getEntityByName('cloud1');
+            e.position({x:e.position().x-0.05,y:e.position().y});
+            if(e.position().x < -e._ops.width/2){
+                e.position({x:myWorld._ops.boundaries.right+e._ops.width/2,y:e.position().y});
+            }
+            var e = myWorld.getEntityByName('cloud2');
+            e.position({x:e.position().x-0.02,y:e.position().y});
+            if(e.position().x < -e._ops.width/2){
+                e.position({x:myWorld._ops.boundaries.right+e._ops.width/2,y:e.position().y});
+            }
+            
+        };
+        
+        myWorld.onRender(animateStage);
+        
         
         //instruction
         console.log("Use the smiley like angry birds");
@@ -258,18 +364,7 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
         
         crates.push( myWorld.createEntity( crateConfig, { name: "crate2",  x: 22 } ) );
         
-        crates.push( myWorld.createEntity( crateConfig, {
-            name: "crate3",
-            x: 19,
-            y: 5,
-            onImpact: function(entity, force){
-                if(entity.name() === "bottom"){
-                    this._sprite = undefined;
-                    this.color("darkred");
-                    this.life = 5;
-                }
-            }
-        } ) );
+        crates.push( myWorld.createEntity( crateConfig, { name: "crate3",  x: 19, y: 5 } ) );
         
         //maybe use onTick ?
         myWorld.onRender(function(){
@@ -281,37 +376,45 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
             }
         });
         
-        for (var i = 0; i<crates.length; i++){
-            crates[i].mouseDraggable({
-                start: function(e,mouseDraggableInfos){
-                    this._world.unbindOnRender(trackSmiley);
-                    console.log(this.name()+' drag start');
-                },
-                drag: function(e,mouseDraggableInfos){
-                    console.log(this.name()+' drag drag');
-                },
-                stop: function(e,mouseDraggableInfos){
-                    console.log(this.name()+' drag stop');
-                }
-            });
-            crates[i].touchDraggable({
-                start: function(e,touchDraggableInfos){
-                    console.log(this.name()+' drag start');
-                },
-                drag: function(e,touchDraggableInfos){
-                    console.log(this.name()+' drag drag');
-                },
-                stop: function(e,touchDraggableInfos){
-                    console.log(this.name()+' drag stop');
-                },
-                touchadd: function(e,touchDraggableInfos){
-                    console.log(this.name()+' drag touchadd');
-                },
-                touchremove: function(e,touchDraggableInfos){
-                    console.log(this.name()+' drag touchremove');
-                }
-            });
-        }
+        var addDragggableToCrates = function(crates, indexStart){
+        
+            indexStart = indexStart || 0;
+            for (var i = indexStart; i<crates.length; i++){
+                crates[i].mouseDraggable({
+                    start: function(e,mouseDraggableInfos){
+                        this._world.unbindOnRender(trackSmiley);
+                        console.log(this.name()+' drag start');
+                    },
+                    drag: function(e,mouseDraggableInfos){
+                        console.log(this.name()+' drag drag');
+                    },
+                    stop: function(e,mouseDraggableInfos){
+                        console.log(this.name()+' drag stop');
+                    }
+                });
+                crates[i].touchDraggable({
+                    start: function(e,touchDraggableInfos){
+                        console.log(this.name()+' drag start');
+                    },
+                    drag: function(e,touchDraggableInfos){
+                        console.log(this.name()+' drag drag');
+                    },
+                    stop: function(e,touchDraggableInfos){
+                        console.log(this.name()+' drag stop');
+                    },
+                    touchadd: function(e,touchDraggableInfos){
+                        console.log(this.name()+' drag touchadd');
+                    },
+                    touchremove: function(e,touchDraggableInfos){
+                        console.log(this.name()+' drag touchremove');
+                    }
+                });
+            }
+        
+        };
+        
+        //reused in stressTest
+        addDragggableToCrates(crates);
         
         //blocks
         var blockConfig = {
@@ -450,9 +553,51 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
             confirmRestart();
         });
         
-    }
-    
-    function phase2(){
+        //stressTest
+        var stressConfig = {
+            name: "stressTest",
+            shape: "square",
+            color: "yellow",
+            width: 1,
+            height: 1,
+            image: "./stress-icon.png",	
+            imageStretchToFit: true,
+            x: 26,
+            y: 0,
+            type: "static",
+            active: true
+        };
+        
+        myWorld.createEntity( stressConfig );
+        
+        var confirmStressTest = function(){
+            myWorld.pause();
+            //using setTimout because of confirm on iPhone (seems to take ahead on events)
+            setTimeout(function(){
+                if(confirm("Are you sure you wan't start stress test ? (50 crates)")){
+                    //ok for stress test
+                    myWorld.pause();
+                    for(var j=4; j<50; j++){
+                        crates.push( myWorld.createEntity( crateConfig, { name: "crate"+j, x: (myWorld._ops.boundaries.right - myWorld._ops.boundaries.left)/2 , y : (myWorld._ops.boundaries.bottom - myWorld._ops.boundaries.top)/2, width: j < 15 ? 2 : 0.75, height: j < 15 ? 3 : 1 } ) );
+                        console.info(j,crates[j-1].position());
+                    }
+                    addDragggableToCrates(crates,3);
+                }
+                else{
+                    setTimeout(function(){
+                        myWorld.pause();
+                    },500);
+                }
+            },500);
+        };
+        
+        myWorld.getEntityByName("stressTest").onMouseup(function(e, mouseInfos){
+            confirmStressTest();
+        });
+        
+        myWorld.getEntityByName("stressTest").onTouchstart(function(e, touchInfos){
+            confirmStressTest();
+        });
         
     }
     

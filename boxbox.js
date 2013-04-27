@@ -4135,7 +4135,7 @@ See more on the readme file
         draw: function(ctx, x, y) {
             var cameraOffsetX = -this._world._cameraX;
             var cameraOffsetY = -this._world._cameraY;
-            ctx.fillStyle = this._ops.color;
+            ctx.fillStyle = typeof this._ops.color === 'function' ? this._ops.color.call(this,ctx) : this._ops.color;
             ctx.strokeStyle = this._ops.borderColor;
             ctx.lineWidth = this._ops.borderWidth;
             var i;
