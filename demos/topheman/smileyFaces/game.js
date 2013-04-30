@@ -495,9 +495,7 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
                     window.location.href = "http://topheman.github.com/boxbox";
                 }
                 else{
-                    setTimeout(function(){
-                        myWorld.pause();
-                    },500);
+                    myWorld.pause();
                 }
             },500);
         };
@@ -538,9 +536,7 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
                     phase1();
                 }
                 else{
-                    setTimeout(function(){
-                        myWorld.pause();
-                    },500);
+                    myWorld.pause();
                 }
             },500);
         };
@@ -584,9 +580,7 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
                     addDragggableToCrates(crates,3);
                 }
                 else{
-                    setTimeout(function(){
-                        myWorld.pause();
-                    },500);
+                    myWorld.pause();
                 }
             },500);
         };

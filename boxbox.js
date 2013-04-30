@@ -904,7 +904,13 @@ See more on the readme file
                     }
 
                     // framerate, velocity iterations, position iterations
-                    world.Step(1 / 60, 10, 10);
+                    //@modified by topheman
+                    if(self._pause === false){
+                        world.Step(1 / 60, 10, 10);
+                    }
+                    else{
+                        world.Step(null);
+                    }
 
                     // create
                     for (i = 0; i < self._creationQueue.length; i++) {
@@ -931,13 +937,7 @@ See more on the readme file
                     
                     world.ClearForces();
                     world.DrawDebugData();
-                    //@modified by topheman
-                    if(self._pause === false){
-                        window.requestAnimationFrame(animationLoop);
-                    }
-                    else{
-                        self._pause = animationLoop;
-                    }
+                    window.requestAnimationFrame(animationLoop);
                 }());
                 
                 /**
@@ -2277,7 +2277,7 @@ See more on the readme file
         /**
          * @_name pause
          * @_module world
-         * @description Stops or resumes the animationLoop
+         * @description Stops or resumes the box2d engine (the animation loops keeps going on - i.e. your specific renderers on the canvas ctx will keep animate)
          * @added by topheman
          */
         pause : function(){
@@ -2286,7 +2286,6 @@ See more on the readme file
             }
             else
             {
-                window.requestAnimationFrame(this._pause);
                 this._pause = false;
             }
         },
