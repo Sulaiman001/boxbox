@@ -1,9 +1,17 @@
-TODO : change gradient to color (auto detect function) DONE
 TODO : prevent adding events on a active = false body
 TODO : "touch / mouse events are disabled *******" - refactor to a one method (with the todo before)
+TODO : maxScale
+
+TODO ?
+- canvasFitToWindow
+- canvasResizeToWindow
+implementation from viewporter.js from Zynga ? (a little heavy ? is it the work of boxbox ?)
+
+TODO : seperate repo for SimpleConsole.js
+
+TODO : change gradient to color (auto detect function) DONE
 TODO : fix isTouchNotPanningNorPinching - OK (check) DONE
 TODO : fix pause - () - not really the problem (confirm is the problem) DONE
-TODO : maxScale
 TODO : world.cleanup()
 
 world.pause : will pause when there will be no more transactionnal events

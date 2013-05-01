@@ -5,6 +5,9 @@ Demos boxbox by topheman
     <head>
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!--[if IE]>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <![endif]-->
         <meta name="app-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black" />
         <meta name="apple-touch-fullscreen" content="yes" />
@@ -25,12 +28,20 @@ Demos boxbox by topheman
         <!-- if you don't need to debug boxbox or Box2d, you should use the minified versions -->
     </head>
     <body>
-        <!-- preload images -->
+        <!-- 
+        simple preload images 
+        You should use a resource manager and do conditional loading (like high quality images on desktop, lighter images on mobile)
+        -->
         <img src="./smiley-iddle.png" class="preloading">
         <img src="./smiley-impact.png" class="preloading">
         <img src="./smiley-launched.png" class="preloading">
         <img src="./smiley-launching.png" class="preloading">
         <img src="./wood-crate.png" class="preloading">
+        <img src="./stress-icon.png" class="preloading" id="stress-icon">
+        <img src="./home-icon.png" class="preloading" id="home-icon">
+        <img src="./refresh-icon.png" class="preloading" id="refresh-icon">
+        <img src="./sunny-cloud.png" class="preloading">
+        <img src="./cloud.png" class="preloading">
         <canvas id="canvas" width="600" height="400" class="main-canvas"></canvas>
         <script type="text/javascript" src="./game.js"></script>
     </body>

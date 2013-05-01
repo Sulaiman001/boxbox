@@ -9,9 +9,10 @@ if(touchDetected){
     window.scrollTo(0, IS_ANDROID ? 1 : 0); // Android needs to scroll by at least 1px
 }
 
+//if you add ?debug=false to the url there will be no console at all
 var debug = window.location.search === "" ? true : false;
 
-//canvas to full window
+//resize canvas to full window
 var canvas = document.getElementById('canvas');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -51,7 +52,7 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
     
     function initConsole(){
     
-        //this is only the console drawing function
+        //this is only the console drawing function, we add it only on debug mode
         if(debug){
             myWorld.onRender(function(){
                 logging.draw(this._ctx);
@@ -197,6 +198,7 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
         //walls
         initWalls();
         
+        //this is the rendering callback of the clouds (using boxbox entities)
         var animateStage = function(){
             var e = myWorld.getEntityByName('cloud1');
             e.position({x:e.position().x-0.05,y:e.position().y});
@@ -211,8 +213,45 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
             
         };
         
+        //process the size and position of the static icon once and for all
+        var iconWidth = canvas.height/15 < 20 ? 20 : canvas.height/15;
+        var iconMargin = 4;
+        
+        var homeIcon = {
+            "img"   : document.getElementById('home-icon'),
+            "x"     : canvas.width - (iconWidth + iconMargin),
+            "y"     : iconMargin,
+            "width" : iconWidth,
+            "height": iconWidth
+        };
+        
+        var refreshIcon = {
+            "img"   : document.getElementById('refresh-icon'),
+            "x"     : homeIcon.x - (iconWidth + iconMargin),
+            "y"     : iconMargin,
+            "width" : iconWidth,
+            "height": iconWidth
+        };
+        
+        var stressIcon = {
+            "img"   : document.getElementById('stress-icon'),
+            "x"     : refreshIcon.x - (iconWidth + iconMargin),
+            "y"     : iconMargin,
+            "width" : iconWidth,
+            "height": iconWidth
+        };
+        
+        //this is the rendering callback of the icons (using direct canvas ctx) - the click/touch on the icons are below on the code
+        var drawIcons = function(ctx){
+            ctx.drawImage(homeIcon.img,homeIcon.x,homeIcon.y,homeIcon.width,homeIcon.height);
+            ctx.drawImage(refreshIcon.img,refreshIcon.x,refreshIcon.y,refreshIcon.width,refreshIcon.height);
+            ctx.drawImage(stressIcon.img,stressIcon.x,stressIcon.y,stressIcon.width,stressIcon.height);
+        };
+        
+        //binding the rendering callbacks
         myWorld.onRender(animateStage);
         
+        myWorld.onRender(drawIcons);
         
         //instruction
         console.log("Use the smiley like angry birds");
@@ -234,11 +273,12 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
             }
         };
         
+        //this is a drawing callback wehere we draw nothing (we only adjust the viewport), it's binded and unbinded on the event callbacks below
         var trackSmiley = function(ctx){
             myWorld.viewport.centerTo(myWorld.getEntityByName("smiley"));
         };
         
-        //you could just writ myWorld.mousePan if you don't wan't specific callbacks
+        //you could just write myWorld.mousePan if you don't wan't specific callbacks
         myWorld.mousePan({
             start: function(e, viewportInfos){
                 myWorld.unbindOnRender(trackSmiley);//we stop tracking the smiley
@@ -366,16 +406,6 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
         
         crates.push( myWorld.createEntity( crateConfig, { name: "crate3",  x: 19, y: 5 } ) );
         
-        //maybe use onTick ?
-        myWorld.onRender(function(){
-            if(crates[2] && crates[2].life){
-                crates[2].life--;
-                if(crates[2].life === 1){
-                    crates[2].destroy();
-                }
-            }
-        });
-        
         var addDragggableToCrates = function(crates, indexStart){
         
             indexStart = indexStart || 0;
@@ -470,22 +500,7 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
 		height: 0.5
 	}) );
         
-        //refresh
-        var refreshConfig = {
-            name: "home",
-            shape: "square",
-            color: "yellow",
-            width: 1,
-            height: 1,
-            image: "./home-icon.png",	
-            imageStretchToFit: true,
-            x: 29,
-            y: 0,
-            type: "static",
-            active: true
-        };
-        
-        myWorld.createEntity( refreshConfig );
+        //handlers to bind on the icons
         
         var confirmGoHome = function(){
             myWorld.pause();
@@ -499,31 +514,6 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
                 }
             },500);
         };
-        
-        myWorld.getEntityByName("home").onMouseup(function(e, mouseInfos){
-            confirmGoHome();
-        });
-        
-        myWorld.getEntityByName("home").onTouchstart(function(e, touchInfos){
-            confirmGoHome();
-        });
-        
-        //refresh
-        var restartConfig = {
-            name: "restart",
-            shape: "square",
-            color: "yellow",
-            width: 1,
-            height: 1,
-            image: "./refresh-icon.png",	
-            imageStretchToFit: true,
-            x: 27.5,
-            y: 0,
-            type: "static",
-            active: true
-        };
-        
-        myWorld.createEntity( restartConfig );
         
         var confirmRestart = function(){
             myWorld.pause();
@@ -541,31 +531,6 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
             },500);
         };
         
-        myWorld.getEntityByName("restart").onMouseup(function(e, mouseInfos){
-            confirmRestart();
-        });
-        
-        myWorld.getEntityByName("restart").onTouchstart(function(e, touchInfos){
-            confirmRestart();
-        });
-        
-        //stressTest
-        var stressConfig = {
-            name: "stressTest",
-            shape: "square",
-            color: "yellow",
-            width: 1,
-            height: 1,
-            image: "./stress-icon.png",	
-            imageStretchToFit: true,
-            x: 26,
-            y: 0,
-            type: "static",
-            active: true
-        };
-        
-        myWorld.createEntity( stressConfig );
-        
         var confirmStressTest = function(){
             myWorld.pause();
             //using setTimout because of confirm on iPhone (seems to take ahead on events)
@@ -573,11 +538,12 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
                 if(confirm("Are you sure you wan't start stress test ? (50 crates)")){
                     //ok for stress test
                     myWorld.pause();
-                    for(var j=4; j<50; j++){
+                    var start = crates.length;
+                    var stop = start + 50;
+                    for(var j=start; j<stop; j++){
                         crates.push( myWorld.createEntity( crateConfig, { name: "crate"+j, x: (myWorld._ops.boundaries.right - myWorld._ops.boundaries.left)/2 , y : (myWorld._ops.boundaries.bottom - myWorld._ops.boundaries.top)/2, width: j < 15 ? 2 : 0.75, height: j < 15 ? 3 : 1 } ) );
-                        console.info(j,crates[j-1].position());
                     }
-                    addDragggableToCrates(crates,3);
+                    addDragggableToCrates(crates,start);
                 }
                 else{
                     myWorld.pause();
@@ -585,13 +551,23 @@ var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 1
             },500);
         };
         
-        myWorld.getEntityByName("stressTest").onMouseup(function(e, mouseInfos){
-            confirmStressTest();
-        });
+        //final handler to bind on the world
+        var pointerWorld = function(e){
+            var x = touchDetected ? (e.touches[0].offsetX || e.touches[0].layerX || e.touches[0].pageX) : (e.offsetX || e.layerX || e.pageX);
+            var y = touchDetected ? (e.touches[0].offsetY || e.touches[0].layerY || e.touches[0].pageY) : (e.offsetY || e.layerY || e.pageY);
+            if(x > homeIcon.x && x < (homeIcon.x + homeIcon.width) && y > homeIcon.y && y < (homeIcon.y + homeIcon.height)){
+                confirmGoHome();
+            }
+            if(x > refreshIcon.x && x < (refreshIcon.x + refreshIcon.width) && y > refreshIcon.y && y < (refreshIcon.y + refreshIcon.height)){
+                confirmRestart();
+            }
+            if(x > stressIcon.x && x < (stressIcon.x + stressIcon.width) && y > stressIcon.y && y < (stressIcon.y + stressIcon.height)){
+                confirmStressTest();
+            }
+        };
         
-        myWorld.getEntityByName("stressTest").onTouchstart(function(e, touchInfos){
-            confirmStressTest();
-        });
+        myWorld.onMousedown(pointerWorld);
+        myWorld.onTouchstart(pointerWorld);
         
     }
     
