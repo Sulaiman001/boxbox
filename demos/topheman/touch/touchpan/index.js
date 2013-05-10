@@ -6,7 +6,7 @@ function init(){
     
     //init canvas and world
     canvas = document.getElementById("canvas");
-    logging = SimpleConsole.getInstance({fitToCanvas: canvas});
+    logging = SoftLogger.getInstance({fitToCanvas: canvas});
     
 //    var borders = {
 //        left : -2,

@@ -43,7 +43,7 @@ function init(){
         boundaries : boundaries
     });
     
-    logging = SimpleConsole.getInstance({fitToCanvas: canvas});
+    logging = SoftLogger.getInstance({fitToCanvas: canvas});
     
     myWorld.onRender(function(){
         logging.draw(this._ctx);

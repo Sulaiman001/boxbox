@@ -16,11 +16,11 @@ Copyright (C) 2013 Christophe Rosset <tophe@topheman.com>
  *     font
  *   }
  * }
- * @returns {SimpleConsole}
+ * @returns {SoftLogger}
  */
-function SimpleConsole(options){
+function SoftLogger(options){
     
-    if ( SimpleConsole.caller !== SimpleConsole.getInstance ) {  
+    if ( SoftLogger.caller !== SoftLogger.getInstance ) {  
         throw new Error("This object cannot be instanciated");
     }
     
@@ -104,7 +104,7 @@ function SimpleConsole(options){
     this.toggleConsole = function(){
         //only works if console api is present
         if(oldConsoleLog){
-            //catch the console entries, redirect them to SimpleConsole
+            //catch the console entries, redirect them to SoftLogger
             if(logging === false){
                 console.log = log;
                 logging = true;
@@ -140,18 +140,18 @@ function SimpleConsole(options){
     
 }
 
-SimpleConsole.instance = null;
+SoftLogger.instance = null;
 
-SimpleConsole.getInstance = function(logMaxNumber){
+SoftLogger.getInstance = function(logMaxNumber){
     if(this.instance === null){
-        this.instance = new SimpleConsole(logMaxNumber);
+        this.instance = new SoftLogger(logMaxNumber);
     }
     return this.instance;
 };
 
 /*
 function lol(args){alert(arguments[0])};
-logging = SimpleConsole.getInstance(10,lol);
+logging = SoftLogger.getInstance(10,lol);
 lol('test',(new Date()).getTime());
 lol('test',(new Date()).getTime());
 lol('test',(new Date()).getTime());
@@ -176,7 +176,7 @@ logging.getLogs();
 
 
 canvas = document.getElementById('myCanvas');
-logging = SimpleConsole.getInstance({fitToCanvas:true, canvas: canvas});
+logging = SoftLogger.getInstance({fitToCanvas:true, canvas: canvas});
 console.log('test',(new Date()).getTime());
 console.log('test',(new Date()).getTime());
 console.log('test',(new Date()).getTime());

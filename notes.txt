@@ -2,12 +2,11 @@ TODO : prevent adding events on a active = false body
 TODO : "touch / mouse events are disabled *******" - refactor to a one method (with the todo before)
 TODO : maxScale
 
-TODO ?
+NEXT FEATURES
 - canvasFitToWindow
-- canvasResizeToWindow
+- hideAddressBar -> add orientationChange
+- canvasResizeToWindow -> add resize
 implementation from viewporter.js from Zynga ? (a little heavy ? is it the work of boxbox ?)
-
-TODO : seperate repo for SimpleConsole.js
 
 TODO : change gradient to color (auto detect function) DONE
 TODO : fix isTouchNotPanningNorPinching - OK (check) DONE

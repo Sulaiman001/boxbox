@@ -18,7 +18,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 //add console
-var logging = SimpleConsole.getInstance({fitToCanvas: canvas, ctxOptions : {x: 10, y: 10}});
+var logging = SoftLogger.getInstance({fitToCanvas: canvas, ctxOptions : {x: 10, y: 10}});
 
 //from here this is sample code (most of it is for logging, you could reduce it a lot !)
 
