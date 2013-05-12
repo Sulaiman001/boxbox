@@ -5357,7 +5357,7 @@ See more on the readme file
          * @disabled {Boolean} true/false to disable/enable the draggable state
          * @type {String} "regularDrag" or "eventDrag"
          * <ul>
-         * @regularDrag : Moves the entity with the mouse
+         * @regularDrag : Moves the entity with the mouse (by default)
          * @eventDrag : doesn't move the entity, only sends you the data and callbacks
          * </ul>
          * @start function(e,mouseDraggableInfos)
@@ -5483,7 +5483,7 @@ See more on the readme file
          * @maxTouches {Number}
          * @type {String} "regularDrag" or "eventDrag"
          * <ul>
-         * @regularDrag : Moves the entity with the mouse
+         * @regularDrag : Moves the entity with the touch (by default)
          * @eventDrag : doesn't move the entity, only sends you the data and callbacks
          * </ul>
          * @start function(e,touchDraggableInfos)
@@ -5492,7 +5492,7 @@ See more on the readme file
          * @touchadd function(e,touchDraggableInfos,totalTouches)
          * @touchremove function(e,touchDraggableInfos,totalTouches)
          * </ul>
-         * touchDraggableInfos
+         * @touchDraggableInfos
          * <ul>
          * @position : {x,y}
          * @originalPosition : {x,y}

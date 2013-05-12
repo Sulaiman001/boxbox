@@ -214,7 +214,7 @@ var logging = SoftLogger.getInstance({fitToCanvas: canvas, ctxOptions : {x: 10, 
         };
         
         //process the size and position of the static icon once and for all
-        var iconWidth = canvas.height/15 < 20 ? 20 : canvas.height/15;
+        var iconWidth = canvas.height/15 < 30 ? 30 : canvas.height/15;
         var iconMargin = 4;
         
         var homeIcon = {
