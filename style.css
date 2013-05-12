@@ -9,11 +9,12 @@ body {
     margin: 0;
     padding: 0;
     font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+	font-size : 0.9em;
 }
 
 header {
     text-align: center;
-    padding: 2em 0 0;
+    padding: 0.5em 0 0;
 }
 
 header h1 {
@@ -22,6 +23,10 @@ header h1 {
 
 h2 {
     font-size: 1.2em;
+}
+
+h2 span{
+	color:#900000;
 }
 
 h3 {
