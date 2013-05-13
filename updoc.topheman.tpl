@@ -22,7 +22,7 @@ a:hover {
 }
 
 header {
-  margin: 0 0 1em;
+  margin: 0 0 1em 250px;
 }
 
 header a {
@@ -77,7 +77,6 @@ ul {
 
 #content {
   margin: 0 auto;
-  max-width: 800px;
 }
 
 nav {
@@ -85,9 +84,20 @@ nav {
 }
 
 nav.compact {
-  line-height: 2em;
-  background-color: #e2e3ec;
   display : block;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  position: fixed;
+  width: 250px;
+  max-height: 100%;
+  overflow-y: scroll;
+  font-size: 0.8em;
+  overflow-x: hidden;
+}
+
+#sections{
+  margin-left:250px;
 }
 
 nav ul {
@@ -95,7 +105,12 @@ nav ul {
   list-style-type: none;
 }
 
+nav.compact {
+  padding:0px;  
+}
+
 nav.compact ul {
+  padding: 0px;
   background-color: transparent;
 }
 
@@ -103,8 +118,22 @@ nav.compact ul li {
   font-weight: bold;
 }
 
+nav.compact ul li a{
+  line-height:3em;
+}
+
 nav.compact a{
-    text-decoration: none;
+  text-decoration: none;
+  display:block;
+  line-height:0.8em;
+}
+
+#back-top{
+  text-align:center;
+}
+
+#back-top a{
+  color:black;   
 }
 
 nav.compact a:hover{
@@ -180,17 +209,18 @@ ul.properties li {
     <% } %>
   </head>
   <body>
+    <header>
+      <h1>
+        <a href="http://topheman.github.com/boxbox/" title="boxbox events - API documentation">
+          <img src="http://topheman.github.com/boxbox/boxbox-events.png" alt="boxbox events">
+        </a>
+      </h2>
+      <%= description %>
+    </header>
     <div id="content">
-      <header>
-        <h1>
-          <a href="http://topheman.github.com/boxbox/" title="boxbox events - API documentation">
-            <img src="http://topheman.github.com/boxbox/boxbox-events.png" alt="boxbox events">
-          </a>
-        </h2>
-        <%= description %>
-      </header>
       <nav class="<%= compact_index ? "compact" : ""%>">
         <ul>
+          <li id="back-top"><a href="#">Top ↑</a></li>
           <% _.each(sections, function(s) { %>
             <% if (s.header || s._name) { %>
               <%= compact_index && s._depth === deepest_depth ? "" : "<li>"%>
@@ -201,7 +231,7 @@ ul.properties li {
                   <a href="#header-<%= s.header.replace(/ /g, '-') %>" class="<% if (compact_index && s._depth === deepest_depth) print("inlineIndexItem") %>"><%= s.header %></a>
                 <% } %>
                 <% if (!s.header && s._name) { %>
-                  <a href="#name-<%= s._module %>-<%= s._name %>" class="<% if (compact_index && s._depth === deepest_depth) print("inlineIndexItem") %>"><%= s._name %></a>
+                  <a href="#<%= s._module %>" class="<% if (compact_index && s._depth === deepest_depth) print("inlineIndexItem") %>"><%= s._name %></a>
                 <% } %>
               <%= compact_index && s._depth === deepest_depth ? "" : "</li>"%>
             <% } %>
@@ -216,7 +246,7 @@ ul.properties li {
             <%= s.header ? '<h1 id="header-' + s.header.replace(/ /g, '-') + '">' + s.header + "</h1>" : "" %>
             
             <% if (s._name) { %>
-              <h2 id="name-<%= s._module %>-<%= s._name %>">
+              <h2 id="<%= s._module %>">
                 <%= ((s._type === "function" || s._type === "other") && !(s._name === 'Entity' || s._name === 'World' || s._name === 'boxbox') ? "." : "") %><%= s._name %><%= ((s._type === "other" || s._type === "function") && !(s._name === 'Entity' || s._name === 'World' || s._name === 'boxbox') ? "( " + (s._params ? s._params : "") + " )" : "") %>
               </h2>
             <% } %>

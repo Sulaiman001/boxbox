@@ -22,7 +22,7 @@ a:hover {
 }
 
 header {
-  margin: 0 0 1em;
+  margin: 0 0 1em 250px;
 }
 
 header a {
@@ -77,7 +77,6 @@ ul {
 
 #content {
   margin: 0 auto;
-  max-width: 800px;
 }
 
 nav {
@@ -85,9 +84,20 @@ nav {
 }
 
 nav.compact {
-  line-height: 2em;
-  background-color: #e2e3ec;
   display : block;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  position: fixed;
+  width: 250px;
+  max-height: 100%;
+  overflow-y: scroll;
+  font-size: 0.8em;
+  overflow-x: hidden;
+}
+
+#sections{
+  margin-left:250px;
 }
 
 nav ul {
@@ -95,7 +105,12 @@ nav ul {
   list-style-type: none;
 }
 
+nav.compact {
+  padding:0px;  
+}
+
 nav.compact ul {
+  padding: 0px;
   background-color: transparent;
 }
 
@@ -103,8 +118,22 @@ nav.compact ul li {
   font-weight: bold;
 }
 
+nav.compact ul li a{
+  line-height:3em;
+}
+
 nav.compact a{
-    text-decoration: none;
+  text-decoration: none;
+  display:block;
+  line-height:0.8em;
+}
+
+#back-top{
+  text-align:center;
+}
+
+#back-top a{
+  color:black;   
 }
 
 nav.compact a:hover{
@@ -178,17 +207,18 @@ ul.properties li {
     
   </head>
   <body>
+    <header>
+      <h1>
+        <a href="http://topheman.github.com/boxbox/" title="boxbox events - API documentation">
+          <img src="http://topheman.github.com/boxbox/boxbox-events.png" alt="boxbox events">
+        </a>
+      </h2>
+      api documentation
+    </header>
     <div id="content">
-      <header>
-        <h1>
-          <a href="http://topheman.github.com/boxbox/" title="boxbox events - API documentation">
-            <img src="http://topheman.github.com/boxbox/boxbox-events.png" alt="boxbox events">
-          </a>
-        </h2>
-        api documentation
-      </header>
       <nav class="compact">
         <ul>
+          <li id="back-top"><a href="#">Top ↑</a></li>
           
             
           
@@ -206,26 +236,6 @@ ul.properties li {
           
             
           
-            
-              <li>
-                
-                  
-                
-                
-                
-                  <a href="#name-boxbox-boxbox" class="">boxbox</a>
-                
-              </li>
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-boxbox.createWorld-createWorld" class="inlineIndexItem">createWorld</a>
-                
-              
             
           
             
@@ -235,7 +245,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-Entity-Entity" class="">Entity</a>
+                  <a href="#boxbox" class="">boxbox</a>
                 
               </li>
             
@@ -245,587 +255,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-entity.applyImpulse-applyImpulse" class="inlineIndexItem">applyImpulse</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.borderColor-borderColor" class="inlineIndexItem">borderColor</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.borderWidth-borderWidth" class="inlineIndexItem">borderWidth</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.canvasPosition-canvasPosition" class="inlineIndexItem">canvasPosition</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.checkPosition-checkPosition" class="inlineIndexItem">checkPosition</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.clearForce-clearForce" class="inlineIndexItem">clearForce</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.clearVelocity-clearVelocity" class="inlineIndexItem">clearVelocity</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.color-color" class="inlineIndexItem">color</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.destroy-destroy" class="inlineIndexItem">destroy</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.draw-draw" class="inlineIndexItem">draw</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.friction-friction" class="inlineIndexItem">friction</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.image-image" class="inlineIndexItem">image</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.imageOffsetX-imageOffsetX" class="inlineIndexItem">imageOffsetX</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.imageOffsetY-imageOffsetY" class="inlineIndexItem">imageOffsetY</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.imageStretchToFit-imageStretchToFit" class="inlineIndexItem">imageStretchToFit</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.isMouseDraggable-isMouseDraggable" class="inlineIndexItem">isMouseDraggable</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.isPined-isPined" class="inlineIndexItem">isPined</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.isTouchDraggable-isTouchDraggable" class="inlineIndexItem">isTouchDraggable</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.maxVelocityX-maxVelocityX" class="inlineIndexItem">maxVelocityX</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.maxVelocityY-maxVelocityY" class="inlineIndexItem">maxVelocityY</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.mouseDraggable-mouseDraggable" class="inlineIndexItem">mouseDraggable</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.name-name" class="inlineIndexItem">name</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.onFinishContact-onFinishContact" class="inlineIndexItem">onFinishContact</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.onImpact-onImpact" class="inlineIndexItem">onImpact</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.onKeydown-onKeydown" class="inlineIndexItem">onKeydown</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.onKeyup-onKeyup" class="inlineIndexItem">onKeyup</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.onMousedown-onMousedown" class="inlineIndexItem">onMousedown</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.onMousein-onMousein" class="inlineIndexItem">onMousein</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.onMousemove-onMousemove" class="inlineIndexItem">onMousemove</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.onMouseout-onMouseout" class="inlineIndexItem">onMouseout</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.onMouseup-onMouseup" class="inlineIndexItem">onMouseup</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.onMousewheel-onMousewheel" class="inlineIndexItem">onMousewheel</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.onRender-onRender" class="inlineIndexItem">onRender</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.onStartContact-onStartContact" class="inlineIndexItem">onStartContact</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.onTick-onTick" class="inlineIndexItem">onTick</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.onTouchend-onTouchend" class="inlineIndexItem">onTouchend</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.onTouchmove-onTouchmove" class="inlineIndexItem">onTouchmove</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.onTouchstart-onTouchstart" class="inlineIndexItem">onTouchstart</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.pin-pin" class="inlineIndexItem">pin</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.position-position" class="inlineIndexItem">position</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.restitution-restitution" class="inlineIndexItem">restitution</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.rotation-rotation" class="inlineIndexItem">rotation</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.setForce-setForce" class="inlineIndexItem">setForce</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.setVelocity-setVelocity" class="inlineIndexItem">setVelocity</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.sprite-sprite" class="inlineIndexItem">sprite</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.spriteHeight-spriteHeight" class="inlineIndexItem">spriteHeight</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.spriteSheet-spriteSheet" class="inlineIndexItem">spriteSheet</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.spriteWidth-spriteWidth" class="inlineIndexItem">spriteWidth</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.touchDraggable-touchDraggable" class="inlineIndexItem">touchDraggable</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.unbindOnMousedown-unbindOnMousedown" class="inlineIndexItem">unbindOnMousedown</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.unbindOnMousein-unbindOnMousein" class="inlineIndexItem">unbindOnMousein</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.unbindOnMousemove-unbindOnMousemove" class="inlineIndexItem">unbindOnMousemove</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.unbindOnMouseout-unbindOnMouseout" class="inlineIndexItem">unbindOnMouseout</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.unbindOnMouseup-unbindOnMouseup" class="inlineIndexItem">unbindOnMouseup</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.unbindOnMousewheel-unbindOnMousewheel" class="inlineIndexItem">unbindOnMousewheel</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.unbindOnTouchend-unbindOnTouchend" class="inlineIndexItem">unbindOnTouchend</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.unbindOnTouchmove-unbindOnTouchmove" class="inlineIndexItem">unbindOnTouchmove</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.unbindOnTouchstart-unbindOnTouchstart" class="inlineIndexItem">unbindOnTouchstart</a>
-                
-              
-            
-          
-            
-              
-                
-                
-                
-                  <a href="#name-entity.unPin-unPin" class="inlineIndexItem">unPin</a>
+                  <a href="#boxbox.createWorld" class="inlineIndexItem">createWorld</a>
                 
               
             
@@ -837,7 +267,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-World-World" class="">World</a>
+                  <a href="#Entity" class="">Entity</a>
                 
               </li>
             
@@ -847,7 +277,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.calculateWorldPositionFromPointer-calculateWorldPositionFromPointer" class="inlineIndexItem">calculateWorldPositionFromPointer</a>
+                  <a href="#entity.applyImpulse" class="inlineIndexItem">applyImpulse</a>
                 
               
             
@@ -857,7 +287,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.camera-camera" class="inlineIndexItem">camera</a>
+                  <a href="#entity.borderColor" class="inlineIndexItem">borderColor</a>
                 
               
             
@@ -867,7 +297,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.canvasPositionAt-canvasPositionAt" class="inlineIndexItem">canvasPositionAt</a>
+                  <a href="#entity.borderWidth" class="inlineIndexItem">borderWidth</a>
                 
               
             
@@ -877,7 +307,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.cleanup-cleanup" class="inlineIndexItem">cleanup</a>
+                  <a href="#entity.canvasPosition" class="inlineIndexItem">canvasPosition</a>
                 
               
             
@@ -887,7 +317,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.createEntity-createEntity" class="inlineIndexItem">createEntity</a>
+                  <a href="#entity.checkPosition" class="inlineIndexItem">checkPosition</a>
                 
               
             
@@ -897,7 +327,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.createJoint-createJoint" class="inlineIndexItem">createJoint</a>
+                  <a href="#entity.clearForce" class="inlineIndexItem">clearForce</a>
                 
               
             
@@ -907,7 +337,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.find-find" class="inlineIndexItem">find</a>
+                  <a href="#entity.clearVelocity" class="inlineIndexItem">clearVelocity</a>
                 
               
             
@@ -917,7 +347,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.getEntityById-getEntityById" class="inlineIndexItem">getEntityById</a>
+                  <a href="#entity.color" class="inlineIndexItem">color</a>
                 
               
             
@@ -927,7 +357,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.getEntityByName-getEntityByName" class="inlineIndexItem">getEntityByName</a>
+                  <a href="#entity.destroy" class="inlineIndexItem">destroy</a>
                 
               
             
@@ -937,7 +367,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.getEntityByPosition-getEntityByPosition" class="inlineIndexItem">getEntityByPosition</a>
+                  <a href="#entity.draw" class="inlineIndexItem">draw</a>
                 
               
             
@@ -947,7 +377,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.gravity-gravity" class="inlineIndexItem">gravity</a>
+                  <a href="#entity.friction" class="inlineIndexItem">friction</a>
                 
               
             
@@ -957,7 +387,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.isMousePanning-isMousePanning" class="inlineIndexItem">isMousePanning</a>
+                  <a href="#entity.image" class="inlineIndexItem">image</a>
                 
               
             
@@ -967,7 +397,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.isMousewheelZoomEnabled-isMousewheelZoomEnabled" class="inlineIndexItem">isMousewheelZoomEnabled</a>
+                  <a href="#entity.imageOffsetX" class="inlineIndexItem">imageOffsetX</a>
                 
               
             
@@ -977,7 +407,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.isTouchPanEnabled-isTouchPanEnabled" class="inlineIndexItem">isTouchPanEnabled</a>
+                  <a href="#entity.imageOffsetY" class="inlineIndexItem">imageOffsetY</a>
                 
               
             
@@ -987,7 +417,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.mousePan-mousePan" class="inlineIndexItem">mousePan</a>
+                  <a href="#entity.imageStretchToFit" class="inlineIndexItem">imageStretchToFit</a>
                 
               
             
@@ -997,7 +427,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.mousewheelZoom-mousewheelZoom" class="inlineIndexItem">mousewheelZoom</a>
+                  <a href="#entity.isMouseDraggable" class="inlineIndexItem">isMouseDraggable</a>
                 
               
             
@@ -1007,7 +437,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.onMousedown-onMousedown" class="inlineIndexItem">onMousedown</a>
+                  <a href="#entity.isPined" class="inlineIndexItem">isPined</a>
                 
               
             
@@ -1017,7 +447,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.onMousein-onMousein" class="inlineIndexItem">onMousein</a>
+                  <a href="#entity.isTouchDraggable" class="inlineIndexItem">isTouchDraggable</a>
                 
               
             
@@ -1027,7 +457,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.onMousemove-onMousemove" class="inlineIndexItem">onMousemove</a>
+                  <a href="#entity.maxVelocityX" class="inlineIndexItem">maxVelocityX</a>
                 
               
             
@@ -1037,7 +467,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.onMouseout-onMouseout" class="inlineIndexItem">onMouseout</a>
+                  <a href="#entity.maxVelocityY" class="inlineIndexItem">maxVelocityY</a>
                 
               
             
@@ -1047,7 +477,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.onMouseup-onMouseup" class="inlineIndexItem">onMouseup</a>
+                  <a href="#entity.mouseDraggable" class="inlineIndexItem">mouseDraggable</a>
                 
               
             
@@ -1057,7 +487,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.onMousewheel-onMousewheel" class="inlineIndexItem">onMousewheel</a>
+                  <a href="#entity.name" class="inlineIndexItem">name</a>
                 
               
             
@@ -1067,7 +497,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.onRender-onRender" class="inlineIndexItem">onRender</a>
+                  <a href="#entity.onFinishContact" class="inlineIndexItem">onFinishContact</a>
                 
               
             
@@ -1077,7 +507,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.onTick-onTick" class="inlineIndexItem">onTick</a>
+                  <a href="#entity.onImpact" class="inlineIndexItem">onImpact</a>
                 
               
             
@@ -1087,7 +517,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.onTouchend-onTouchend" class="inlineIndexItem">onTouchend</a>
+                  <a href="#entity.onKeydown" class="inlineIndexItem">onKeydown</a>
                 
               
             
@@ -1097,7 +527,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.onTouchmove-onTouchmove" class="inlineIndexItem">onTouchmove</a>
+                  <a href="#entity.onKeyup" class="inlineIndexItem">onKeyup</a>
                 
               
             
@@ -1107,7 +537,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.onTouchstart-onTouchstart" class="inlineIndexItem">onTouchstart</a>
+                  <a href="#entity.onMousedown" class="inlineIndexItem">onMousedown</a>
                 
               
             
@@ -1117,7 +547,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.pause-pause" class="inlineIndexItem">pause</a>
+                  <a href="#entity.onMousein" class="inlineIndexItem">onMousein</a>
                 
               
             
@@ -1127,7 +557,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.scale-scale" class="inlineIndexItem">scale</a>
+                  <a href="#entity.onMousemove" class="inlineIndexItem">onMousemove</a>
                 
               
             
@@ -1137,7 +567,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.touchPan-touchPan" class="inlineIndexItem">touchPan</a>
+                  <a href="#entity.onMouseout" class="inlineIndexItem">onMouseout</a>
                 
               
             
@@ -1147,7 +577,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.unbindOnMousedown-unbindOnMousedown" class="inlineIndexItem">unbindOnMousedown</a>
+                  <a href="#entity.onMouseup" class="inlineIndexItem">onMouseup</a>
                 
               
             
@@ -1157,7 +587,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.unbindOnMousein-unbindOnMousein" class="inlineIndexItem">unbindOnMousein</a>
+                  <a href="#entity.onMousewheel" class="inlineIndexItem">onMousewheel</a>
                 
               
             
@@ -1167,7 +597,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.unbindOnMousemove-unbindOnMousemove" class="inlineIndexItem">unbindOnMousemove</a>
+                  <a href="#entity.onRender" class="inlineIndexItem">onRender</a>
                 
               
             
@@ -1177,7 +607,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.unbindOnMouseout-unbindOnMouseout" class="inlineIndexItem">unbindOnMouseout</a>
+                  <a href="#entity.onStartContact" class="inlineIndexItem">onStartContact</a>
                 
               
             
@@ -1187,7 +617,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.unbindOnMouseup-unbindOnMouseup" class="inlineIndexItem">unbindOnMouseup</a>
+                  <a href="#entity.onTick" class="inlineIndexItem">onTick</a>
                 
               
             
@@ -1197,7 +627,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.unbindOnMousewheel-unbindOnMousewheel" class="inlineIndexItem">unbindOnMousewheel</a>
+                  <a href="#entity.onTouchend" class="inlineIndexItem">onTouchend</a>
                 
               
             
@@ -1207,7 +637,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.unbindOnRender-unbindOnRender" class="inlineIndexItem">unbindOnRender</a>
+                  <a href="#entity.onTouchmove" class="inlineIndexItem">onTouchmove</a>
                 
               
             
@@ -1217,7 +647,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.unbindOnTick-unbindOnTick" class="inlineIndexItem">unbindOnTick</a>
+                  <a href="#entity.onTouchstart" class="inlineIndexItem">onTouchstart</a>
                 
               
             
@@ -1227,7 +657,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.unbindOnTouchend-unbindOnTouchend" class="inlineIndexItem">unbindOnTouchend</a>
+                  <a href="#entity.pin" class="inlineIndexItem">pin</a>
                 
               
             
@@ -1237,7 +667,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.unbindOnTouchmove-unbindOnTouchmove" class="inlineIndexItem">unbindOnTouchmove</a>
+                  <a href="#entity.position" class="inlineIndexItem">position</a>
                 
               
             
@@ -1247,7 +677,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.unbindOnTouchstart-unbindOnTouchstart" class="inlineIndexItem">unbindOnTouchstart</a>
+                  <a href="#entity.restitution" class="inlineIndexItem">restitution</a>
                 
               
             
@@ -1257,7 +687,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.viewport&#46;centerTo-viewport&#46;centerTo" class="inlineIndexItem">viewport&#46;centerTo</a>
+                  <a href="#entity.rotation" class="inlineIndexItem">rotation</a>
                 
               
             
@@ -1267,7 +697,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.viewport&#46;centerToStage-viewport&#46;centerToStage" class="inlineIndexItem">viewport&#46;centerToStage</a>
+                  <a href="#entity.setForce" class="inlineIndexItem">setForce</a>
                 
               
             
@@ -1277,7 +707,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.viewport&#46;checkBoundaries-viewport&#46;checkBoundaries" class="inlineIndexItem">viewport&#46;checkBoundaries</a>
+                  <a href="#entity.setVelocity" class="inlineIndexItem">setVelocity</a>
                 
               
             
@@ -1287,7 +717,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.viewport&#46;focusAll-viewport&#46;focusAll" class="inlineIndexItem">viewport&#46;focusAll</a>
+                  <a href="#entity.sprite" class="inlineIndexItem">sprite</a>
                 
               
             
@@ -1297,7 +727,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.viewport&#46;getCurrentWindowInfos-viewport&#46;getCurrentWindowInfos" class="inlineIndexItem">viewport&#46;getCurrentWindowInfos</a>
+                  <a href="#entity.spriteHeight" class="inlineIndexItem">spriteHeight</a>
                 
               
             
@@ -1307,7 +737,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.viewport&#46;getMaxWindowInfos-viewport&#46;getMaxWindowInfos" class="inlineIndexItem">viewport&#46;getMaxWindowInfos</a>
+                  <a href="#entity.spriteSheet" class="inlineIndexItem">spriteSheet</a>
                 
               
             
@@ -1317,7 +747,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.viewport&#46;getScaledWindowInfos-viewport&#46;getScaledWindowInfos" class="inlineIndexItem">viewport&#46;getScaledWindowInfos</a>
+                  <a href="#entity.spriteWidth" class="inlineIndexItem">spriteWidth</a>
                 
               
             
@@ -1327,7 +757,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.viewport&#46;getWindowInfosCenterTo-viewport&#46;getWindowInfosCenterTo" class="inlineIndexItem">viewport&#46;getWindowInfosCenterTo</a>
+                  <a href="#entity.touchDraggable" class="inlineIndexItem">touchDraggable</a>
                 
               
             
@@ -1337,7 +767,7 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.viewport&#46;isRestricted-viewport&#46;isRestricted" class="inlineIndexItem">viewport&#46;isRestricted</a>
+                  <a href="#entity.unbindOnMousedown" class="inlineIndexItem">unbindOnMousedown</a>
                 
               
             
@@ -1347,7 +777,609 @@ ul.properties li {
                 
                 
                 
-                  <a href="#name-world.viewport&#46;scaleTo-viewport&#46;scaleTo" class="inlineIndexItem">viewport&#46;scaleTo</a>
+                  <a href="#entity.unbindOnMousein" class="inlineIndexItem">unbindOnMousein</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#entity.unbindOnMousemove" class="inlineIndexItem">unbindOnMousemove</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#entity.unbindOnMouseout" class="inlineIndexItem">unbindOnMouseout</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#entity.unbindOnMouseup" class="inlineIndexItem">unbindOnMouseup</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#entity.unbindOnMousewheel" class="inlineIndexItem">unbindOnMousewheel</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#entity.unbindOnTouchend" class="inlineIndexItem">unbindOnTouchend</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#entity.unbindOnTouchmove" class="inlineIndexItem">unbindOnTouchmove</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#entity.unbindOnTouchstart" class="inlineIndexItem">unbindOnTouchstart</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#entity.unPin" class="inlineIndexItem">unPin</a>
+                
+              
+            
+          
+            
+              <li>
+                
+                  
+                
+                
+                
+                  <a href="#World" class="">World</a>
+                
+              </li>
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.calculateWorldPositionFromPointer" class="inlineIndexItem">calculateWorldPositionFromPointer</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.camera" class="inlineIndexItem">camera</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.canvasPositionAt" class="inlineIndexItem">canvasPositionAt</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.cleanup" class="inlineIndexItem">cleanup</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.createEntity" class="inlineIndexItem">createEntity</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.createJoint" class="inlineIndexItem">createJoint</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.find" class="inlineIndexItem">find</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.getEntityById" class="inlineIndexItem">getEntityById</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.getEntityByName" class="inlineIndexItem">getEntityByName</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.getEntityByPosition" class="inlineIndexItem">getEntityByPosition</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.gravity" class="inlineIndexItem">gravity</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.isMousePanning" class="inlineIndexItem">isMousePanning</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.isMousewheelZoomEnabled" class="inlineIndexItem">isMousewheelZoomEnabled</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.isTouchPanEnabled" class="inlineIndexItem">isTouchPanEnabled</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.mousePan" class="inlineIndexItem">mousePan</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.mousewheelZoom" class="inlineIndexItem">mousewheelZoom</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.onMousedown" class="inlineIndexItem">onMousedown</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.onMousein" class="inlineIndexItem">onMousein</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.onMousemove" class="inlineIndexItem">onMousemove</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.onMouseout" class="inlineIndexItem">onMouseout</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.onMouseup" class="inlineIndexItem">onMouseup</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.onMousewheel" class="inlineIndexItem">onMousewheel</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.onRender" class="inlineIndexItem">onRender</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.onTick" class="inlineIndexItem">onTick</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.onTouchend" class="inlineIndexItem">onTouchend</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.onTouchmove" class="inlineIndexItem">onTouchmove</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.onTouchstart" class="inlineIndexItem">onTouchstart</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.pause" class="inlineIndexItem">pause</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.scale" class="inlineIndexItem">scale</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.touchPan" class="inlineIndexItem">touchPan</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.unbindOnMousedown" class="inlineIndexItem">unbindOnMousedown</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.unbindOnMousein" class="inlineIndexItem">unbindOnMousein</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.unbindOnMousemove" class="inlineIndexItem">unbindOnMousemove</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.unbindOnMouseout" class="inlineIndexItem">unbindOnMouseout</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.unbindOnMouseup" class="inlineIndexItem">unbindOnMouseup</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.unbindOnMousewheel" class="inlineIndexItem">unbindOnMousewheel</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.unbindOnRender" class="inlineIndexItem">unbindOnRender</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.unbindOnTick" class="inlineIndexItem">unbindOnTick</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.unbindOnTouchend" class="inlineIndexItem">unbindOnTouchend</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.unbindOnTouchmove" class="inlineIndexItem">unbindOnTouchmove</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.unbindOnTouchstart" class="inlineIndexItem">unbindOnTouchstart</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.viewport&#46;centerTo" class="inlineIndexItem">viewport&#46;centerTo</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.viewport&#46;centerToStage" class="inlineIndexItem">viewport&#46;centerToStage</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.viewport&#46;checkBoundaries" class="inlineIndexItem">viewport&#46;checkBoundaries</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.viewport&#46;focusAll" class="inlineIndexItem">viewport&#46;focusAll</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.viewport&#46;getCurrentWindowInfos" class="inlineIndexItem">viewport&#46;getCurrentWindowInfos</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.viewport&#46;getMaxWindowInfos" class="inlineIndexItem">viewport&#46;getMaxWindowInfos</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.viewport&#46;getScaledWindowInfos" class="inlineIndexItem">viewport&#46;getScaledWindowInfos</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.viewport&#46;getWindowInfosCenterTo" class="inlineIndexItem">viewport&#46;getWindowInfosCenterTo</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.viewport&#46;isRestricted" class="inlineIndexItem">viewport&#46;isRestricted</a>
+                
+              
+            
+          
+            
+              
+                
+                
+                
+                  <a href="#world.viewport&#46;scaleTo" class="inlineIndexItem">viewport&#46;scaleTo</a>
                 
               
             
@@ -1370,8 +1402,35 @@ ul.properties li {
                 
                   <li>
                   
-                    <span class="property">param</span>
-                    <span>{DraggingInfos} draggingInfos</span>
+                    <span class="property">param1</span>
+                    <span>{World} | {Entity} object</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">param2</span>
+                    <span>{String} pointerType "touch" | "mouse" | "key"</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">param3</span>
+                    <span>{String} methodName</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">returns</span>
+                    <span>{Boolean}</span>
                   
                   </li>
                 
@@ -1608,25 +1667,8 @@ ul.properties li {
                 
                   <li>
                   
-                    <span class="property">function</span>
-                    <span>PanDraggingObject</span>
-                  
-                  </li>
-                
-              
-                
-                  <li>
-                  
                     <span class="property">param</span>
-                    <span>{DraggingInfos}</span>
-                  
-                  </li>
-                
-              
-                
-                  <li>
-                  
-                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                    <span>{DraggingInfos} draggingInfos</span>
                   
                   </li>
                 
@@ -1659,12 +1701,57 @@ ul.properties li {
           </section>
         
         
+          <section class="depth0 header" data-module="">
+          
+            
+            
+            
+            
+            <ul class="properties">
+              
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">function</span>
+                    <span>PanDraggingObject</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">param</span>
+                    <span>{DraggingInfos}</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="added-by-topheman"><span class="property">added</span> by topheman</span>
+                  
+                  </li>
+                
+              
+                
+              
+            </ul>
+            
+            
+            
+          </section>
+        
+        
           <section class="depth1 header" data-module="boxbox">
           
             
             
             
-              <h2 id="name-boxbox-boxbox">
+              <h2 id="boxbox">
                 boxbox
               </h2>
             
@@ -1695,7 +1782,7 @@ ul.properties li {
             
             
             
-              <h2 id="name-boxbox.createWorld-createWorld">
+              <h2 id="boxbox.createWorld">
                 .createWorld( canvas, [options] )
               </h2>
             
@@ -1891,7 +1978,7 @@ var world = boxbox.createWorld(canvasElem, {
             
             
             
-              <h2 id="name-Entity-Entity">
+              <h2 id="Entity">
                 Entity
               </h2>
             
@@ -1922,7 +2009,7 @@ var world = boxbox.createWorld(canvasElem, {
             
             
             
-              <h2 id="name-entity.applyImpulse-applyImpulse">
+              <h2 id="entity.applyImpulse">
                 .applyImpulse( power, degrees )
               </h2>
             
@@ -1976,7 +2063,7 @@ entity.applyImpulse(10, 1, -1); // the vector x=1 y=-1}</code></div>
             
             
             
-              <h2 id="name-entity.borderColor-borderColor">
+              <h2 id="entity.borderColor">
                 .borderColor( [value] )
               </h2>
             
@@ -2025,7 +2112,7 @@ entity.applyImpulse(10, 1, -1); // the vector x=1 y=-1}</code></div>
             
             
             
-              <h2 id="name-entity.borderWidth-borderWidth">
+              <h2 id="entity.borderWidth">
                 .borderWidth( [value] )
               </h2>
             
@@ -2075,7 +2162,7 @@ Set to 0 to not show a border.</div>
             
             
             
-              <h2 id="name-entity.canvasPosition-canvasPosition">
+              <h2 id="entity.canvasPosition">
                 .canvasPosition(  )
               </h2>
             
@@ -2117,7 +2204,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.checkPosition-checkPosition">
+              <h2 id="entity.checkPosition">
                 .checkPosition( x,y )
               </h2>
             
@@ -2165,7 +2252,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.clearForce-clearForce">
+              <h2 id="entity.clearForce">
                 .clearForce(  )
               </h2>
             
@@ -2194,7 +2281,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.clearVelocity-clearVelocity">
+              <h2 id="entity.clearVelocity">
                 .clearVelocity(  )
               </h2>
             
@@ -2223,7 +2310,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.color-color">
+              <h2 id="entity.color">
                 .color( [value] )
               </h2>
             
@@ -2272,7 +2359,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.destroy-destroy">
+              <h2 id="entity.destroy">
                 .destroy(  )
               </h2>
             
@@ -2301,7 +2388,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.draw-draw">
+              <h2 id="entity.draw">
                 .draw( [value] )
               </h2>
             
@@ -2350,7 +2437,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.friction-friction">
+              <h2 id="entity.friction">
                 .friction( [value] )
               </h2>
             
@@ -2399,7 +2486,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.image-image">
+              <h2 id="entity.image">
                 .image( [value] )
               </h2>
             
@@ -2448,7 +2535,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.imageOffsetX-imageOffsetX">
+              <h2 id="entity.imageOffsetX">
                 .imageOffsetX( [value] )
               </h2>
             
@@ -2497,7 +2584,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.imageOffsetY-imageOffsetY">
+              <h2 id="entity.imageOffsetY">
                 .imageOffsetY( [value] )
               </h2>
             
@@ -2546,7 +2633,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.imageStretchToFit-imageStretchToFit">
+              <h2 id="entity.imageStretchToFit">
                 .imageStretchToFit( [value] )
               </h2>
             
@@ -2595,7 +2682,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.isMouseDraggable-isMouseDraggable">
+              <h2 id="entity.isMouseDraggable">
                 .isMouseDraggable(  )
               </h2>
             
@@ -2641,7 +2728,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.isPined-isPined">
+              <h2 id="entity.isPined">
                 .isPined(  )
               </h2>
             
@@ -2687,7 +2774,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.isTouchDraggable-isTouchDraggable">
+              <h2 id="entity.isTouchDraggable">
                 .isTouchDraggable(  )
               </h2>
             
@@ -2733,7 +2820,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.maxVelocityX-maxVelocityX">
+              <h2 id="entity.maxVelocityX">
                 .maxVelocityX( [value] )
               </h2>
             
@@ -2782,7 +2869,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.maxVelocityY-maxVelocityY">
+              <h2 id="entity.maxVelocityY">
                 .maxVelocityY( [value] )
               </h2>
             
@@ -2831,7 +2918,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.mouseDraggable-mouseDraggable">
+              <h2 id="entity.mouseDraggable">
                 .mouseDraggable( [options] )
               </h2>
             
@@ -2991,7 +3078,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.name-name">
+              <h2 id="entity.name">
                 .name( [value] )
               </h2>
             
@@ -3031,7 +3118,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.onFinishContact-onFinishContact">
+              <h2 id="entity.onFinishContact">
                 .onFinishContact( callback )
               </h2>
             
@@ -3091,7 +3178,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.onImpact-onImpact">
+              <h2 id="entity.onImpact">
                 .onImpact( callback )
               </h2>
             
@@ -3169,7 +3256,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.onKeydown-onKeydown">
+              <h2 id="entity.onKeydown">
                 .onKeydown( callback )
               </h2>
             
@@ -3229,7 +3316,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.onKeyup-onKeyup">
+              <h2 id="entity.onKeyup">
                 .onKeyup( callback )
               </h2>
             
@@ -3289,7 +3376,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.onMousedown-onMousedown">
+              <h2 id="entity.onMousedown">
                 .onMousedown( callback )
               </h2>
             
@@ -3366,7 +3453,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.onMousein-onMousein">
+              <h2 id="entity.onMousein">
                 .onMousein( callback )
               </h2>
             
@@ -3443,7 +3530,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.onMousemove-onMousemove">
+              <h2 id="entity.onMousemove">
                 .onMousemove( callback )
               </h2>
             
@@ -3520,7 +3607,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.onMouseout-onMouseout">
+              <h2 id="entity.onMouseout">
                 .onMouseout( callback )
               </h2>
             
@@ -3597,7 +3684,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.onMouseup-onMouseup">
+              <h2 id="entity.onMouseup">
                 .onMouseup( callback )
               </h2>
             
@@ -3674,7 +3761,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.onMousewheel-onMousewheel">
+              <h2 id="entity.onMousewheel">
                 .onMousewheel( callback )
               </h2>
             
@@ -3779,7 +3866,7 @@ is relative to the World's scale and camera position.</div>
             
             
             
-              <h2 id="name-entity.onRender-onRender">
+              <h2 id="entity.onRender">
                 .onRender( callback )
               </h2>
             
@@ -3842,7 +3929,7 @@ with world.unbindOnRender.</div>
             
             
             
-              <h2 id="name-entity.onStartContact-onStartContact">
+              <h2 id="entity.onStartContact">
                 .onStartContact( callback )
               </h2>
             
@@ -3902,7 +3989,7 @@ with world.unbindOnRender.</div>
             
             
             
-              <h2 id="name-entity.onTick-onTick">
+              <h2 id="entity.onTick">
                 .onTick( callback )
               </h2>
             
@@ -3961,7 +4048,7 @@ with world.unbindOnTick.</div>
             
             
             
-              <h2 id="name-entity.onTouchend-onTouchend">
+              <h2 id="entity.onTouchend">
                 .onTouchend( callback )
               </h2>
             
@@ -4038,7 +4125,7 @@ with world.unbindOnTick.</div>
             
             
             
-              <h2 id="name-entity.onTouchmove-onTouchmove">
+              <h2 id="entity.onTouchmove">
                 .onTouchmove( callback )
               </h2>
             
@@ -4115,7 +4202,7 @@ with world.unbindOnTick.</div>
             
             
             
-              <h2 id="name-entity.onTouchstart-onTouchstart">
+              <h2 id="entity.onTouchstart">
                 .onTouchstart( callback )
               </h2>
             
@@ -4192,7 +4279,7 @@ with world.unbindOnTick.</div>
             
             
             
-              <h2 id="name-entity.pin-pin">
+              <h2 id="entity.pin">
                 .pin( x,y )
               </h2>
             
@@ -4240,7 +4327,7 @@ with world.unbindOnTick.</div>
             
             
             
-              <h2 id="name-entity.position-position">
+              <h2 id="entity.position">
                 .position( [value] )
               </h2>
             
@@ -4289,7 +4376,7 @@ with world.unbindOnTick.</div>
             
             
             
-              <h2 id="name-entity.restitution-restitution">
+              <h2 id="entity.restitution">
                 .restitution( [value] )
               </h2>
             
@@ -4338,7 +4425,7 @@ with world.unbindOnTick.</div>
             
             
             
-              <h2 id="name-entity.rotation-rotation">
+              <h2 id="entity.rotation">
                 .rotation( [value] )
               </h2>
             
@@ -4387,7 +4474,7 @@ with world.unbindOnTick.</div>
             
             
             
-              <h2 id="name-entity.setForce-setForce">
+              <h2 id="entity.setForce">
                 .setForce( name, power, degrees )
               </h2>
             
@@ -4446,7 +4533,7 @@ using clearForce.</div>
             
             
             
-              <h2 id="name-entity.setVelocity-setVelocity">
+              <h2 id="entity.setVelocity">
                 .setVelocity( name, power, degrees )
               </h2>
             
@@ -4505,7 +4592,7 @@ using clearVelocity. Usually you probably want setForce or applyImpulse.</div>
             
             
             
-              <h2 id="name-entity.sprite-sprite">
+              <h2 id="entity.sprite">
                 .sprite( x,y )
               </h2>
             
@@ -4537,7 +4624,7 @@ Used only on entities with spriteSheet:true</div>
             
             
             
-              <h2 id="name-entity.spriteHeight-spriteHeight">
+              <h2 id="entity.spriteHeight">
                 .spriteHeight( [value] )
               </h2>
             
@@ -4586,7 +4673,7 @@ Used only on entities with spriteSheet:true</div>
             
             
             
-              <h2 id="name-entity.spriteSheet-spriteSheet">
+              <h2 id="entity.spriteSheet">
                 .spriteSheet( [value] )
               </h2>
             
@@ -4635,7 +4722,7 @@ Used only on entities with spriteSheet:true</div>
             
             
             
-              <h2 id="name-entity.spriteWidth-spriteWidth">
+              <h2 id="entity.spriteWidth">
                 .spriteWidth( [value] )
               </h2>
             
@@ -4684,7 +4771,7 @@ Used only on entities with spriteSheet:true</div>
             
             
             
-              <h2 id="name-entity.touchDraggable-touchDraggable">
+              <h2 id="entity.touchDraggable">
                 .touchDraggable( [options] )
               </h2>
             
@@ -4886,7 +4973,7 @@ Used only on entities with spriteSheet:true</div>
             
             
             
-              <h2 id="name-entity.unbindOnMousedown-unbindOnMousedown">
+              <h2 id="entity.unbindOnMousedown">
                 .unbindOnMousedown(  )
               </h2>
             
@@ -4923,7 +5010,7 @@ Used only on entities with spriteSheet:true</div>
             
             
             
-              <h2 id="name-entity.unbindOnMousein-unbindOnMousein">
+              <h2 id="entity.unbindOnMousein">
                 .unbindOnMousein(  )
               </h2>
             
@@ -4960,7 +5047,7 @@ Used only on entities with spriteSheet:true</div>
             
             
             
-              <h2 id="name-entity.unbindOnMousemove-unbindOnMousemove">
+              <h2 id="entity.unbindOnMousemove">
                 .unbindOnMousemove(  )
               </h2>
             
@@ -4997,7 +5084,7 @@ Used only on entities with spriteSheet:true</div>
             
             
             
-              <h2 id="name-entity.unbindOnMouseout-unbindOnMouseout">
+              <h2 id="entity.unbindOnMouseout">
                 .unbindOnMouseout(  )
               </h2>
             
@@ -5034,7 +5121,7 @@ Used only on entities with spriteSheet:true</div>
             
             
             
-              <h2 id="name-entity.unbindOnMouseup-unbindOnMouseup">
+              <h2 id="entity.unbindOnMouseup">
                 .unbindOnMouseup(  )
               </h2>
             
@@ -5071,7 +5158,7 @@ Used only on entities with spriteSheet:true</div>
             
             
             
-              <h2 id="name-entity.unbindOnMousewheel-unbindOnMousewheel">
+              <h2 id="entity.unbindOnMousewheel">
                 .unbindOnMousewheel(  )
               </h2>
             
@@ -5108,7 +5195,7 @@ Used only on entities with spriteSheet:true</div>
             
             
             
-              <h2 id="name-entity.unbindOnTouchend-unbindOnTouchend">
+              <h2 id="entity.unbindOnTouchend">
                 .unbindOnTouchend(  )
               </h2>
             
@@ -5145,7 +5232,7 @@ Used only on entities with spriteSheet:true</div>
             
             
             
-              <h2 id="name-entity.unbindOnTouchmove-unbindOnTouchmove">
+              <h2 id="entity.unbindOnTouchmove">
                 .unbindOnTouchmove(  )
               </h2>
             
@@ -5182,7 +5269,7 @@ Used only on entities with spriteSheet:true</div>
             
             
             
-              <h2 id="name-entity.unbindOnTouchstart-unbindOnTouchstart">
+              <h2 id="entity.unbindOnTouchstart">
                 .unbindOnTouchstart(  )
               </h2>
             
@@ -5219,7 +5306,7 @@ Used only on entities with spriteSheet:true</div>
             
             
             
-              <h2 id="name-entity.unPin-unPin">
+              <h2 id="entity.unPin">
                 .unPin(  )
               </h2>
             
@@ -5256,7 +5343,7 @@ Used only on entities with spriteSheet:true</div>
             
             
             
-              <h2 id="name-World-World">
+              <h2 id="World">
                 World
               </h2>
             
@@ -5287,7 +5374,7 @@ Used only on entities with spriteSheet:true</div>
             
             
             
-              <h2 id="name-world.calculateWorldPositionFromPointer-calculateWorldPositionFromPointer">
+              <h2 id="world.calculateWorldPositionFromPointer">
                 .calculateWorldPositionFromPointer( [value] )
               </h2>
             
@@ -5344,7 +5431,7 @@ Used only on entities with spriteSheet:true</div>
             
             
             
-              <h2 id="name-world.camera-camera">
+              <h2 id="world.camera">
                 .camera( [value] )
               </h2>
             
@@ -5393,7 +5480,7 @@ Used only on entities with spriteSheet:true</div>
             
             
             
-              <h2 id="name-world.canvasPositionAt-canvasPositionAt">
+              <h2 id="world.canvasPositionAt">
                 .canvasPositionAt(  )
               </h2>
             
@@ -5432,7 +5519,7 @@ for custom rendering in onRender. Respects world scale and camera position.</div
             
             
             
-              <h2 id="name-world.cleanup-cleanup">
+              <h2 id="world.cleanup">
                 .cleanup(  )
               </h2>
             
@@ -5470,7 +5557,7 @@ for custom rendering in onRender. Respects world scale and camera position.</div
             
             
             
-              <h2 id="name-world.createEntity-createEntity">
+              <h2 id="world.createEntity">
                 .createEntity( options )
               </h2>
             
@@ -5805,6 +5892,87 @@ collision detection</span>
                 
                   <li>
                   
+                    <span class="property">onMousedown</span>
+                    <span>mousedown event handler</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">onMouseup</span>
+                    <span>mouseup event handler</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">onMousemove</span>
+                    <span>mousemove event handler</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">onMousein</span>
+                    <span>mousein event handler</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">onMouseout</span>
+                    <span>mouseout event handler</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">onMousewheel</span>
+                    <span>mousewheel event handler</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">onTouchstart</span>
+                    <span>touchstart event handler</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">onTouchend</span>
+                    <span>touchend event handler</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
+                    <span class="property">onTouchmove</span>
+                    <span>touchmove event handler</span>
+                  
+                  </li>
+                
+              
+                
+                  <li>
+                  
                     <span class="property">onStartContact</span>
                     <span>start contact event handler</span>
                   
@@ -5891,7 +6059,7 @@ This allows you to provide your own custom methods and properties.</div>
             
             
             
-              <h2 id="name-world.createJoint-createJoint">
+              <h2 id="world.createJoint">
                 .createJoint( entity1, entity2, [options] )
               </h2>
             
@@ -6052,7 +6220,7 @@ info.</div>
             
             
             
-              <h2 id="name-world.find-find">
+              <h2 id="world.find">
                 .find( x1, y1, x2, y2 )
               </h2>
             
@@ -6128,7 +6296,7 @@ info.</div>
             
             
             
-              <h2 id="name-world.getEntityById-getEntityById">
+              <h2 id="world.getEntityById">
                 .getEntityById( entityId )
               </h2>
             
@@ -6176,7 +6344,7 @@ info.</div>
             
             
             
-              <h2 id="name-world.getEntityByName-getEntityByName">
+              <h2 id="world.getEntityByName">
                 .getEntityByName( entityName )
               </h2>
             
@@ -6224,7 +6392,7 @@ info.</div>
             
             
             
-              <h2 id="name-world.getEntityByPosition-getEntityByPosition">
+              <h2 id="world.getEntityByPosition">
                 .getEntityByPosition( x,y )
               </h2>
             
@@ -6290,7 +6458,7 @@ info.</div>
             
             
             
-              <h2 id="name-world.gravity-gravity">
+              <h2 id="world.gravity">
                 .gravity( [value] )
               </h2>
             
@@ -6339,7 +6507,7 @@ info.</div>
             
             
             
-              <h2 id="name-world.isMousePanning-isMousePanning">
+              <h2 id="world.isMousePanning">
                 .isMousePanning(  )
               </h2>
             
@@ -6368,7 +6536,7 @@ info.</div>
             
             
             
-              <h2 id="name-world.isMousewheelZoomEnabled-isMousewheelZoomEnabled">
+              <h2 id="world.isMousewheelZoomEnabled">
                 .isMousewheelZoomEnabled(  )
               </h2>
             
@@ -6405,7 +6573,7 @@ info.</div>
             
             
             
-              <h2 id="name-world.isTouchPanEnabled-isTouchPanEnabled">
+              <h2 id="world.isTouchPanEnabled">
                 .isTouchPanEnabled(  )
               </h2>
             
@@ -6442,7 +6610,7 @@ info.</div>
             
             
             
-              <h2 id="name-world.mousePan-mousePan">
+              <h2 id="world.mousePan">
                 .mousePan( [options] )
               </h2>
             
@@ -6626,7 +6794,7 @@ world.mousePan('exclude',[7,8,12]);</code></div>
             
             
             
-              <h2 id="name-world.mousewheelZoom-mousewheelZoom">
+              <h2 id="world.mousewheelZoom">
                 .mousewheelZoom( [options] )
               </h2>
             
@@ -6693,7 +6861,7 @@ world.mousePan('exclude',[7,8,12]);</code></div>
             
             
             
-              <h2 id="name-world.onMousedown-onMousedown">
+              <h2 id="world.onMousedown">
                 .onMousedown( callback )
               </h2>
             
@@ -6770,7 +6938,7 @@ world.mousePan('exclude',[7,8,12]);</code></div>
             
             
             
-              <h2 id="name-world.onMousein-onMousein">
+              <h2 id="world.onMousein">
                 .onMousein( callback )
               </h2>
             
@@ -6847,7 +7015,7 @@ world.mousePan('exclude',[7,8,12]);</code></div>
             
             
             
-              <h2 id="name-world.onMousemove-onMousemove">
+              <h2 id="world.onMousemove">
                 .onMousemove( callback )
               </h2>
             
@@ -6924,7 +7092,7 @@ world.mousePan('exclude',[7,8,12]);</code></div>
             
             
             
-              <h2 id="name-world.onMouseout-onMouseout">
+              <h2 id="world.onMouseout">
                 .onMouseout( callback )
               </h2>
             
@@ -7001,7 +7169,7 @@ world.mousePan('exclude',[7,8,12]);</code></div>
             
             
             
-              <h2 id="name-world.onMouseup-onMouseup">
+              <h2 id="world.onMouseup">
                 .onMouseup( callback )
               </h2>
             
@@ -7078,7 +7246,7 @@ world.mousePan('exclude',[7,8,12]);</code></div>
             
             
             
-              <h2 id="name-world.onMousewheel-onMousewheel">
+              <h2 id="world.onMousewheel">
                 .onMousewheel( callback )
               </h2>
             
@@ -7192,7 +7360,7 @@ world.mousePan('exclude',[7,8,12]);</code></div>
             
             
             
-              <h2 id="name-world.onRender-onRender">
+              <h2 id="world.onRender">
                 .onRender( callback )
               </h2>
             
@@ -7262,7 +7430,7 @@ with unbindOnRender.</div>
             
             
             
-              <h2 id="name-world.onTick-onTick">
+              <h2 id="world.onTick">
                 .onTick( callback )
               </h2>
             
@@ -7321,7 +7489,7 @@ with unbindOnTick.</div>
             
             
             
-              <h2 id="name-world.onTouchend-onTouchend">
+              <h2 id="world.onTouchend">
                 .onTouchend( callback )
               </h2>
             
@@ -7398,7 +7566,7 @@ with unbindOnTick.</div>
             
             
             
-              <h2 id="name-world.onTouchmove-onTouchmove">
+              <h2 id="world.onTouchmove">
                 .onTouchmove( callback )
               </h2>
             
@@ -7475,7 +7643,7 @@ with unbindOnTick.</div>
             
             
             
-              <h2 id="name-world.onTouchstart-onTouchstart">
+              <h2 id="world.onTouchstart">
                 .onTouchstart( callback )
               </h2>
             
@@ -7552,7 +7720,7 @@ with unbindOnTick.</div>
             
             
             
-              <h2 id="name-world.pause-pause">
+              <h2 id="world.pause">
                 .pause(  )
               </h2>
             
@@ -7589,7 +7757,7 @@ with unbindOnTick.</div>
             
             
             
-              <h2 id="name-world.scale-scale">
+              <h2 id="world.scale">
                 .scale( [value] )
               </h2>
             
@@ -7638,7 +7806,7 @@ with unbindOnTick.</div>
             
             
             
-              <h2 id="name-world.touchPan-touchPan">
+              <h2 id="world.touchPan">
                 .touchPan( [options] )
               </h2>
             
@@ -7867,7 +8035,7 @@ world.touchPan('exclude',[7,8,12]);</code></div>
             
             
             
-              <h2 id="name-world.unbindOnMousedown-unbindOnMousedown">
+              <h2 id="world.unbindOnMousedown">
                 .unbindOnMousedown(  )
               </h2>
             
@@ -7904,7 +8072,7 @@ world.touchPan('exclude',[7,8,12]);</code></div>
             
             
             
-              <h2 id="name-world.unbindOnMousein-unbindOnMousein">
+              <h2 id="world.unbindOnMousein">
                 .unbindOnMousein(  )
               </h2>
             
@@ -7941,7 +8109,7 @@ world.touchPan('exclude',[7,8,12]);</code></div>
             
             
             
-              <h2 id="name-world.unbindOnMousemove-unbindOnMousemove">
+              <h2 id="world.unbindOnMousemove">
                 .unbindOnMousemove(  )
               </h2>
             
@@ -7978,7 +8146,7 @@ world.touchPan('exclude',[7,8,12]);</code></div>
             
             
             
-              <h2 id="name-world.unbindOnMouseout-unbindOnMouseout">
+              <h2 id="world.unbindOnMouseout">
                 .unbindOnMouseout(  )
               </h2>
             
@@ -8015,7 +8183,7 @@ world.touchPan('exclude',[7,8,12]);</code></div>
             
             
             
-              <h2 id="name-world.unbindOnMouseup-unbindOnMouseup">
+              <h2 id="world.unbindOnMouseup">
                 .unbindOnMouseup(  )
               </h2>
             
@@ -8052,7 +8220,7 @@ world.touchPan('exclude',[7,8,12]);</code></div>
             
             
             
-              <h2 id="name-world.unbindOnMousewheel-unbindOnMousewheel">
+              <h2 id="world.unbindOnMousewheel">
                 .unbindOnMousewheel(  )
               </h2>
             
@@ -8089,7 +8257,7 @@ world.touchPan('exclude',[7,8,12]);</code></div>
             
             
             
-              <h2 id="name-world.unbindOnRender-unbindOnRender">
+              <h2 id="world.unbindOnRender">
                 .unbindOnRender(  )
               </h2>
             
@@ -8128,7 +8296,7 @@ World, it is removed.</div>
             
             
             
-              <h2 id="name-world.unbindOnTick-unbindOnTick">
+              <h2 id="world.unbindOnTick">
                 .unbindOnTick(  )
               </h2>
             
@@ -8167,7 +8335,7 @@ World, it is removed.</div>
             
             
             
-              <h2 id="name-world.unbindOnTouchend-unbindOnTouchend">
+              <h2 id="world.unbindOnTouchend">
                 .unbindOnTouchend(  )
               </h2>
             
@@ -8204,7 +8372,7 @@ World, it is removed.</div>
             
             
             
-              <h2 id="name-world.unbindOnTouchmove-unbindOnTouchmove">
+              <h2 id="world.unbindOnTouchmove">
                 .unbindOnTouchmove(  )
               </h2>
             
@@ -8241,7 +8409,7 @@ World, it is removed.</div>
             
             
             
-              <h2 id="name-world.unbindOnTouchstart-unbindOnTouchstart">
+              <h2 id="world.unbindOnTouchstart">
                 .unbindOnTouchstart(  )
               </h2>
             
@@ -8278,7 +8446,7 @@ World, it is removed.</div>
             
             
             
-              <h2 id="name-world.viewport&#46;centerTo-viewport&#46;centerTo">
+              <h2 id="world.viewport&#46;centerTo">
                 .viewport&#46;centerTo( {x,y} or Entity )
               </h2>
             
@@ -8380,7 +8548,7 @@ World, it is removed.</div>
             
             
             
-              <h2 id="name-world.viewport&#46;centerToStage-viewport&#46;centerToStage">
+              <h2 id="world.viewport&#46;centerToStage">
                 .viewport&#46;centerToStage(  )
               </h2>
             
@@ -8426,7 +8594,7 @@ World, it is removed.</div>
             
             
             
-              <h2 id="name-world.viewport&#46;checkBoundaries-viewport&#46;checkBoundaries">
+              <h2 id="world.viewport&#46;checkBoundaries">
                 .viewport&#46;checkBoundaries( viewport )
               </h2>
             
@@ -8538,7 +8706,7 @@ World, it is removed.</div>
             
             
             
-              <h2 id="name-world.viewport&#46;focusAll-viewport&#46;focusAll">
+              <h2 id="world.viewport&#46;focusAll">
                 .viewport&#46;focusAll(  )
               </h2>
             
@@ -8647,7 +8815,7 @@ World, it is removed.</div>
             
             
             
-              <h2 id="name-world.viewport&#46;getCurrentWindowInfos-viewport&#46;getCurrentWindowInfos">
+              <h2 id="world.viewport&#46;getCurrentWindowInfos">
                 .viewport&#46;getCurrentWindowInfos(  )
               </h2>
             
@@ -8747,7 +8915,7 @@ World, it is removed.</div>
             
             
             
-              <h2 id="name-world.viewport&#46;getMaxWindowInfos-viewport&#46;getMaxWindowInfos">
+              <h2 id="world.viewport&#46;getMaxWindowInfos">
                 .viewport&#46;getMaxWindowInfos( forceCurrentRatio )
               </h2>
             
@@ -8867,7 +9035,7 @@ World, it is removed.</div>
             
             
             
-              <h2 id="name-world.viewport&#46;getScaledWindowInfos-viewport&#46;getScaledWindowInfos">
+              <h2 id="world.viewport&#46;getScaledWindowInfos">
                 .viewport&#46;getScaledWindowInfos( newScale )
               </h2>
             
@@ -8996,7 +9164,7 @@ World, it is removed.</div>
             
             
             
-              <h2 id="name-world.viewport&#46;getWindowInfosCenterTo-viewport&#46;getWindowInfosCenterTo">
+              <h2 id="world.viewport&#46;getWindowInfosCenterTo">
                 .viewport&#46;getWindowInfosCenterTo( position )
               </h2>
             
@@ -9125,7 +9293,7 @@ World, it is removed.</div>
             
             
             
-              <h2 id="name-world.viewport&#46;isRestricted-viewport&#46;isRestricted">
+              <h2 id="world.viewport&#46;isRestricted">
                 .viewport&#46;isRestricted(  )
               </h2>
             
@@ -9171,7 +9339,7 @@ World, it is removed.</div>
             
             
             
-              <h2 id="name-world.viewport&#46;scaleTo-viewport&#46;scaleTo">
+              <h2 id="world.viewport&#46;scaleTo">
                 .viewport&#46;scaleTo( scale )
               </h2>
             

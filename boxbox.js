@@ -2962,6 +2962,15 @@ See more on the readme file
          * @init a function that is run when the entity is created
          * @onKeyDown keydown event handler
          * @onKeyUp keyup event handler
+         * @onMousedown mousedown event handler
+         * @onMouseup mouseup event handler
+         * @onMousemove mousemove event handler
+         * @onMousein mousein event handler
+         * @onMouseout mouseout event handler
+         * @onMousewheel mousewheel event handler
+         * @onTouchstart touchstart event handler
+         * @onTouchend touchend event handler
+         * @onTouchmove touchmove event handler
          * @onStartContact start contact event handler
          * @onFinishContact finish contact event handler
          * @onImpact impact event handler
@@ -4349,10 +4358,26 @@ See more on the readme file
                 this._world._addImpactHandler(id, ops.onImpact);
             }
             if (ops.onKeyDown) {
-                this._world._addKeydownHandler(id, ops.onKeyDown);
+                if(checkBeforeAddEvent(this, "key", "onKeyDown") === true){
+                    this._world._addKeydownHandler(id, ops.onKeyDown);
+                }
+            }
+            //@added by topheman to keep case matching
+            else if(ops.onKeydown) {
+                if(checkBeforeAddEvent(this, "key", "onKeydown") === true){
+                    this._world._addKeydownHandler(id, ops.onKeydown);
+                }
             }
             if (ops.onKeyUp) {
-                this._world._addKeyupHandler(id, ops.onKeyUp);
+                if(checkBeforeAddEvent(this, "key", "onKeyUp") === true){
+                    this._world._addKeyupHandler(id, ops.onKeyUp);
+                }
+            }
+            //@added by topheman to keep case matching
+            else if(ops.onKeyup) {
+                if(checkBeforeAddEvent(this, "key", "onKeyup") === true){
+                    this._world._addKeydownHandler(id, ops.onKeyup);
+                }
             }
             if (ops.onRender) {
                 this.onRender(ops.onRender);
@@ -4385,6 +4410,11 @@ See more on the readme file
             if (ops.onMouseout) {
                 if(checkBeforeAddEvent(this, "mouse", "onMouseout") === true){
                     this._world._addMouseoutHandler(id, ops.onMouseout);
+                }
+            }
+            if (ops.onMousewheel) {
+                if(checkBeforeAddEvent(this, "mouse", "onMousewheel") === true){
+                    this._world._addMousewheelHandler(id, ops.onMousewheel);
                 }
             }
             if (ops.onTouchstart) {
