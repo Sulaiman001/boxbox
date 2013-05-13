@@ -178,7 +178,7 @@ See more on the readme file
      * @bottom
      * </ul>
      * </ul>
-     * @return a new <a href="#name-World-World">World</a>
+     * @return a new <a href="#World">World</a>
      * @description
      without options
      <code>var canvasElem = document.getElementById("myCanvas");
@@ -2977,7 +2977,7 @@ See more on the readme file
          * @onRender event handler on render
          * @onTick event handler on tick
          * </ul>
-         * @return a new <a href="#name-Entity-Entity">Entity</a>
+         * @return a new <a href="#Entity">Entity</a>
          * @description
          <h2>Example</h2>
          <code>var player = world.createEntity({
@@ -4535,7 +4535,7 @@ See more on the readme file
          * @_params
          * @return {x,y}
          * @description Get the Entity position in pixels. Useful for custom
-         * rendering. Unlike <a href="#name-entity.position-position">position</a> the result
+         * rendering. Unlike <a href="#entity.position">position</a> the result
          * is relative to the World's scale and camera position.
          */
         canvasPosition: function(value) {
