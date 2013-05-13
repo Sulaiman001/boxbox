@@ -98,6 +98,47 @@ See more on the readme file
         }
         return target;
     }
+    
+    /**
+     * @param {World} | {Entity} object
+     * @param {String} pointerType "touch" | "mouse" | "key"
+     * @param {String} methodName
+     * @returns {Boolean}
+     */
+    function checkBeforeAddEvent(object, pointerType, methodName) {
+        var worldOptions, active = true;
+        if(object._id > -1){
+            worldOptions = object._world._ops;
+            active = object._ops.active;
+        }
+        else{
+            worldOptions = object._ops;
+        }
+        
+        if(active === false && pointerType !== "key"){
+            console.warn(methodName+" only on active objects");
+            return false;
+        }
+        
+        if(worldOptions.disableKeyEvents === true && pointerType === "key"){
+            console.warn("Key events are disabled, you tried to call "+methodName);
+            return false;
+        }
+        
+        if(worldOptions.disableMouseEvents === true && pointerType === "mouse"){
+            console.warn("Mouse events are disabled, you tried to call "+methodName);
+            return false;
+        }
+        
+        if(worldOptions.disableTouchEvents === true && pointerType === "touch"){
+            console.warn("Touch events are disabled, you tried to call "+methodName);
+            return false;
+        }
+        
+        //everything's ok, you can add the event
+        return true;
+        
+    }
 
     // these look like imports but there is no cost here
     var b2Vec2 = Box2D.Common.Math.b2Vec2;
@@ -3302,8 +3343,7 @@ See more on the readme file
          * @added by topheman
          */
         onMousedown : function(callback){
-            if(this._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call onMousedown');
+            if(checkBeforeAddEvent(this, "mouse", "onMousedown") === false){
                 return false;
             }
             this._addMousedownHandler(worldCallbackEventId, callback);
@@ -3323,8 +3363,7 @@ See more on the readme file
          * @added by topheman
          */
         onMouseup : function(callback){
-            if(this._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call onMouseup');
+            if(checkBeforeAddEvent(this, "mouse", "onMouseup") === false){
                 return false;
             }
             this._addMouseupHandler(worldCallbackEventId, callback);
@@ -3344,8 +3383,7 @@ See more on the readme file
          * @added by topheman
          */
         onMousemove : function(callback){
-            if(this._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call onMousemove');
+            if(checkBeforeAddEvent(this, "mouse", "onMousemove") === false){
                 return false;
             }
             this._addMousemoveHandler(worldCallbackEventId, callback);
@@ -3358,10 +3396,6 @@ See more on the readme file
          * @added by topheman
          */    
         unbindOnMousedown: function(){
-            if(this._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call unbindOnMousedown');
-                return false;
-            }
             this._removeMousedownHandler(worldCallbackEventId);
         },
         
@@ -3372,10 +3406,6 @@ See more on the readme file
          * @added by topheman
          */   
         unbindOnMouseup: function(){
-            if(this._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call unbindOnMouseup');
-                return false;
-            }
             this._removeMouseupHandler(worldCallbackEventId);
         },
         
@@ -3386,10 +3416,6 @@ See more on the readme file
          * @added by topheman
          */    
         unbindOnMousemove: function(){
-            if(this._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call unbindOnMousemove');
-                return false;
-            }
             this._removeMousemoveHandler(worldCallbackEventId);
         },
         
@@ -3407,8 +3433,7 @@ See more on the readme file
          * @added by topheman
          */
         onMousein : function(callback){
-            if(this._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call onMousein');
+            if(checkBeforeAddEvent(this, "mouse", "onMousein") === false){
                 return false;
             }
             this._addMouseinHandler(worldCallbackEventId, callback);
@@ -3428,8 +3453,7 @@ See more on the readme file
          * @added by topheman
          */
         onMouseout : function(callback){
-            if(this._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call onMouseout');
+            if(checkBeforeAddEvent(this, "mouse", "onMouseout") === false){
                 return false;
             }
             this._addMouseoutHandler(worldCallbackEventId, callback);
@@ -3442,10 +3466,6 @@ See more on the readme file
          * @added by topheman
          */    
         unbindOnMousein: function(){
-            if(this._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call unbindOnMousein');
-                return false;
-            }
             this._removeMouseinHandler(worldCallbackEventId);
         },
         
@@ -3456,10 +3476,6 @@ See more on the readme file
          * @added by topheman
          */    
         unbindOnMouseout: function(){
-            if(this._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call unbindOnMouseout');
-                return false;
-            }
             this._removeMouseoutHandler(worldCallbackEventId);
         },
         
@@ -3477,8 +3493,7 @@ See more on the readme file
          * @added by topheman
          */
         onTouchstart : function(callback){
-            if(this._ops.disableTouchEvents){
-                console.warn('Touch events are disabled, you tried to call onTouchstart');
+            if(checkBeforeAddEvent(this, "touch", "onTouchstart") === false){
                 return false;
             }
             this._addTouchstartHandler(worldCallbackEventId, callback);
@@ -3498,8 +3513,7 @@ See more on the readme file
          * @added by topheman
          */
         onTouchmove : function(callback){
-            if(this._ops.disableTouchEvents){
-                console.warn('Touch events are disabled, you tried to call onTouchmove');
+            if(checkBeforeAddEvent(this, "touch", "onTouchmove") === false){
                 return false;
             }
             this._addTouchmoveHandler(worldCallbackEventId, callback);
@@ -3519,8 +3533,7 @@ See more on the readme file
          * @added by topheman
          */
         onTouchend : function(callback){
-            if(this._ops.disableTouchEvents){
-                console.warn('Touch events are disabled, you tried to call onTouchend');
+            if(checkBeforeAddEvent(this, "touch", "onTouchend") === false){
                 return false;
             }
             this._addTouchendHandler(worldCallbackEventId, callback);
@@ -3533,10 +3546,6 @@ See more on the readme file
          * @added by topheman
          */
         unbindOnTouchstart : function(){
-            if(this._ops.disableTouchEvents){
-                console.warn('Touch events are disabled, you tried to call unbindOnTouchstart');
-                return false;
-            }
             this._removeTouchstartHandler(worldCallbackEventId);
         },
         
@@ -3547,10 +3556,6 @@ See more on the readme file
          * @added by topheman
          */
         unbindOnTouchmove : function(callback){
-            if(this._ops.disableTouchEvents){
-                console.warn('Touch events are disabled, you tried to call unbindOnTouchmove');
-                return false;
-            }
             this._removeTouchmoveHandler(worldCallbackEventId);
         },
         
@@ -3561,10 +3566,6 @@ See more on the readme file
          * @added by topheman
          */
         unbindOnTouchend : function(callback){
-            if(this._ops.disableTouchEvents){
-                console.warn('Touch events are disabled, you tried to call unbindOnTouchend');
-                return false;
-            }
             this._removeTouchendHandler(worldCallbackEventId);
         },
         
@@ -3588,8 +3589,7 @@ See more on the readme file
          * @added by topheman
          */
         onMousewheel : function(callback){
-            if(this._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call onMousewheel');
+            if(checkBeforeAddEvent(this, "mouse", "onMousewheel") === false){
                 return false;
             }
             this._addMousewheelHandler(worldCallbackEventId, callback);
@@ -3602,10 +3602,6 @@ See more on the readme file
          * @added by topheman
          */
         unbindOnMousewheel : function(callback){
-            if(this._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call unbindOnMousewheel');
-                return false;
-            }
             this._removeMousewheelHandler(worldCallbackEventId);
         },
                 
@@ -3663,8 +3659,7 @@ See more on the readme file
          */
         mousePan : function(options,value){
             var i,tmpValue;
-            if(this._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call mousePan');
+            if(checkBeforeAddEvent(this, "mouse", "mousePan") === false){
                 return false;
             }
             
@@ -3833,8 +3828,7 @@ See more on the readme file
          */                
         touchPan : function(options,value){
             var i,tmpValue;
-            if(this._ops.disableTouchEvents){
-                console.warn('Touch events are disabled, you tried to call touchPan');
+            if(checkBeforeAddEvent(this, "touch", "touchPan") === false){
                 return false;
             }
             
@@ -4039,8 +4033,7 @@ See more on the readme file
          * @added by topheman
          */
         mousewheelZoom : function(options){
-            if(this._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call mousewheelZoom');
+            if(checkBeforeAddEvent(this, "mouse", "mousewheelZoom") === false){
                 return false;
             }
             
@@ -4366,6 +4359,48 @@ See more on the readme file
             }
             if (ops.onTick) {
                 this.onTick(ops.onTick);
+            }
+            
+            //@added by topheman
+            if (ops.onMousedown) {
+                if(checkBeforeAddEvent(this, "mouse", "onMousedown") === true){
+                    this._world._addMousedownHandler(id, ops.onMousedown);
+                }
+            }
+            if (ops.onMouseup) {
+                if(checkBeforeAddEvent(this, "mouse", "onMouseup") === true){
+                    this._world._addMouseupHandler(id, ops.onMouseup);
+                }
+            }
+            if (ops.onMousemove) {
+                if(checkBeforeAddEvent(this, "mouse", "onMousemove") === true){
+                    this._world._addMousemoveHandler(id, ops.onMousemove);
+                }
+            }
+            if (ops.onMousein) {
+                if(checkBeforeAddEvent(this, "mouse", "onMousein") === true){
+                    this._world._addMouseinHandler(id, ops.onMousein);
+                }
+            }
+            if (ops.onMouseout) {
+                if(checkBeforeAddEvent(this, "mouse", "onMouseout") === true){
+                    this._world._addMouseoutHandler(id, ops.onMouseout);
+                }
+            }
+            if (ops.onTouchstart) {
+                if(checkBeforeAddEvent(this, "touch", "onTouchstart") === true){
+                    this._world._addTouchstartHandler(id, ops.onTouchstart);
+                }
+            }
+            if (ops.onTouchend) {
+                if(checkBeforeAddEvent(this, "touch", "onTouchend") === true){
+                    this._world._addTouchendHandler(id, ops.onTouchend);
+                }
+            }
+            if (ops.onTouchmove) {
+                if(checkBeforeAddEvent(this, "touch", "onTouchmove") === true){
+                    this._world._addTouchmoveHandler(id, ops.onTouchmove);
+                }
             }
 
             // custom init function
@@ -4813,8 +4848,7 @@ See more on the readme file
          * @description Handle keydown event for this entity.
          */
         onKeydown: function(callback) {
-            if(this._world._ops.disableKeyEvents){
-                console.warn('Key events are disabled, you tried to call onKeydown');
+            if(checkBeforeAddEvent(this, "key", "onKeydown") === false){
                 return false;
             }
             this._world._addKeydownHandler(this._id, callback);
@@ -4832,8 +4866,7 @@ See more on the readme file
          * @description Handle keyup event for this entity.
          */
         onKeyup: function(callback) {
-            if(this._world._ops.disableKeyEvents){
-                console.warn('Key events are disabled, you tried to call onKeyup');
+            if(checkBeforeAddEvent(this, "key", "onKeyup") === false){
                 return false;
             }
             this._world._addKeyupHandler(this._id, callback);
@@ -4853,8 +4886,7 @@ See more on the readme file
          * @added by topheman
          */
         onMousedown : function(callback){
-            if(this._world._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call onMousedown');
+            if(checkBeforeAddEvent(this, "mouse", "onMousedown") === false){
                 return false;
             }
             this._world._addMousedownHandler(this._id, callback);
@@ -4874,8 +4906,7 @@ See more on the readme file
          * @added by topheman
          */     
         onMouseup : function(callback){
-            if(this._world._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call onMouseup');
+            if(checkBeforeAddEvent(this, "mouse", "onMouseup") === false){
                 return false;
             }
             this._world._addMouseupHandler(this._id, callback);
@@ -4895,8 +4926,7 @@ See more on the readme file
          * @added by topheman
          */    
         onMousemove : function(callback){
-            if(this._world._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call onMousemove');
+            if(checkBeforeAddEvent(this, "mouse", "onMousemove") === false){
                 return false;
             }
             this._world._addMousemoveHandler(this._id, callback);
@@ -4909,10 +4939,6 @@ See more on the readme file
          * @added by topheman
          */    
         unbindOnMousedown: function(){
-            if(this._world._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call unbindOnMousedown');
-                return false;
-            }
             this._world._removeMousedownHandler(this._id);
         },
         
@@ -4923,10 +4949,6 @@ See more on the readme file
          * @added by topheman
          */   
         unbindOnMouseup: function(){
-            if(this._world._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call unbindOnMouseup');
-                return false;
-            }
             this._world._removeMouseupHandler(this._id);
         },
         
@@ -4937,10 +4959,6 @@ See more on the readme file
          * @added by topheman
          */    
         unbindOnMousemove: function(){
-            if(this._world._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call unbindOnMousemove');
-                return false;
-            }
             this._world._removeMousemoveHandler(this._id);
         },
         
@@ -4958,12 +4976,8 @@ See more on the readme file
          * @added by topheman
          */    
         onMousein : function(callback){
-            if(this._world._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call onMousein');
+            if(checkBeforeAddEvent(this, "mouse", "onMousein") === false){
                 return false;
-            }
-            if(this._ops.active === false){
-                console.warn('onMousein only on active objects');
             }
             this._world._addMouseinHandler(this._id, callback);
         },
@@ -4982,12 +4996,8 @@ See more on the readme file
          * @added by topheman
          */    
         onMouseout : function(callback){
-            if(this._world._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call onMouseout');
+            if(checkBeforeAddEvent(this, "mouse", "onMouseout") === false){
                 return false;
-            }
-            if(this._ops.active === false){
-                console.warn('onMousein only on active objects');
             }
             this._world._addMouseoutHandler(this._id, callback);
         },
@@ -4999,10 +5009,6 @@ See more on the readme file
          * @added by topheman
          */    
         unbindOnMousein: function(){
-            if(this._world._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call unbindOnMousein');
-                return false;
-            }
             this._world._removeMouseinHandler(this._id);
         },
         
@@ -5013,10 +5019,6 @@ See more on the readme file
          * @added by topheman
          */    
         unbindOnMouseout: function(){
-            if(this._world._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call unbindOnMouseout');
-                return false;
-            }
             this._world._removeMouseoutHandler(this._id);
         },
         
@@ -5034,8 +5036,7 @@ See more on the readme file
          * @added by topheman
          */  
         onTouchstart : function(callback){
-            if(this._world._ops.disableTouchEvents){
-                console.warn('Touch events are disabled, you tried to call onTouchstart');
+            if(checkBeforeAddEvent(this, "touch", "onTouchstart") === false){
                 return false;
             }
             this._world._addTouchstartHandler(this._id, callback);
@@ -5055,8 +5056,7 @@ See more on the readme file
          * @added by topheman
          */  
         onTouchend : function(callback){
-            if(this._world._ops.disableTouchEvents){
-                console.warn('Touch events are disabled, you tried to call onTouchend');
+            if(checkBeforeAddEvent(this, "touch", "onTouchend") === false){
                 return false;
             }
             this._world._addTouchendHandler(this._id, callback);
@@ -5076,8 +5076,7 @@ See more on the readme file
          * @added by topheman
          */  
         onTouchmove : function(callback){
-            if(this._world._ops.disableTouchEvents){
-                console.warn('Touch events are disabled, you tried to call onTouchmove');
+            if(checkBeforeAddEvent(this, "touch", "onTouchmove") === false){
                 return false;
             }
             this._world._addTouchmoveHandler(this._id, callback);
@@ -5090,10 +5089,6 @@ See more on the readme file
          * @added by topheman
          */    
         unbindOnTouchstart: function(){
-            if(this._world._ops.disableTouchEvents){
-                console.warn('Touch events are disabled, you tried to call unbindOnTouchstart');
-                return false;
-            }
             this._world._removeTouchstartHandler(this._id);
         },
         
@@ -5104,10 +5099,6 @@ See more on the readme file
          * @added by topheman
          */    
         unbindOnTouchend: function(){
-            if(this._world._ops.disableTouchEvents){
-                console.warn('Touch events are disabled, you tried to call unbindOnTouchend');
-                return false;
-            }
             this._world._removeTouchendHandler(this._id);
         },
         
@@ -5118,10 +5109,6 @@ See more on the readme file
          * @added by topheman
          */    
         unbindOnTouchmove: function(){
-            if(this._world._ops.disableTouchEvents){
-                console.warn('Touch events are disabled, you tried to call unbindOnTouchmove');
-                return false;
-            }
             this._world._removeTouchmoveHandler(this._id);
         },
         
@@ -5144,8 +5131,7 @@ See more on the readme file
          * @added by topheman
          */
         onMousewheel : function(callback){
-            if(this._world._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call onMousewheel');
+            if(checkBeforeAddEvent(this, "mouse", "onMousewheel") === false){
                 return false;
             }
             this._world._addMousewheelHandler(this._id, callback);
@@ -5158,10 +5144,6 @@ See more on the readme file
          * @added by topheman
          */ 
         unbindOnMousewheel: function(){
-            if(this._world._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call unbindOnMousewheel');
-                return false;
-            }
             this._world._removeMousewheelHandler(this._id);
         },
 
@@ -5372,8 +5354,7 @@ See more on the readme file
          * @added by topheman
          */
         mouseDraggable: function(options){
-            if(this._world._ops.disableMouseEvents){
-                console.warn('Mouse events are disabled, you tried to call mouseDraggable');
+            if(checkBeforeAddEvent(this, "mouse", "mouseDraggable") === false){
                 return false;
             }
             //simple init without options
@@ -5501,8 +5482,7 @@ See more on the readme file
          * @added by topheman
          */
         touchDraggable: function(options){
-            if(this._world._ops.disableTouchEvents){
-                console.warn('Touch events are disabled, you tried to call touchDraggable');
+            if(checkBeforeAddEvent(this, "touch", "touchDraggable") === false){
                 return false;
             }
             //simple init without options
