@@ -15,7 +15,8 @@ function initViewport(){
     fullWindow = window.location.search.indexOf("noFullWindow") > -1 ? false : true;
     
     //resize canvas to full window if asked for
-    if(fullWindow){
+    //if full window was not asked for but we're in touch, I assume we're on mobile and resize anyway to prevent canvas oversizing viewport
+    if(fullWindow || isTouch){
         canvas = document.getElementById('myCanvas');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
