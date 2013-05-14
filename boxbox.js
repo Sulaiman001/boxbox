@@ -393,7 +393,8 @@ See more on the readme file
                         requiredScale = newScale;
                         
                         //check for rescale in/out necessity to stick with the opposit borders of the restrict stage
-                        if(boundaries.top && boundaries.bottom){
+                        if(boundaries.top !== null && boundaries.bottom !== null){
+                            console.info('h');
                             //check for scale out need
                             if(requiredScale > boundaries.maxScale){
                                 
@@ -406,7 +407,8 @@ See more on the readme file
                                 rescaledFlag = true;
                             }
                         }
-                        if(boundaries.right && boundaries.left){
+                        if(boundaries.right !== null && boundaries.left !== null){
+                            console.info('v');
                             //check for scale out need
                             if(requiredScale > boundaries.maxScale){
                                 
@@ -655,7 +657,7 @@ See more on the readme file
                         requiredLeft        = position.x - requiredWidth/2;
                         
                         //check for rescale in/out necessity to stick with the opposit borders of the restrict stage
-                        if(boundaries.top && boundaries.bottom){
+                        if(boundaries.top !== null && boundaries.bottom !== null){
                             //check for scale out need
                             if(requiredScale > boundaries.maxScale){
                                 
@@ -668,7 +670,7 @@ See more on the readme file
                                 rescaledFlag = true;
                             }
                         }
-                        if(boundaries.right && boundaries.left){
+                        if(boundaries.right !== null && boundaries.left !== null){
                             //check for scale out need
                             if(requiredScale > boundaries.maxScale){
                                 
@@ -736,26 +738,26 @@ See more on the readme file
                             currentViewport = null,
                             center = {};
                         if(this.isRestricted()){
-                            if(boundaries.right && boundaries.left){
+                            if(boundaries.right !== null && boundaries.left !== null){
                                 center.x = (boundaries.right - boundaries.left) /2 + boundaries.left;
                             }
-                            else if(boundaries.right){
+                            else if(boundaries.right !== null){
                                 center.x = boundaries.right;
                             }
-                            else if(boundaries.left){
+                            else if(boundaries.left !== null){
                                 center.x = boundaries.left;
                             }
                             else{
                                 currentViewport = currentViewport === null ? this.getCurrentWindowInfos() : currentViewport;
                                 center.x = currentViewport.x + currentViewport.width/2;
                             }
-                            if(boundaries.top && boundaries.bottom){
+                            if(boundaries.top !== null && boundaries.bottom !== null){
                                 center.y = (boundaries.bottom - boundaries.top) /2 + boundaries.top;
                             }
-                            else if(boundaries.top){
+                            else if(boundaries.top !== null){
                                 center.y = boundaries.top;
                             }
-                            else if(boundaries.bottom){
+                            else if(boundaries.bottom !== null){
                                 center.y = boundaries.bottom;
                             }
                             else{
