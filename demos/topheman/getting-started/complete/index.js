@@ -18,14 +18,7 @@ var myWorld = boxbox.createWorld(canvas,{
     }
 });
 
-//activate the panning on both mouse and touch
-myWorld.mousePan();     //you'll receive a warning if disableMouseEvents = true
-myWorld.touchPan();     //you'll receive a warning if disableTouchEvents = true
-
-//activate the mousewheel zoom
-myWorld.mousewheelZoom({step : 1});
-
-//add walls
+//walls
 //this config is shared by the all the walls
 var wallConfig = {
     type: "static",     //the walls won't move
@@ -61,14 +54,14 @@ myWorld.createEntity( wallConfig, {
     height : 0.5
 });
 
-//add the player
-player = myWorld.createEntity({
+//player
+var player = myWorld.createEntity({
     name: "player",
     shape: "circle",
     color : "blue",
     borderWidth : 0,
     radius: 1,
-    x: 2, 
+    x: 3, 
     y: 2,
     onStartContact:function(entity){    //when the player hits the ground, it goes back to blue
         if(entity.name() === "bottom"){
@@ -77,11 +70,8 @@ player = myWorld.createEntity({
     }
 });
 
-//focus on the player (the framework centers the viewport to the center of the world by default)
-myWorld.viewport.centerTo(player);
-myWorld.viewport.scaleTo(14);//little scale for little devices (to see most of the world)
-
 //blocks
+//this config is shared by all blocks
 var blockConfig = {
     shape: "square",
     color: "brown",
@@ -123,3 +113,119 @@ myWorld.createEntity( blockConfig, {
         width: 6,
         height: 0.5
 });
+
+//crates
+//this config is shared by all crates
+var crateConfig = {
+    shape: "square",
+    color: "yellow",
+    width: 2,
+    height: 3,
+    y: 10
+};
+var crate1 = myWorld.createEntity( crateConfig, { x: 16 } );
+var crate2 = myWorld.createEntity( crateConfig, { x: 22 } );
+var crate3 = myWorld.createEntity( crateConfig, { x: 19, y: 5 } );
+
+//function that will be binded/unbinded as an onRender callback
+//binded when launching the player (to track it when it is thrown)
+//unbinded when the user pan the world (not to mess with the user panning)
+//@see api documentation for more infos
+function trackPlayer(ctx){
+    myWorld.viewport.centerTo(player);
+}
+
+//function that will be binded/unbinded as an onRender callback to the player
+//binded when start dragging on the player
+//unbinded when stop dragging on the player
+function drawTargetting(ctx){
+    //this._canvasPointerInfos is injected while dragging on the player
+    if(this._canvasPointerInfos){
+        ctx.lineWidth = 3;
+        ctx.strokeStyle='#900000';
+        ctx.beginPath();
+        ctx.moveTo(this.canvasPosition().x,this.canvasPosition().y);
+        ctx.lineTo(this._canvasPointerInfos.x,this._canvasPointerInfos.y);
+        ctx.stroke();
+    }
+};
+
+//we use the mouseDraggable with type = "eventDrag" to activate the launcher
+//it won't physically drag the player
+//but we'll have the data to draw the target line + apply the right impulse
+player.mouseDraggable({
+    type : 'eventDrag',
+    start: function(e,mouseDraggableInfos){
+        myWorld.unbindOnRender(trackPlayer);    //when start dragging, stop tracking the player
+        this.onRender(drawTargetting);          //binding a render callback
+    },
+    drag: function(e,mouseDraggableInfos){
+        //adding infos for the render callback
+        this._canvasPointerInfos = this._world.canvasPositionAt(mouseDraggableInfos.position.x,mouseDraggableInfos.position.y);
+    },
+    stop: function(e,mouseDraggableInfos){
+        //no more need for the render callback
+        myWorld.unbindOnRender(drawTargetting);
+        //reset this._canvasPointerInfos 
+        this._canvasPointerInfos = null;
+        //launch the player
+        this.applyImpulse(30,-(this.position().x-mouseDraggableInfos.position.x),-(this.position().y-mouseDraggableInfos.position.y));
+        //from now on, we track the player
+        myWorld.onRender(trackPlayer);
+    }
+});
+//touchDraggable is mostly the same but remember, on drag, touchDraggableInfos is an array (this is multitouch)
+player.touchDraggable({
+    type : 'eventDrag',
+    maxTouches : 1,
+    start: function(e,touchDraggableInfos){
+        myWorld.unbindOnRender(trackPlayer);    //when start dragging, stop tracking the player
+        this.onRender(drawTargetting);          //binding a render callback
+    },
+    drag: function(e,touchDraggableInfos){
+        //adding infos for the render callback
+        this._canvasPointerInfos = this._world.canvasPositionAt(touchDraggableInfos[0].position.x,touchDraggableInfos[0].position.y);//maxTouches = 1, so we are sure we can take the first item of the array
+    },
+    stop: function(e,touchDraggableInfos){
+        //no more need for the render callback
+        myWorld.unbindOnRender(drawTargetting);
+        //reset this._canvasPointerInfos 
+        this._canvasPointerInfos = null;
+        //launch the player
+        this.applyImpulse(30,-(this.position().x-touchDraggableInfos.position.x),-(this.position().y-touchDraggableInfos.position.y));
+        //from now on, we track the player
+        myWorld.onRender(trackPlayer);
+    }
+});
+
+//dragging the crates
+var cratesDraggableConfig = {
+    start: function(){
+        myWorld.unbindOnRender(trackPlayer); //when start dragging, stop tracking the player
+    }
+};
+crate1.touchDraggable(cratesDraggableConfig);
+crate2.touchDraggable(cratesDraggableConfig);
+crate3.touchDraggable(cratesDraggableConfig);
+crate1.mouseDraggable(cratesDraggableConfig);
+crate2.mouseDraggable(cratesDraggableConfig);
+crate3.mouseDraggable(cratesDraggableConfig);
+
+//activate the panning on both mouse and touch
+myWorld.mousePan({
+    start: function(e, viewportInfos){
+        myWorld.unbindOnRender(trackPlayer);    //when start pan, stop tracking the player
+    }
+});
+myWorld.touchPan({
+    start: function(e, viewportInfos){
+        myWorld.unbindOnRender(trackPlayer);    //when start pan, stop tracking the player
+    }
+});
+
+//activate the mousewheel zoom
+myWorld.mousewheelZoom({step : 1});
+
+////focus on the player (the framework centers the viewport to the center of the world by default)
+myWorld.viewport.centerTo(player);
+myWorld.viewport.scaleTo(14);//little scale for little devices (to see most of the world)

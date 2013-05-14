@@ -394,7 +394,6 @@ See more on the readme file
                         
                         //check for rescale in/out necessity to stick with the opposit borders of the restrict stage
                         if(boundaries.top !== null && boundaries.bottom !== null){
-                            console.info('h');
                             //check for scale out need
                             if(requiredScale > boundaries.maxScale){
                                 
@@ -408,7 +407,6 @@ See more on the readme file
                             }
                         }
                         if(boundaries.right !== null && boundaries.left !== null){
-                            console.info('v');
                             //check for scale out need
                             if(requiredScale > boundaries.maxScale){
                                 
