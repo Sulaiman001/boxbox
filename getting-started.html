@@ -14,11 +14,75 @@
         </header>
         <section>
             <nav>
-                <a href="https://github.com/topheman/boxbox">download on github</a>
-                <a href="http://topheman.github.com/boxbox/boxbox/updoc.topheman.html">documentation</a>
+                <a href="https://github.com/topheman/boxbox" title="Github repo">download on github</a>
+                <a href="http://topheman.github.com/boxbox/boxbox/updoc.topheman.html" title="api documentation">documentation</a>
+                <a href="http://topheman.github.com/boxbox/" title="home">back home</a>
             </nav>
-            <h2>Intro</h2>
-            <p></p>
+            <h2 id="intro">Intro</h2>
+            <p>If you don't already have, please take a look at <a href="http://topheman.github.com/boxbox/boxbox/demos/topheman/smileyFaces/demo.html" title="Play smileyFaces">smileyFaces</a>, a little game I developed with boxbox events, to let you have an overview of the possibilities of the framework.</p>
+            <p>In the following document, I will explain to you step by step how to make a simple version of smileyFaces to introduce you to boxbox events.</p>
+            <p>Like smileyFaces, it is playable on desktop/tablet/mobile in any orientation ...</p>
+            <p class="try-it"><a href="http://topheman.github.com/boxbox/boxbox/demos/topheman/getting-started/complete/index.html?noFullWindow" title="Try getting-started complete">Try it!</a> - <a href="https://github.com/topheman/boxbox/tree/master/demos/topheman/getting-started" title="boxbox events getting-started sources">All sources for the following examples</a></p>
+            <p>This project includes a simple stylesheet <code>style.css</code> and the following scripts :</p>
+            <ul>
+                <li><code>Box2dWeb-2.1.a.3.min.js</code> (dependency of boxbox events)</li>
+                <li><code>boxbox.min.js</code> (minified version of boxbox events)</li>
+                <li><code>viewport.js</code> (<a href="https://github.com/topheman/boxbox/tree/master/demos/topheman/getting-started/viewport.js" title="Source viewport.js">simple script</a> that handles canvas resizing to full window + detects touch)</li>
+                <li><code>index.js</code> (this is where the code of the game is)</li>
+            </ul>
+            <h3 id="step1" class="steps-head">1) Creation of the world</h3>
+            <p>First, you create the world, providing the canvas + some options (only canvas is mandatory, see <a href="http://topheman.github.com/boxbox/boxbox/updoc.topheman.html#boxbox.createWorld" title="api documentation">api documentation</a>  ).</p>
+            <p>As you'll see, you can choose to disable some types of event listeners (ex : if your game only uses touch, you don't wan't mouse or key events).</p>
+            <p>You can apply boundaries to your game (so you won't have to manage them manually).</p>
+            <script src="http://gist-it.appspot.com/github/topheman/boxbox/blob/master/demos/topheman/getting-started/step-1/index.js"></script>
+            <p class="try-it"><a href="http://topheman.github.com/boxbox/boxbox/demos/topheman/getting-started/step-1/index.html?noFullWindow" title="Try getting-started complete">Try it!</a> (you'll only see an empty world ...)</p>
+            
+            <h3 id="step2" class="steps-head">2) Creation of entities / Walls</h3>
+            <p>Now that we have a world, let's put some walls around (to prevent the ball to get out).</p>
+            <script src="http://gist-it.appspot.com/github/topheman/boxbox/blob/master/demos/topheman/getting-started/step-2/index.js?slice=20:200"></script>
+            <p>The viewport is smaller than the world and doesn't have the same ratio, so you won't see all your walls. We'll add the panning ability at the end, so you can navigate along your world.</p>
+            <p class="try-it"><a href="http://topheman.github.com/boxbox/boxbox/demos/topheman/getting-started/step-2/index.html?noFullWindow" title="Try getting-started complete">Try it!</a></p>
+            
+            <h3 id="step3" class="steps-head">3) Creation of entities / Player</h3>
+            <p>Now that we have a stage, let's add the player. As you can see, it has a callback that will turn it back to blue when it hits the bottom wall.</p>
+            <script src="http://gist-it.appspot.com/github/topheman/boxbox/blob/master/demos/topheman/getting-started/step-3/index.js?slice=56:200"></script>
+            <p class="try-it"><a href="http://topheman.github.com/boxbox/boxbox/demos/topheman/getting-started/step-3/index.html?noFullWindow" title="Try getting-started complete">Try it!</a></p>
+            
+            <h3 id="step4" class="steps-head">4) Creation of entities / Blocks</h3>
+            <p>After the player, let's add some blocks. The <code>blockConfig</code> var acts like a reusable template for each created blocks. As you can see, if the block is hit hard enough by the player, it will turn to black and the player will turn to red, if it hits hard enough the bottom the block will be destroyed.</p>
+            <script src="http://gist-it.appspot.com/github/topheman/boxbox/blob/master/demos/topheman/getting-started/step-4/index.js?slice=72:200"></script>
+            <p class="try-it"><a href="http://topheman.github.com/boxbox/boxbox/demos/topheman/getting-started/step-4/index.html?noFullWindow" title="Try getting-started complete">Try it!</a></p>
+            
+            <h3 id="step5" class="steps-head">5) Creation of entities / Crates</h3>
+            <p>Finally, like we added some blocks, we add 3 crates.</p>
+            <script src="http://gist-it.appspot.com/github/topheman/boxbox/blob/master/demos/topheman/getting-started/step-5/index.js?slice=116:200"></script>
+            <p class="try-it"><a href="http://topheman.github.com/boxbox/boxbox/demos/topheman/getting-started/step-5/index.html?noFullWindow" title="Try getting-started complete">Try it!</a></p>
+            
+            <h3 id="step6" class="steps-head">6) Interraction : mouse/touchDraggable (type:eventDrag)</h3>
+            <p>Except for the boundaries of the world, you could do quite everything above with the original boxbox. Now, let's add some interraction with some new features from boxbox events !</p>
+            <p>We'll add the ability to launch the player by dragging, with mouse or touch (angry birds like).</p>
+            <p>Explanation are in the comments in the code.</p>
+            <script src="http://gist-it.appspot.com/github/topheman/boxbox/blob/master/demos/topheman/getting-started/step-6/index.js?slice=152:300"></script>
+            <p class="try-it"><a href="http://topheman.github.com/boxbox/boxbox/demos/topheman/getting-started/step-6/index.html?noFullWindow" title="Try getting-started complete">Try it!</a> (Now, you can launch the player and the viewport tracks down the player)</p>
+            
+            <h3 id="step7" class="steps-head">7) Interraction : mouse/touchDraggable (type:regularDrag)</h3>
+            <p>Previously we used the eventDrag type for mouse/touchDraggable, now we are going to make the crates draggable (multitouch style).</p>
+            <script src="http://gist-it.appspot.com/github/topheman/boxbox/blob/master/demos/topheman/getting-started/step-7/index.js?slice=200:300"></script>
+            <p class="try-it"><a href="http://topheman.github.com/boxbox/boxbox/demos/topheman/getting-started/step-7/index.html?noFullWindow" title="Try getting-started complete">Try it!</a> (Play with the crates, plurality of ones at a time on multitouch - either with more than one touch on each one if you dare !)</p>
+            
+            <h3 id="step8" class="steps-head">8) Interraction : mouse/touchPan + mousewheelZoom</h3>
+            <p>The game is beginning to look good, but still, we can't navigate through the world, let's add some panning/pinching/zooming ability.</p>
+            <script src="http://gist-it.appspot.com/github/topheman/boxbox/blob/master/demos/topheman/getting-started/step-8/index.js?slice=213:300"></script>
+            <p class="try-it"><a href="http://topheman.github.com/boxbox/boxbox/demos/topheman/getting-started/step-8/index.html?noFullWindow" title="Try getting-started complete">Try it!</a> (Now, move your world with your mouse or finger, zoom in/out with your mousewheel or by pinching with your fingers)</p>
+            
+            <h3 id="step9" class="steps-head">9) Viewport api</h3>
+            <p>Center the viewport on your player at the beginning, with only one line of code (you specified the boundaries on your world, boxbox events will take care about repositionning, rescaling, etc ...)</p>
+            <script src="http://gist-it.appspot.com/github/topheman/boxbox/blob/master/demos/topheman/getting-started/complete/index.js?slice=228:300"></script>
+            <p class="try-it"><a href="http://topheman.github.com/boxbox/boxbox/demos/topheman/getting-started/complete/index.html?noFullWindow" title="Try getting-started complete">Try it!</a></p>
+            
+            <h2>Conclusion</h2>
+            <p>I hope you've found this introduction/tutorial helpful. For further infos, don't hesitate to check out the <a href="http://topheman.github.com/boxbox/boxbox/updoc.topheman.html" title="api documentation">api documentation</a>, or any of the sources on my <a href="https://github.com/topheman/boxbox" title="Github repo">github repo</a>.</p>
+            
         </section>
         <footer>
             <a href="https://twitter.com/topheman" title="@topheman on twitter">twitter</a> - <a href="https://github.com/topheman" title="@topheman on github">github</a> - 

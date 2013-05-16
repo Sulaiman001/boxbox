@@ -93,3 +93,7 @@ footer {
 .warning {
     color : red;
 }
+
+h3.steps-head{
+    box-shadow: none;
+}
