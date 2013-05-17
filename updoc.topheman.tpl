@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>boxbox events - API documentation</title>
+    <title>boxboxevents - API documentation</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link type="text/css" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css" rel="stylesheet">
     <script type="text/javascript" src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js"></script>
@@ -211,8 +211,8 @@ ul.properties li {
   <body>
     <header>
       <h1>
-        <a href="http://topheman.github.com/boxbox/" title="boxbox events - API documentation">
-          <img src="http://topheman.github.com/boxbox/boxbox-events.png" alt="boxbox events">
+        <a href="http://topheman.github.com/boxbox/" title="boxboxevents - API documentation">
+          <img src="http://topheman.github.com/boxbox/boxbox-events.png" alt="boxboxevents">
         </a>
       </h2>
       <%= description %>

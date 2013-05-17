@@ -506,7 +506,7 @@ var logging = SoftLogger.getInstance({fitToCanvas: canvas, ctxOptions : {x: 10, 
             myWorld.pause();
             //using setTimout because of confirm on iPhone (seems to take ahead on events)
             setTimeout(function(){
-                if(confirm("Are you sure you wan't to go back to boxbox events home page ?")){
+                if(confirm("Are you sure you wan't to go back to boxboxevents home page ?")){
                     window.location.href = "http://topheman.github.com/boxbox";
                 }
                 else{
