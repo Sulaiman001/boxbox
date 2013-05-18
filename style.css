@@ -97,3 +97,7 @@ footer {
 h3.steps-head{
     box-shadow: none;
 }
+
+#qrcode-smileyFaces{
+    float: right;
+}
