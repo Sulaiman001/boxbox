@@ -57,6 +57,7 @@ See more on the readme file
      * @description contains a single self-contained physics simulation
      */
     window.boxbox = {};
+    window.boxbox.codeName = "boxboxevents";
     
     // Make sure Box2D exists
     if (Box2D === undefined) {
@@ -1679,13 +1680,13 @@ See more on the readme file
                  */
                 var _world_mousemoveHandlerForDragEvent = function(e, mousePos) {
                     //tag as dragging when passing for the first time
-                    if(this._world._mouseDraggingEntityId === null && !this._mouseDragging && !this._mouseStartDrag){
+                    if(self._mouseDraggingEntityId === null && !this._mouseDragging && !this._mouseStartDrag){
                         //tag as dragging (all along the drag), with the original coordinates
                         this._mouseDragging = mousePos;
                         //tag as startDrag to know that startDrag event will have to be triggered next time on mousemove event
                         this._mouseStartDrag = true;
                         //tag the entity as dragged on the world
-                        this._world._mouseDraggingEntityId = this._id;
+                        self._mouseDraggingEntityId = this._id;
                         
                         //init regularDrag
                         if(this._ops._mouseDraggable.type === 'regularDrag'){
@@ -1693,12 +1694,12 @@ See more on the readme file
                                 //create the joint with the mouse on first call
                                 var jointDefinition = new Box2D.Dynamics.Joints.b2MouseJointDef();
 
-                                jointDefinition.bodyA = this._world._world.GetGroundBody();
+                                jointDefinition.bodyA = self._world.GetGroundBody();
                                 jointDefinition.bodyB = this._body;
                                 jointDefinition.target.Set(mousePos.x, mousePos.y);
                                 jointDefinition.maxForce = 10000000000000000000000000000;//100000
                                 jointDefinition.timeStep = 1/60;//hard coded ?!!
-                                this._mouseMoveJoint = this._world._world.CreateJoint(jointDefinition);
+                                this._mouseMoveJoint = self._world.CreateJoint(jointDefinition);
                             }
                         }
                         //init eventDrag
@@ -1709,15 +1710,15 @@ See more on the readme file
                     else if(this._mouseDragging) {
                         //trigger startdrag event on the first move
                         if(this._mouseStartDrag && e.type === 'mousemove'){
-                            if(this._world._mouseStartdragHandlers[this._id]){
-                                this._world._mouseStartdragHandlers[this._id].call(this,e, mergeMouseInfos(mousePos,this._mouseDragging));
+                            if(self._mouseStartdragHandlers[this._id]){
+                                self._mouseStartdragHandlers[this._id].call(this,e, mergeMouseInfos(mousePos,this._mouseDragging));
                             }
                             this._mouseStartDrag = false;//reset startDrag state after the first drag
                         }
                         //trigger the drag event on the next moves
                         else {
-                            if(this._world._mouseDragHandlers[this._id]){
-                                this._world._mouseDragHandlers[this._id].call(this,e, mergeMouseInfos(mousePos,this._mouseDragging));
+                            if(self._mouseDragHandlers[this._id]){
+                                self._mouseDragHandlers[this._id].call(this,e, mergeMouseInfos(mousePos,this._mouseDragging));
                             }
                         }
                     }
@@ -1740,17 +1741,17 @@ See more on the readme file
                     if(this._mouseDragging){
                         //if there is a move joint, we are in regularDrag (no test, in case the type of drag is change in the middle of a drag)
                         if (this._mouseMoveJoint) {
-                            this._world._world.DestroyJoint(this._mouseMoveJoint);
+                            self._world.DestroyJoint(this._mouseMoveJoint);
                             this._mouseMoveJoint = null;
                         }
                         //trigger the stopdrag event (don't trigger it if the first drag hasn't happened)
-                        if(this._mouseStartDrag === false && this._world._mouseStopdragHandlers[this._id]){
-                            this._world._mouseStopdragHandlers[this._id].call(this,e, mergeMouseInfos(mousePos,this._mouseDragging));
+                        if(this._mouseStartDrag === false && self._mouseStopdragHandlers[this._id]){
+                            self._mouseStopdragHandlers[this._id].call(this,e, mergeMouseInfos(mousePos,this._mouseDragging));
                         }
                     }
                     this._mouseStartDrag = false;//reset startDrag state if there was no drag at all
                     this._mouseDragging = false;//all the dragging process is ended, reset this propertie
-                    this._world._mouseDraggingEntityId = null;//untag the dragging entity on world
+                    self._mouseDraggingEntityId = null;//untag the dragging entity on world
                 };
                 
                 /*
@@ -1820,7 +1821,7 @@ See more on the readme file
                     }
                     //remove joint if there is already a joint on this touch (shouldn't happend on multitouch screen) - backwards compatibility for non mutitouch devices 
                     if(this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier] && this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint){
-                        this._world._world.DestroyJoint(this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint);
+                        self._world.DestroyJoint(this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint);
                     }
                     //add the originalPosition of the touch
                     this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier] = {
@@ -1835,12 +1836,12 @@ See more on the readme file
                         //create the joint with the touch
                         jointDefinition = new Box2D.Dynamics.Joints.b2MouseJointDef();
 
-                        jointDefinition.bodyA = this._world._world.GetGroundBody();
+                        jointDefinition.bodyA = self._world.GetGroundBody();
                         jointDefinition.bodyB = this._body;
                         jointDefinition.target.Set(touchInfos[touchIndex].x, touchInfos[touchIndex].y);
                         jointDefinition.maxForce = 10000000000000000000000000000;//100000
                         jointDefinition.timeStep = 1/60;//hard coded ?!!
-                        this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint = this._world._world.CreateJoint(jointDefinition);
+                        this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint = self._world.CreateJoint(jointDefinition);
                     }
                     //init eventDrag
                     else if(this._ops._touchDraggable.type === 'eventDrag'){
@@ -1849,8 +1850,8 @@ See more on the readme file
                     
                     //trigger the touchadd callback if not the first touch on the dragging entity
                     touchesCount = Object.keys(this._touchMoveJoints).length;
-                    if(touchesCount > 1 && this._world._touchAddtouchdragHandlers[this._id]){
-                        this._world._touchAddtouchdragHandlers[this._id].call(this,e, mergeTouchDraggableInfos(touchInfos,this)[0],touchesCount);
+                    if(touchesCount > 1 && self._touchAddtouchdragHandlers[this._id]){
+                        self._touchAddtouchdragHandlers[this._id].call(this,e, mergeTouchDraggableInfos(touchInfos,this)[0],touchesCount);
                     }
                 };
                 
@@ -1871,15 +1872,15 @@ See more on the readme file
                     if(this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier]){
                         //destroy the mouseJoint created in case of a regularDrag
                         if(this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint){
-                            this._world._world.DestroyJoint(this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint);
+                            self._world.DestroyJoint(this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier].joint);
                         }
                         this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier] = null;
                         delete this._touchMoveJoints[touchInfos[touchIndex].touchIdentifier];
                     }
                     //trigger the touchremove callback if not the first touch on the dragging entity
                     touchesCount = Object.keys(this._touchMoveJoints).length;
-                    if(touchesCount > 0 && this._world._touchRemovetouchdragHandlers[this._id]){
-                        this._world._touchRemovetouchdragHandlers[this._id].call(this,e, touchDraggableInfos,touchesCount);
+                    if(touchesCount > 0 && self._touchRemovetouchdragHandlers[this._id]){
+                        self._touchRemovetouchdragHandlers[this._id].call(this,e, touchDraggableInfos,touchesCount);
                     }
                 };
                 
@@ -1907,7 +1908,7 @@ See more on the readme file
                  */
                 var _world_touchmoveHandlerForDragEvent = function(e, touchInfos, touchIndex) {
                     //tag as dragging when passing for the first time
-                    if(e.type === 'touchstart' && this._world._touchDraggingEntityIds.indexOf(this._id) === -1 && !this._touchDragging && !this._touchStartDrag){
+                    if(e.type === 'touchstart' && self._touchDraggingEntityIds.indexOf(this._id) === -1 && !this._touchDragging && !this._touchStartDrag){
                         //force the entity not to sleep for all the time it will be dragged
                         this._body.SetSleepingAllowed(false);
                         //tag as dragging (all along the drag)
@@ -1915,13 +1916,13 @@ See more on the readme file
                         //tag as startDrag to know that startDrag event will have to be triggered next time on touchmove event
                         this._touchStartDrag = true;
                         //tag the entity as dragged on the world
-                        this._world._touchDraggingEntityIds.push(this._id);
+                        self._touchDraggingEntityIds.push(this._id);
                         
                         //here with the very first touch to this entity, we add the very first joint
                         _world_touchAddtouchHandlerForDragEvent.call(this, e, touchInfos, touchIndex);
                     }
                     //if it's a new touch while dragging the same entity
-                    else if(e.type === 'touchstart' && this._world._touchDraggingEntityIds.indexOf(this._id) > -1){
+                    else if(e.type === 'touchstart' && self._touchDraggingEntityIds.indexOf(this._id) > -1){
                         if(Object.keys(this._touchMoveJoints).length < this._ops._touchDraggable.maxTouches){
                             //here with the nth touch to this entity, we add the nth joint
                             _world_touchAddtouchHandlerForDragEvent.call(this, e, touchInfos, touchIndex);
@@ -1930,8 +1931,8 @@ See more on the readme file
                     else if(this._touchDragging){
                         //trigger startdrag event on the first move
                         if(this._touchStartDrag && e.type === 'touchmove'){
-                            if(this._world._touchStartdragHandlers[this._id]){
-                                this._world._touchStartdragHandlers[this._id].call(this,e, mergeTouchDraggableInfos(touchInfos,this)[0]);
+                            if(self._touchStartdragHandlers[this._id]){
+                                self._touchStartdragHandlers[this._id].call(this,e, mergeTouchDraggableInfos(touchInfos,this)[0]);
                             }
                             this._touchStartDrag = false;//reset startDrag state after the first drag
                         }
@@ -1970,7 +1971,7 @@ See more on the readme file
                         }
                         this._touchStartDrag = false;//reset startDrag state if there was no drag at all
                         this._touchDragging = false;//all the dragging process is ended, reset this propertie
-                        this._world._touchDraggingEntityIds.splice(this._world._touchDraggingEntityIds.indexOf(this._id),1);//untag the dragging entity on world
+                        self._touchDraggingEntityIds.splice(self._touchDraggingEntityIds.indexOf(this._id),1);//untag the dragging entity on world
                     }
                 };
                 
