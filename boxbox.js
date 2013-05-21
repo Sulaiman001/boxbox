@@ -57,7 +57,8 @@ See more on the readme file
      * @description contains a single self-contained physics simulation
      */
     window.boxbox = {};
-    window.boxbox.codeName = "boxboxevents";
+    window.boxbox.codeName  = "boxboxevents";
+    window.boxbox.version   = "0.1.0";
     
     // Make sure Box2D exists
     if (Box2D === undefined) {
