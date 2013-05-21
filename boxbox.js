@@ -58,7 +58,7 @@ See more on the readme file
      */
     window.boxbox = {};
     window.boxbox.codeName  = "boxboxevents";
-    window.boxbox.version   = "0.1.0";
+    window.boxbox.version   = "dev";
     
     // Make sure Box2D exists
     if (Box2D === undefined) {
