@@ -26,25 +26,25 @@ var logging = SoftLogger.getInstance({fitToCanvas: canvas, ctxOptions : {x: 10, 
     
     //your boxbox world accessible all accross this scope
     var myWorld;
+    var myWorldOptions = {
+        scale:30,
+        preventScroll: true,
+        disableTouchEvents : !touchDetected,
+        disableKeyEvents : true,
+        disableMouseEvents : touchDetected,
+        debugDraw: false,
+        boundaries : {
+            left : -1,
+            right : 30,
+            top : -1,
+            bottom : 12
+        }
+    };
     
     function initWorld(){
         
         //create your world
-        myWorld = boxbox.createWorld(canvas,{
-            scale:30,
-            preventScroll: true,
-            disableTouchEvents : !touchDetected,
-            disableKeyEvents : true,
-            disableMouseEvents : touchDetected,
-            debugDraw: false,
-            boundaries : {
-                left : -1,
-                right : 30,
-                top : -1,
-                bottom : 12
-            }
-        });
-        
+        myWorld = boxbox.createWorld(canvas,myWorldOptions);
         //the world is ready, start to populate it
         phase1();
         
@@ -522,7 +522,7 @@ var logging = SoftLogger.getInstance({fitToCanvas: canvas, ctxOptions : {x: 10, 
                 if(confirm("Are you sure you wan't restart game ?")){
                     //restart
                     myWorld.pause();
-                    myWorld.cleanup();
+                    myWorld.cleanup(myWorldOptions);
                     phase1();
                 }
                 else{

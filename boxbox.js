@@ -1122,6 +1122,7 @@ See more on the readme file
                  */
                 var mousedownHandler = function(e) {
                     var mousePos = getEntityFromMouse(e);
+                    e.preventDefault();
                     _world_mousedownHandler(e, mousePos);
                     for (var key in self._mousedownHandlers) {
                         if(key === worldCallbackEventId){
@@ -1140,6 +1141,7 @@ See more on the readme file
                  */
                 var mouseupHandler = function(e) {
                     var mousePos = getEntityFromMouse(e);
+                    e.preventDefault();
                     _world_mouseupHandler(e, mousePos);
                     for (var key in self._mouseupHandlers) {
                         if(key === worldCallbackEventId){
@@ -1158,6 +1160,7 @@ See more on the readme file
                  */
                 var mousemoveHandler = function(e) {
                     var mousePos = getEntityFromMouse(e);
+                    e.preventDefault();
                     _world_mousemoveHandler(e, mousePos);
                     for (var key in self._mousemoveHandlers) {
                         if(key === worldCallbackEventId){
@@ -1177,6 +1180,7 @@ See more on the readme file
                  */
                 var mouseinHandler = function (e) {
                     var mousePos = getEntityFromMouse(e);
+                    e.preventDefault();
                     _world_mouseinHandler(e, mousePos);
                     if(self._mouseinHandlers[worldCallbackEventId]){
                         self._mouseinHandlers[worldCallbackEventId].call(self, e, mousePos);
@@ -1191,6 +1195,7 @@ See more on the readme file
                  */
                 var mouseoutHandler = function (e) {
                     var mousePos = getEntityFromMouse(e);
+                    e.preventDefault();
                     _world_mouseoutHandler(e, mousePos);
                     if(self._mouseoutHandlers[worldCallbackEventId]){
                         self._mouseoutHandlers[worldCallbackEventId].call(self, e, mousePos);
@@ -1207,6 +1212,7 @@ See more on the readme file
                     var mousePos = getEntityFromMouse(e),
                         delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail))),
                         callMousewheelzoom = true;
+                    e.preventDefault();
                     mousePos.delta = delta;
                     for (var key in self._mousewheelHandlers) {
                         if(key === worldCallbackEventId){
@@ -2336,11 +2342,13 @@ See more on the readme file
         /**
          * @_name cleanup
          * @_module world
+         * @_params options
+         * @options The same kind of options you passed when you created the world. Warn : disableTouchEvents, disableMouseEvents and preventScroll won't be effective (you can't add/remove this kind of listeners after creating the world)
          * @description Removes all the entities, all the handlers (even the world handlers such as mouse/touch Pan/wheelZoom) while keeping your boundaries (if any) in options
          * <br>Usefull when you have multiple levels
          * @added by topheman
          */
-        cleanup : function(){
+        cleanup : function(options){
             
             var i,j, world = this._world, toDestroy, id, self = this;
             //destroy the entities
@@ -2378,27 +2386,12 @@ See more on the readme file
                 //destroy the entity itself
                 delete self._entities[id];
             }
-        
-//            self._ops = null;
-//            self._world = null;
-//            self._canvas = null;
-//          //reinit some of the ops
-            self._ops._mousePan = {
-                disabled: true,
-                excludeEntityIds: [],
-                multiplier: 1
-            };
-            self._ops._touchPan = { //@added by topheman
-                disabled: true,
-                panMultiplier: 1,
-                excludeEntityIds: [],
-                triggerWorldEvents: true,
-                allowPinch: true
-            },
-            self._ops._mousewheelZoom = {
-                disabled: true,
-                step: 0.1
-            };
+
+            options = options || {};
+            self._ops = extend(options, WORLD_DEFAULT_OPTIONS);
+            self._world.SetGravity( new b2Vec2(self._ops.gravity.x, self._ops.gravity.y) );
+            self._scale = self._ops.scale;
+
             //destroy the references in the world
             self._destroyQueue = [];
             self._impulseQueue = [];
