@@ -1,0 +1,9 @@
+{
+  "name": "boxboxevents",
+  "description": "JavaScript physics made easy and event management easier",
+  "author": "Christophe Rosset <tophe@topheman.com>",
+  "devDependencies": {
+    "grunt": "0.3.17"
+  },
+  "engine": "node >= 0.4.1"
+}
