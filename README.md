@@ -29,7 +29,7 @@ It will install the correct versions of :
 * grunt : the task manager (takes charge of minification, test, lint ...)
 * updoc : creates the documentation from the comments in the code
 
-You should have to run **npm install -g grunt updoc** to be able to use them via this type of shortcut :
+You should have to run **npm install -g grunt-cli updoc** to be able to use them via this type of shortcut :
 
 * grunt min, grunt lint ...
 * updoc boxbox.js updoc.topheman.html updoc.topheman.tpl
