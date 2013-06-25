@@ -21,3 +21,15 @@ I'm still working on it, to improve the code and maybe if you have some relevent
 Tophe
 
 ![boxboxevents](http://topheman.github.io/boxbox/boxbox-events.png)
+
+PS : This project comes with a package.json file so that you can run : **npm install**
+
+It will install the correct versions of :
+
+* grunt : the task manager (takes charge of minification, test, lint ...)
+* updoc : creates the documentation from the comments in the code
+
+You should have to run **npm install -g grunt updoc** to be able to use them via this type of shortcut :
+
+* grunt min, grunt lint ...
+* updoc boxbox.js updoc.topheman.html updoc.topheman.tpl
