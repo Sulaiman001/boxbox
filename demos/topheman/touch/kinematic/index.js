@@ -69,39 +69,76 @@ function init(){
         borderColor : "black"
     };
     
-//    totoStatic = myWorld.createEntity( entityConfig, {
-//        type : "static",
-//        name: "totoStatic",
-//        borderColor : "black",
-//        x: 5,
-//        y: 10,
-//        width : 5,
-//        height : 3
+    totoStatic = myWorld.createEntity( entityConfig, {
+        type : "kinematic",
+        name: "totoStatic",
+        borderColor : "black",
+        x: 5,
+        y: 10,
+        width : 5,
+        height : 3
+    });
+    
+    totoKinematic = myWorld.createEntity( entityConfig, {
+        type : "kinematic",
+        name: "totoKinematic",
+        borderColor : "blue",
+        image : "../../smileyFaces/wood-crate.png",		
+        imageStretchToFit: true,
+        x: 12,
+        y: 10,
+        width : 5,
+        height : 3
+    });
+    
+    totoDynamic = myWorld.createEntity( entityConfig, {
+        type : "dynamic",
+        name: "totoDynamic",
+        borderColor : "red",
+        x: 20,
+        y: 10,
+        width : 5,
+        height : 3
+    });
+    
+    totoStatic.onMousedown(callback);
+    totoDynamic.onMousedown(callback);
+//    totoKinematic._body.SetLinearVelocity(new Box2D.Common.Math.b2Vec2(1,1));
+//            totoKinematic._body.SetAngularVelocity(Math.PI/6);
+
+    totoKinematic.onStartContact(function(entity){
+        console.log('contact',entity);
+    });
+    
+    velocity = 2;
+    xMove = 5;
+    yMove = 5;
+    originalPosition = totoKinematic.position();
+    vector = getVector(totoKinematic.position(),{x:totoKinematic.position().x+xMove,y:totoKinematic.position().y+yMove});
+    totoKinematic.setVelocity('t',velocity,vector.x,vector.y);
+    
+    myWorld.onRender(function(){
+        if(totoKinematic.position().y>=originalPosition.y+yMove){
+//            totoKinematic._body.SetLinearVelocity(new Box2D.Common.Math.b2Vec2(-1,-1));
+            totoKinematic.setVelocity('t',velocity,-vector.x,-vector.y);
+//            totoKinematic._body.SetAngularVelocity(Math.PI/6);
+            console.info(totoKinematic.position());
+        }
+        else if(totoKinematic.position().y<=originalPosition.y){
+            totoKinematic.setVelocity('t',velocity,vector.x,vector.y);
+//            totoKinematic._body.SetLinearVelocity(new Box2D.Common.Math.b2Vec2(1,1));
+//            totoKinematic._body.SetAngularVelocity(Math.PI/6);
+            console.info(totoKinematic.position());
+        }
+    });
+    
+    totoKinematic.onMousedown(callback);
+    
+//    totoKinematic.mouseDraggable({
+//        start:function(){
+//            console.info('start');
+//        }
 //    });
-//    
-//    totoKinematic = myWorld.createEntity( entityConfig, {
-//        type : "static",
-//        name: "totoKinematic",
-//        borderColor : "blue",
-//        x: 12,
-//        y: 10,
-//        width : 5,
-//        height : 3
-//    });
-//    
-//    totoDynamic = myWorld.createEntity( entityConfig, {
-//        type : "dynamic",
-//        name: "totoDynamic",
-//        borderColor : "red",
-//        x: 20,
-//        y: 10,
-//        width : 5,
-//        height : 3
-//    });
-//    
-//    totoStatic.onMousedown(callback);
-//    totoDynamic.onMousedown(callback);
-//    totoKinematic.onMousedown(callback);
     
     player = myWorld.createEntity({
         "shape": "circle",
@@ -122,6 +159,14 @@ function init(){
     myWorld.mousePan();
     myWorld.mousewheelZoom({step:0.5});
     myWorld.touchPan();
+    
+    function getVector(sourcePosition,targetPosition){
+        sourcePosition = new Box2D.Common.Math.b2Vec2(sourcePosition.x,sourcePosition.y);
+        targetPosition = new Box2D.Common.Math.b2Vec2(targetPosition.x,targetPosition.y);
+        targetPosition.Subtract(sourcePosition);
+        targetPosition.Multiply(1/(Math.min(targetPosition.x,targetPosition.y)));
+        return targetPosition;
+    }
     
     
 }   

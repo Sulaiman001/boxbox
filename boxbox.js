@@ -58,7 +58,7 @@ See more on the readme file
      */
     window.boxbox = {};
     window.boxbox.codeName  = "boxboxevents";
-    window.boxbox.version   = "0.1.2";
+    window.boxbox.version   = "dev";
     
     // Make sure Box2D exists
     if (Box2D === undefined) {
@@ -2924,7 +2924,7 @@ See more on the readme file
          * @name of this entity
          * @x starting x coordinate for the center of the new entity
          * @y starting y coordinate for the center of the new entity
-         * @type 'dynamic' or 'static'. static objects can't move
+         * @type 'dynamic' or 'static' or 'kinematic'. static objects can't move (warn : kinematic is experimantal for the moment)
          * @shape 'square' or 'circle' or 'polygon'
          * @height for box (default 1)
          * @width for box (default 1)
@@ -4304,6 +4304,9 @@ See more on the readme file
             }
             else if (ops.type === 'dynamic') {
                 body.type = b2Body.b2_dynamicBody;
+            }
+            else if (ops.type === 'kinematic') {
+                body.type = b2Body.b2_kinematicBody;
             }
             
             // shape
