@@ -2,13 +2,14 @@
   "name": "boxboxevents",
   "description": "JavaScript physics made easy and event management easier",
   "author": "Christophe Rosset <tophe@topheman.com>",
-  "repository" :{ 
-	"type" : "git",
-	"url" : "https://github.com/topheman/boxbox.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/topheman/boxbox.git"
   },
   "devDependencies": {
     "grunt": "0.3.17",
-	"updoc": "0.2.6"
+    "updoc": "0.2.6",
+    "grunt-connect": "~0.2.0"
   },
   "engine": "node >= 0.4.1"
 }
