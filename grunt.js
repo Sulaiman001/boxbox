@@ -1,5 +1,7 @@
 module.exports = function(grunt) {
 
+  grunt.loadNpmTasks('grunt-connect');
+
   grunt.initConfig({
     meta: {
       banner: '/* Copyright 2013 Christophe Rosset. Licensed under the MIT License. http://topheman.github.com/boxbox/ */\n/* Copyright 2012 Greg Smith. Licensed under the MIT License. http://incompl.github.com/boxbox/ */'
@@ -37,9 +39,18 @@ module.exports = function(grunt) {
         console: true
       }
     },
-    uglify: {}
+    uglify: {},
+    connect: {
+        server: {
+            options: {
+                port: 9001,
+                base: ''
+            }
+        }
+    }
   });
 
   grunt.registerTask('default', 'lint min');
+  grunt.registerTask('server', 'connect:server');
 
 };
